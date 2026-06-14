@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="440" viewBox="0 0 920 440">
+<rect width="100%" height="100%" fill="white"/>
+<text x="460" y="30" text-anchor="middle" font-family="Arial" font-size="18">3p0 residue-pair class contributions</text>
+<line x1="80" y1="55" x2="80" y2="350" stroke="#333"/>
+<line x1="80" y1="350" x2="890" y2="350" stroke="#333"/>
+<rect x="110" y="250.00" width="34" height="100.00" fill="#4c78a8"/>
+<text x="127" y="245.00" text-anchor="middle" font-family="Arial" font-size="9">18</text>
+<text x="129" y="368" text-anchor="middle" font-family="Arial" font-size="12">central6</text>
+<rect x="198" y="233.33" width="34" height="116.67" fill="#4c78a8"/>
+<text x="215" y="228.33" text-anchor="middle" font-family="Arial" font-size="9">21</text>
+<text x="217" y="368" text-anchor="middle" font-family="Arial" font-size="12">central7</text>
+<rect x="286" y="100.00" width="34" height="250.00" fill="#4c78a8"/>
+<text x="303" y="95.00" text-anchor="middle" font-family="Arial" font-size="9">45</text>
+<text x="305" y="368" text-anchor="middle" font-family="Arial" font-size="12">full</text>
+<rect x="650" y="55" width="13" height="13" fill="#4c78a8"/>
+<text x="668" y="66" font-family="Arial" font-size="12">CYP_MEP_vs_GLU</text>
+</svg>

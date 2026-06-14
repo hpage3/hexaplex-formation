@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="440" viewBox="0 0 920 440">
+<rect width="100%" height="100%" fill="white"/>
+<text x="460" y="30" text-anchor="middle" font-family="Arial" font-size="18">3p4 residue-pair class contributions</text>
+<line x1="80" y1="55" x2="80" y2="350" stroke="#333"/>
+<line x1="80" y1="350" x2="890" y2="350" stroke="#333"/>
+<rect x="110" y="260.71" width="34" height="89.29" fill="#4c78a8"/>
+<text x="127" y="255.71" text-anchor="middle" font-family="Arial" font-size="9">90</text>
+<rect x="148" y="290.48" width="34" height="59.52" fill="#f58518"/>
+<text x="165" y="285.48" text-anchor="middle" font-family="Arial" font-size="9">60</text>
+<rect x="186" y="335.12" width="34" height="14.88" fill="#54a24b"/>
+<text x="203" y="330.12" text-anchor="middle" font-family="Arial" font-size="9">15</text>
+<text x="167" y="368" text-anchor="middle" font-family="Arial" font-size="12">central6</text>
+<rect x="274" y="242.86" width="34" height="107.14" fill="#4c78a8"/>
+<text x="291" y="237.86" text-anchor="middle" font-family="Arial" font-size="9">108</text>
+<rect x="312" y="278.57" width="34" height="71.43" fill="#f58518"/>
+<text x="329" y="273.57" text-anchor="middle" font-family="Arial" font-size="9">72</text>
+<rect x="350" y="329.17" width="34" height="20.83" fill="#54a24b"/>
+<text x="367" y="324.17" text-anchor="middle" font-family="Arial" font-size="9">21</text>
+<text x="331" y="368" text-anchor="middle" font-family="Arial" font-size="12">central7</text>
+<rect x="438" y="100.00" width="34" height="250.00" fill="#4c78a8"/>
+<text x="455" y="95.00" text-anchor="middle" font-family="Arial" font-size="9">252</text>
+<rect x="476" y="183.33" width="34" height="166.67" fill="#f58518"/>
+<text x="493" y="178.33" text-anchor="middle" font-family="Arial" font-size="9">168</text>
+<rect x="514" y="305.36" width="34" height="44.64" fill="#54a24b"/>
+<text x="531" y="300.36" text-anchor="middle" font-family="Arial" font-size="9">45</text>
+<text x="495" y="368" text-anchor="middle" font-family="Arial" font-size="12">full</text>
+<rect x="650" y="55" width="13" height="13" fill="#4c78a8"/>
+<text x="668" y="66" font-family="Arial" font-size="12">CYP_MEP_vs_CYP_MEP</text>
+<rect x="650" y="75" width="13" height="13" fill="#f58518"/>
+<text x="668" y="86" font-family="Arial" font-size="12">CYP_MEP_vs_GLU</text>
+<rect x="650" y="95" width="13" height="13" fill="#54a24b"/>
+<text x="668" y="106" font-family="Arial" font-size="12">GLU_vs_GLU</text>
+</svg>

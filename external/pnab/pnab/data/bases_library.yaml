@@ -1,0 +1,56 @@
+Base A:
+  code: A  
+  file_path: adenine.pdb
+  linker:
+  - 2
+  - 1
+  name: A
+  pair_name: T
+Base G:
+  code: G  
+  file_path: guanine.pdb
+  linker:
+  - 2
+  - 1
+  name: G
+  pair_name: C
+Base C:
+  code: C  
+  file_path: cytosine.pdb
+  linker:
+  - 2
+  - 1
+  name: C
+  pair_name: G
+Base U:
+  code: U  
+  file_path: uracil.pdb
+  linker:
+  - 2
+  - 1
+  name: U
+  pair_name: A
+Base T:
+  code: T  
+  file_path: thymine.pdb
+  linker:
+  - 2
+  - 1
+  name: T
+  pair_name: A
+Base I:
+  code: I
+  file_path: cyanuric_acid.pdb
+  linker:
+  - 2
+  - 1
+  name: I
+  pair_name: E
+Base E:
+  code: E
+  file_path: aminopyrimidine.pdb
+  linker:
+  - 2
+  - 1
+  name: E
+  pair_name: I

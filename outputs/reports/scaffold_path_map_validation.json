@@ -1,0 +1,83 @@
+{
+  "blank_strand_id_count": 0,
+  "blank_strand_label_count": 0,
+  "caution": "Map validation checks internal consistency against the selected PDB; it does not establish biological truth or temporal assembly order.",
+  "duplicate_residue_identity_count": 0,
+  "errors": [],
+  "map_name": "contiguous_residue_blocks",
+  "mapped_missing_from_pdb_count": 0,
+  "mapped_residue_count": 180,
+  "missing_from_map_count": 0,
+  "pdb_residue_count": 180,
+  "source": "generated_from_strand_map_candidate",
+  "strand_summaries": [
+    {
+      "first_residue_label": "CYP1",
+      "fitted_angular_coverage_rad": "6.233895",
+      "last_residue_label": "GLU30",
+      "mean_radius_fitted": "11.186964",
+      "residue_count": "30",
+      "residue_name_pattern": "CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU...",
+      "strand_id": "1",
+      "strand_label": "block_1",
+      "z_span": "49.413400"
+    },
+    {
+      "first_residue_label": "MEP31",
+      "fitted_angular_coverage_rad": "5.861149",
+      "last_residue_label": "GLU60",
+      "mean_radius_fitted": "11.212622",
+      "residue_count": "30",
+      "residue_name_pattern": "MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU...",
+      "strand_id": "2",
+      "strand_label": "block_2",
+      "z_span": "49.434033"
+    },
+    {
+      "first_residue_label": "CYP61",
+      "fitted_angular_coverage_rad": "6.014262",
+      "last_residue_label": "GLU90",
+      "mean_radius_fitted": "11.186942",
+      "residue_count": "30",
+      "residue_name_pattern": "CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU...",
+      "strand_id": "3",
+      "strand_label": "block_3",
+      "z_span": "49.436667"
+    },
+    {
+      "first_residue_label": "MEP91",
+      "fitted_angular_coverage_rad": "6.046707",
+      "last_residue_label": "GLU120",
+      "mean_radius_fitted": "11.212606",
+      "residue_count": "30",
+      "residue_name_pattern": "MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU...",
+      "strand_id": "4",
+      "strand_label": "block_4",
+      "z_span": "49.416433"
+    },
+    {
+      "first_residue_label": "CYP121",
+      "fitted_angular_coverage_rad": "5.912910",
+      "last_residue_label": "GLU150",
+      "mean_radius_fitted": "11.186972",
+      "residue_count": "30",
+      "residue_name_pattern": "CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU-CYP-GLU...",
+      "strand_id": "5",
+      "strand_label": "block_5",
+      "z_span": "49.386267"
+    },
+    {
+      "first_residue_label": "MEP151",
+      "fitted_angular_coverage_rad": "6.227175",
+      "last_residue_label": "GLU180",
+      "mean_radius_fitted": "11.212664",
+      "residue_count": "30",
+      "residue_name_pattern": "MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU-MEP-GLU...",
+      "strand_id": "6",
+      "strand_label": "block_6",
+      "z_span": "49.385333"
+    }
+  ],
+  "validation_status": "pass",
+  "warnings": []
+}

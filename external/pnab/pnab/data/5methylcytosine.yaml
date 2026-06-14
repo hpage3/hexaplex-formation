@@ -1,0 +1,131 @@
+Backbone:
+  file_path: DNA_backbone.pdb
+  fixed_bonds: []
+  interconnects:
+  - 10
+  - 1
+  linker:
+  - 12
+  - 13
+Base 1:
+  code: 5CM
+  file_path: 5methylcytosine.pdb
+  linker:
+  - 2
+  - 1
+  name: L
+  pair_name: K
+  align: true
+Base 2:
+  code: G
+  file_path: guanine.pdb
+  linker:
+  - 2
+  - 1
+  name: K
+  pair_name: L
+  align: false
+HelicalParameters:
+  is_helical: true
+  x_displacement:
+  - -0.12
+  - -0.12
+  - 1
+  y_displacement:
+  - -0.03
+  - -0.03
+  - 1
+  h_rise:
+  - 3.24
+  - 3.24
+  - 1
+  inclination:
+  - 1.93
+  - 1.93
+  - 1
+  tip:
+  - 0.90
+  - 0.90
+  - 1
+  h_twist:
+  - 35.78
+  - 35.78
+  - 1
+  shift:
+  - -0.03
+  - -0.03
+  - 1
+  slide:
+  - 0.03
+  - 0.03
+  - 1
+  rise:
+  - 3.24
+  - 3.24
+  - 1
+  tilt:
+  - -0.55
+  - -0.55
+  - 1
+  roll:
+  - 1.19
+  - 1.19
+  - 1
+  twist:
+  - 35.76
+  - 35.76
+  - 1
+  shear:
+  - -0.01
+  - -0.01
+  - 1
+  stretch:
+  - -0.14
+  - -0.14
+  - 1
+  stagger:
+  - 0.16
+  - 0.16
+  - 1
+  buckle:
+  - 2.33
+  - 2.33
+  - 1
+  propeller:
+  - -10.99
+  - -10.99
+  - 1
+  opening:
+  - 0.47
+  - 0.47
+  - 1
+RuntimeParameters:
+  search_algorithm: weighted monte carlo search
+  num_candidates: 1
+  num_steps: 10000000
+  monte_carlo_temperature: 300
+  weighting_temperature: 300
+  energy_filter:
+  - 0.5
+  - 2.5
+  - 4.0
+  - 50.0
+  - 1000.0
+  is_hexad: false
+  build_strand:
+  - true
+  - true
+  - false
+  - false
+  - false
+  - false
+  strand_orientation:
+  - true
+  - false
+  - true
+  - true
+  - true
+  - true
+  max_distance: 0.8
+  strand: CGLGAATTCKCG
+  ff_type: MMFF94

@@ -1,0 +1,5 @@
+donor_residue,donor_atom,hydrogen_atom,acceptor_residue,acceptor_atom,donor_acceptor_distance_A,hydrogen_acceptor_distance_A
+A:ALA4,N,H,A:ALA7,O,2.833447,1.836338
+A:ALA6,N,H,A:ALA5,O,2.888275,1.891625
+A:ALA5,N,H,A:ALA6,O,2.905344,1.907302
+A:ALA7,N,H,A:ALA4,O,2.850509,1.853547

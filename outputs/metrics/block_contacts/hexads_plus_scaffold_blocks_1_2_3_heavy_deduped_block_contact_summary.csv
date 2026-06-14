@@ -1,0 +1,5 @@
+contact_category,contact_count,GLU_involved_count,GLU_GLU_count,backbone_O_to_GLU_sidechain_O_count,GLU_sidechain_O_to_GLU_sidechain_O_count,backbone_N_to_GLU_sidechain_O_count
+hexad_or_other_internal,42,0,0,0,0,0
+scaffold_between_blocks,43,30,15,0,0,0
+scaffold_hexad_or_other,174,0,0,0,0,0
+scaffold_within_block,171,129,42,0,0,0

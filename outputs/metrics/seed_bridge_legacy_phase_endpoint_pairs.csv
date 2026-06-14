@@ -1,0 +1,13 @@
+unit_count,pair_id,loose_sample_id,formed_sample_id,coupling_weight,matching_cost,endpoint_distance,method_used,notes
+4,0,central4_loose_initial_0001,central4_formed_perturbed_0002,0.1225612843,5.262231,5.262231,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+4,1,central4_loose_initial_0002,central4_formed_perturbed_0001,0.1181083829,4.951921,4.951921,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+4,2,central4_loose_initial_0000,central4_formed_perturbed_0000,0.1120900921,5.036426,5.036426,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+5,0,central5_loose_initial_0001,central5_formed_perturbed_0000,0.1230858393,5.195696,5.195696,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+5,1,central5_loose_initial_0002,central5_formed_perturbed_0002,0.1216825811,5.152357,5.152357,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+5,2,central5_loose_initial_0000,central5_formed_perturbed_0001,0.1113906493,5.169938,5.169938,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+6,0,central6_loose_initial_0000,central6_formed_perturbed_0001,0.1170244776,5.644827,5.644827,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+6,1,central6_loose_initial_0001,central6_formed_perturbed_0002,0.1157295203,5.101245,5.101245,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+6,2,central6_loose_initial_0002,central6_formed_perturbed_0000,0.1115966980,4.857852,4.857852,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+7,0,central7_loose_initial_0001,central7_formed_perturbed_0002,0.1147530554,5.306466,5.306466,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+7,1,central7_loose_initial_0002,central7_formed_perturbed_0000,0.1141974663,4.900106,4.900106,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight
+7,2,central7_loose_initial_0000,central7_formed_perturbed_0001,0.1100948038,5.477022,5.477022,sinkhorn_greedy_unique,entropic OT coupling epsilon=0.75; unique endpoint pairs extracted by descending coupling weight

@@ -1,0 +1,13 @@
+structure_file,atom_count,residue_count,chain_count,chain_ids,residue_names,min_x,max_x,min_y,max_y,min_z,max_z,centroid_x,centroid_y,centroid_z
+outputs/intermediates/cleaned_structures/alanine_beta_sheet_central5_res3_to_7_heavy.pdb,50,5,1,A,ALA,4.188000,25.051000,-8.533000,0.140000,-2.942000,0.691000,14.598140,-4.426760,-0.693560
+outputs/intermediates/cleaned_structures/alanine_beta_sheet_central5_res3_to_7_heavy_deduped.pdb,50,5,1,A,ALA,4.188000,25.051000,-8.533000,0.140000,-2.942000,0.691000,14.598140,-4.426760,-0.693560
+outputs/intermediates/cleaned_structures/alanine_beta_sheet_central5_res4_to_8_heavy.pdb,50,5,1,A,ALA,4.637000,24.480000,-9.409000,0.673000,-2.934000,0.691000,14.597860,-4.428880,-0.694240
+outputs/intermediates/cleaned_structures/alanine_beta_sheet_central5_res4_to_8_heavy_deduped.pdb,50,5,1,A,ALA,4.637000,24.480000,-9.409000,0.673000,-2.934000,0.691000,14.597860,-4.428880,-0.694240
+outputs/intermediates/cleaned_structures/alanine_beta_sheet_full_heavy.pdb,100,10,1,A,ALA,-3.008000,32.224000,-10.284000,1.600000,-3.023000,0.799000,14.598010,-4.428050,-0.693980
+outputs/intermediates/cleaned_structures/alanine_beta_sheet_full_heavy_deduped.pdb,100,10,1,A,ALA,-3.008000,32.224000,-10.284000,1.600000,-3.023000,0.799000,14.598010,-4.428050,-0.693980
+outputs/intermediates/cleaned_structures/full_hexaplex_anti_parallel_30deg_ideal_heavy.pdb,4332,180,1,,CYP;GLU;MEP,-16.444000,16.441000,-16.442000,16.446000,-3.316000,50.914000,-0.000028,-0.000017,23.799934
+outputs/intermediates/cleaned_structures/full_hexaplex_anti_parallel_30deg_ideal_heavy_deduped.pdb,2166,180,1,,CYP;GLU;MEP,-16.444000,16.441000,-16.442000,16.446000,-3.316000,50.914000,-0.000028,-0.000017,23.799934
+outputs/intermediates/cleaned_structures/hexaplex_hexads_only_heavy.pdb,1620,90,1,,CYP;MEP,-7.409000,7.410000,-7.425000,7.413000,-0.014000,47.614000,-0.000016,-0.000033,23.799983
+outputs/intermediates/cleaned_structures/hexaplex_hexads_only_heavy_deduped.pdb,810,90,1,,CYP;MEP,-7.409000,7.410000,-7.425000,7.413000,-0.014000,47.614000,-0.000016,-0.000033,23.799983
+outputs/intermediates/cleaned_structures/hexaplex_scaffold_only_complement_heavy.pdb,2712,180,1,,CYP;GLU;MEP,-16.444000,16.441000,-16.442000,16.446000,-3.316000,50.914000,-0.000035,-0.000007,23.799905
+outputs/intermediates/cleaned_structures/hexaplex_scaffold_only_complement_heavy_deduped.pdb,1356,180,1,,CYP;GLU;MEP,-16.444000,16.441000,-16.442000,16.446000,-3.316000,50.914000,-0.000035,-0.000007,23.799905

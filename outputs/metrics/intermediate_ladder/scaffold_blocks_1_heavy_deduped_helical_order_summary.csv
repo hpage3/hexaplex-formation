@@ -1,0 +1,2 @@
+pdb_file,residue_count,mean_radius_xy,min_radius_xy,max_radius_xy,z_min,z_max,z_span,angle_min,angle_max,angular_coverage_rad
+outputs/intermediates/ladder_structures/scaffold_blocks_1_heavy_deduped.pdb,30,12.081776,10.312854,13.868490,-2.374900,47.038500,49.413400,-3.044517,3.030090,6.074607

@@ -1,0 +1,2 @@
+pdb_file,residue_count,axis_origin_x,axis_origin_y,axis_origin_z,axis_x,axis_y,axis_z,mean_radius_fitted,min_radius_fitted,max_radius_fitted,axial_t_min,axial_t_max,axial_span,angle_min,angle_max,angular_coverage_rad,z_axis_angle_degrees,unwrapped_angle_span_rad,approximate_turns,approximate_pitch_per_turn
+outputs/intermediates/ladder_structures/scaffold_blocks_1_2_3_heavy_deduped.pdb,90,-1.390561,0.001453,23.324477,0.001033,0.173960,0.984752,11.654513,6.456640,17.991606,-25.549207,24.397828,49.947035,-3.122672,3.114872,6.237544,10.018321,-9.844875,1.566860,31.877143

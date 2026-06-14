@@ -1,0 +1,10 @@
+block_pair,contact_count,GLU_involved_count,GLU_GLU_count,min_distance_A
+1--1,43,43,14,1.333753
+1--2,30,30,15,3.372403
+2--2,57,43,14,1.333459
+2--3,13,0,0,3.895853
+3--3,43,43,14,1.332728
+4--4,14,0,0,3.401886
+6--6,14,0,0,3.401520
+hexad_or_other--hexad_or_other,42,0,0,3.398354
+scaffold--hexad_or_other,174,0,0,2.663088

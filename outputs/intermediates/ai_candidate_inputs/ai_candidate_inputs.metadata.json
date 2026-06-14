@@ -1,0 +1,14 @@
+{
+  "chain_count": 6,
+  "deduped_pdb": "outputs/intermediates/ai_candidate_inputs/full_hexaplex_anti_parallel_30deg_ideal_deduped_6chain.pdb",
+  "nonstandard_residues": [
+    "CYP",
+    "MEP"
+  ],
+  "proxy_sequence_map": {
+    "GLU": "E"
+  },
+  "residue_count": 180,
+  "source_pdb": "inputs/structures/full_hexaplex_anti_parallel_30deg_ideal.pdb",
+  "warning": "CYP and MEP are nonstandard residues; the proxy FASTA uses X for them and should only be used for AlphaFold/ESM candidate exploration."
+}

@@ -1,0 +1,15 @@
+{
+  "blocks": 6,
+  "caution": "Candidate scaffold block map; not yet validated against PyMOL colored strand paths.",
+  "mapping_method": "contiguous_residue_order_candidate",
+  "residue_count": 180,
+  "residues_per_block": {
+    "1": 30,
+    "2": 30,
+    "3": 30,
+    "4": 30,
+    "5": 30,
+    "6": 30
+  },
+  "source_pdb": "outputs/intermediates/normalized_structures/hexaplex_scaffold_only_complement_heavy_deduped.pdb"
+}

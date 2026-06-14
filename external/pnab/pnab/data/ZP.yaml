@@ -1,0 +1,131 @@
+Backbone:
+  file_path: DNA_backbone.pdb
+  fixed_bonds: []
+  interconnects:
+  - 10
+  - 1
+  linker:
+  - 12
+  - 13
+Base 1:
+  code: Z
+  file_path: Z.pdb
+  linker:
+  - 2
+  - 1
+  name: Z
+  pair_name: P
+  align: true
+Base 2:
+  code: P
+  file_path: P.pdb
+  linker:
+  - 2
+  - 1
+  name: P
+  pair_name: Z
+  align: true
+HelicalParameters:
+  is_helical: true
+  x_displacement:
+  - -3.60
+  - -3.60
+  - 1
+  y_displacement:
+  - 0.19
+  - 0.19
+  - 1
+  h_rise:
+  - 2.84
+  - 2.84
+  - 1
+  inclination:
+  - 13.68
+  - 13.68
+  - 1
+  tip:
+  - -0.04
+  - -0.04
+  - 1
+  h_twist:
+  - 31.57
+  - 31.57
+  - 1
+  shift:
+  - -0.10
+  - -0.10
+  - 1
+  slide:
+  - -1.26
+  - -1.26
+  - 1
+  rise:
+  - 3.21
+  - 3.21
+  - 1
+  tilt:
+  - 0.02
+  - 0.02
+  - 1
+  roll:
+  - 7.38
+  - 7.38
+  - 1
+  twist:
+  - 30.72
+  - 30.72
+  - 1
+  shear:
+  - -0.03
+  - -0.03
+  - 1
+  stretch:
+  - -0.17
+  - -0.17
+  - 1
+  stagger:
+  - 0.10
+  - 0.10
+  - 1
+  buckle:
+  - -0.83
+  - -0.83
+  - 1
+  propeller:
+  - -10.05
+  - -10.05
+  - 1
+  opening:
+  - 1.46
+  - 1.46
+  - 1
+RuntimeParameters:
+  search_algorithm: monte carlo search
+  num_steps: 100000000
+  monte_carlo_temperature: 300
+  num_candidates: 1
+  seed: 0
+  energy_filter:
+  - 0.5
+  - 2.5
+  - 5.0
+  - 70.0
+  - 1000.0
+  is_hexad: false
+  build_strand:
+  - true
+  - true
+  - false
+  - false
+  - false
+  - false
+  strand_orientation:
+  - true
+  - false
+  - true
+  - true
+  - true
+  - true
+  max_distance: 0.8
+  strand: CTTATPPPZZZATAAG
+  ff_type: MMFF94

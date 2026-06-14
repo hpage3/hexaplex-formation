@@ -1,0 +1,46 @@
+# Intermediate Ladder Report
+
+## Scientific cautions
+
+The d ~= 4.5 A diffraction feature is a reciprocal-space scaffold signature in the current working hypothesis; it is not a literal 4.5 A atom-contact assignment. Contact maps, GLU motifs, and helical summaries are real-space structural summaries. Hydrogen-bond outputs are rough geometric candidates, not definitive hydrogen bonds.
+
+The block mapping used here is a candidate contiguous-residue map. These structures are candidate intermediate models for hypothesis testing and do not prove temporal assembly order. Results require validation against PyMOL strand mapping and/or simulation.
+
+## Ladder model table
+
+| model_name | atom_mode | included_blocks | includes_hexads | atom_count | residue_count | contact_count_4p5A | motif_GLU_GLU | motif_GLU_any | hbond_candidate_count | mean_radius_xy | z_span | angular_coverage_rad |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| scaffold_blocks_1_heavy_deduped | heavy_deduped | 1 | no | 226 | 30 | 57 | 14 | 43 | 0 | 12.081776 | 49.413400 | 6.074607 |
+| hexads_plus_scaffold_blocks_1_heavy_deduped | heavy_deduped | 1 | yes | 1036 | 105 | 301 | 14 | 43 | 0 | 7.015958 | 49.983789 | 6.279224 |
+| scaffold_blocks_1_2_heavy_deduped | heavy_deduped | 1,2 | no | 452 | 60 | 158 | 43 | 116 | 0 | 12.099917 | 52.392100 | 6.074607 |
+| hexads_plus_scaffold_blocks_1_2_heavy_deduped | heavy_deduped | 1,2 | yes | 1262 | 120 | 374 | 43 | 116 | 0 | 8.105272 | 52.392100 | 6.279224 |
+| scaffold_blocks_1_2_3_heavy_deduped | heavy_deduped | 1,2,3 | no | 678 | 90 | 228 | 57 | 159 | 0 | 12.094785 | 52.434200 | 6.079052 |
+| hexads_plus_scaffold_blocks_1_2_3_heavy_deduped | heavy_deduped | 1,2,3 | yes | 1488 | 135 | 430 | 57 | 159 | 0 | 8.951498 | 52.434200 | 6.218836 |
+| scaffold_blocks_1_2_3_4_heavy_deduped | heavy_deduped | 1,2,3,4 | no | 904 | 120 | 329 | 86 | 232 | 0 | 12.100230 | 52.434200 | 6.079052 |
+| hexads_plus_scaffold_blocks_1_2_3_4_heavy_deduped | heavy_deduped | 1,2,3,4 | yes | 1714 | 150 | 503 | 86 | 232 | 0 | 9.629549 | 52.434200 | 6.218836 |
+| scaffold_blocks_1_2_3_4_5_heavy_deduped | heavy_deduped | 1,2,3,4,5 | no | 1130 | 150 | 399 | 100 | 275 | 0 | 12.094903 | 52.434200 | 6.079052 |
+| hexads_plus_scaffold_blocks_1_2_3_4_5_heavy_deduped | heavy_deduped | 1,2,3,4,5 | yes | 1940 | 165 | 559 | 100 | 275 | 0 | 10.182402 | 52.434200 | 6.209014 |
+| scaffold_blocks_1_2_3_4_5_6_heavy_deduped | heavy_deduped | 1,2,3,4,5,6 | no | 1356 | 180 | 513 | 129 | 348 | 0 | 12.097015 | 52.434200 | 6.079052 |
+| hexads_plus_scaffold_blocks_1_2_3_4_5_6_heavy_deduped | heavy_deduped | 1,2,3,4,5,6 | yes | 2166 | 180 | 645 | 129 | 348 | 0 | 10.643939 | 52.434200 | 6.163350 |
+| scaffold_blocks_1_allatom_deduped | allatom_deduped | 1 | no | 438 | 30 | 0 | 0 | 0 | 0 |  |  |  |
+| hexads_plus_scaffold_blocks_1_allatom_deduped | allatom_deduped | 1 | yes | 1248 | 105 | 0 | 0 | 0 | 30 |  |  |  |
+| scaffold_blocks_1_2_allatom_deduped | allatom_deduped | 1,2 | no | 921 | 60 | 0 | 0 | 0 | 0 |  |  |  |
+| hexads_plus_scaffold_blocks_1_2_allatom_deduped | allatom_deduped | 1,2 | yes | 1731 | 120 | 0 | 0 | 0 | 90 |  |  |  |
+| scaffold_blocks_1_2_3_allatom_deduped | allatom_deduped | 1,2,3 | no | 1359 | 90 | 0 | 0 | 0 | 0 |  |  |  |
+| hexads_plus_scaffold_blocks_1_2_3_allatom_deduped | allatom_deduped | 1,2,3 | yes | 2169 | 135 | 0 | 0 | 0 | 120 |  |  |  |
+| scaffold_blocks_1_2_3_4_allatom_deduped | allatom_deduped | 1,2,3,4 | no | 1842 | 120 | 0 | 0 | 0 | 0 |  |  |  |
+| hexads_plus_scaffold_blocks_1_2_3_4_allatom_deduped | allatom_deduped | 1,2,3,4 | yes | 2652 | 150 | 0 | 0 | 0 | 180 |  |  |  |
+| scaffold_blocks_1_2_3_4_5_allatom_deduped | allatom_deduped | 1,2,3,4,5 | no | 2280 | 150 | 0 | 0 | 0 | 0 |  |  |  |
+| hexads_plus_scaffold_blocks_1_2_3_4_5_allatom_deduped | allatom_deduped | 1,2,3,4,5 | yes | 3090 | 165 | 0 | 0 | 0 | 210 |  |  |  |
+| scaffold_blocks_1_2_3_4_5_6_allatom_deduped | allatom_deduped | 1,2,3,4,5,6 | no | 2763 | 180 | 0 | 0 | 0 | 0 |  |  |  |
+| hexads_plus_scaffold_blocks_1_2_3_4_5_6_allatom_deduped | allatom_deduped | 1,2,3,4,5,6 | yes | 3573 | 180 | 0 | 0 | 0 | 270 |  |  |  |
+| reference_hexads_only_heavy_deduped | heavy_deduped |  | yes | 810 | 90 | 258 | 0 | 0 | 0 | 5.565043 | 47.619111 | 6.279224 |
+| reference_scaffold_only_complement_heavy_deduped | heavy_deduped | 1,2,3,4,5,6 | no | 1356 | 180 | 513 | 129 | 348 | 0 | 12.097015 | 52.434200 | 6.079052 |
+| reference_full_hexaplex_heavy_deduped | heavy_deduped |  | yes | 2166 | 180 | 645 | 129 | 348 | 0 | 10.643939 | 52.434200 | 6.163350 |
+
+## Automatically generated notes
+
+- The first scaffold-only candidate intermediate exceeding 3.0 rad angular coverage uses 1 block(s): `scaffold_blocks_1_heavy_deduped` (6.074607 rad). This is consistent with emerging coarse helical order but does not prove temporal assembly order.
+- The first scaffold-only candidate intermediate exceeding 5.5 rad angular coverage uses 1 block(s): `scaffold_blocks_1_heavy_deduped` (6.074607 rad). This is consistent with emerging coarse helical order but does not prove temporal assembly order.
+- The first scaffold-only candidate intermediate with GLU-GLU motifs uses 1 block(s): `scaffold_blocks_1_heavy_deduped` (14 motifs). This requires validation against PyMOL strand mapping and/or simulation.
+- Adding hexads changes contact counts or helical summaries for at least one matched block count; for 1 block(s), contacts change from 57 to 301. This is a candidate intermediate comparison and requires validation against PyMOL strand mapping and/or simulation.

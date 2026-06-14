@@ -1,0 +1,9 @@
+variant_id,scale_factor,total_atom_count,transformed_atom_count,fixed_atom_count,chain_count,residue_count,min_heavy_atom_distance_A,suspicious_overlap_count,radial_extent_min_A,radial_extent_max_A,radial_extent_mean_A,mean_transformed_atom_displacement_A,max_transformed_atom_displacement_A,notes,warnings
+hexaplex_base_length_scale_0p85,0.85,3573,1665,1908,6,180,1.081819,0,3.413304,16.564594,10.247532,0.689436,1.313214,,
+hexaplex_base_length_scale_0p90,0.90,3573,1665,1908,6,180,1.145455,0,3.021259,16.564594,10.161634,0.459624,0.875476,,
+hexaplex_base_length_scale_0p95,0.95,3573,1665,1908,6,180,1.209092,0,2.643580,16.564594,10.077094,0.229812,0.437738,,
+hexaplex_base_length_scale_1p00,1.00,3573,1665,1908,6,180,1.227463,0,2.287393,16.564594,9.994135,0.000000,0.000000,scale 1.00 baseline coordinate match,
+hexaplex_base_length_scale_1p05,1.05,3573,1665,1908,6,180,1.227463,0,1.909742,16.564594,9.913075,0.229812,0.437738,,
+hexaplex_base_length_scale_1p10,1.10,3573,1665,1908,6,180,1.227463,0,1.539924,16.564594,9.834400,0.459624,0.875476,,
+hexaplex_base_length_scale_1p15,1.15,3573,1665,1908,6,180,1.151122,0,1.205661,16.564594,9.758865,0.689436,1.313214,,
+hexaplex_base_length_scale_1p20,1.20,3573,1665,1908,6,180,0.643109,135,0.945472,16.564594,9.687621,0.919248,1.750952,,135 heavy-atom pair(s) below 1.00 A

@@ -1,0 +1,2 @@
+pdb_file,residue_count,mean_radius_xy,min_radius_xy,max_radius_xy,z_min,z_max,z_span,angle_min,angle_max,angular_coverage_rad
+outputs/intermediates/normalized_structures/alanine_beta_sheet_full_heavy_deduped.pdb,10,15.254893,15.241192,15.268943,-0.719200,-0.668600,0.050600,-0.299796,-0.289168,0.010628

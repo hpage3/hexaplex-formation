@@ -1,0 +1,114 @@
+Backbone:
+  file_path: RNA_backbone.pdb
+  fixed_bonds: []
+  interconnects:
+  - 10
+  - 1
+  linker:
+  - 13
+  - 14
+HelicalParameters:
+  is_helical: true
+  x_displacement:
+  - -4.47
+  - -4.47
+  - 1
+  y_displacement:
+  - -0.01
+  - -0.01
+  - 1
+  h_rise:
+  - 2.55
+  - 2.55
+  - 1
+  inclination:
+  - 22.62
+  - 22.62
+  - 1
+  tip:
+  - 0.07
+  - 0.07
+  - 1
+  h_twist:
+  - 32.70
+  - 32.70
+  - 1
+  shift:
+  - 0.00
+  - 0.00
+  - 1
+  slide:
+  - -1.39
+  - -1.39
+  - 1
+  rise:
+  - 3.30
+  - 3.30
+  - 1
+  tilt:
+  - -0.04
+  - -0.04
+  - 1
+  roll:
+  - 12.43
+  - 12.43
+  - 1
+  twist:
+  - 30.30
+  - 30.30
+  - 1
+  shear:
+  - -0.01
+  - -0.01
+  - 1
+  stretch:
+  - -0.10
+  - -0.10
+  - 1
+  stagger:
+  - 0.06
+  - 0.06
+  - 1
+  buckle:
+  - 0.05
+  - 0.05
+  - 1
+  propeller:
+  - -10.52
+  - -10.52
+  - 1
+  opening:
+  - -2.14
+  - -2.14
+  - 1
+RuntimeParameters:
+  build_strand:
+  - true
+  - true
+  - false
+  - false
+  - false
+  - false
+  energy_filter:
+  - 0.5
+  - 2.5
+  - 4.0
+  - 50.0
+  - 1000
+  ff_type: MMFF94
+  is_hexad: false
+  max_distance: 0.8
+  pair_A_U: true
+  search_algorithm: weighted random search
+  num_steps: 100000000
+  num_candidates: 5
+  weighting_temperature: 300
+  seed: 0
+  strand: AAAAAAAAAA
+  strand_orientation:
+  - true
+  - false
+  - false
+  - false
+  - false
+  - false

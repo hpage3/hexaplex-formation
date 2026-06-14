@@ -1,0 +1,2 @@
+pdb_file,residue_count,mean_radius_xy,min_radius_xy,max_radius_xy,z_min,z_max,z_span,angle_min,angle_max,angular_coverage_rad
+outputs/intermediates/ladder_structures/reference_hexads_only_heavy_deduped.pdb,90,5.565043,5.513481,5.616628,-0.009778,47.609333,47.619111,-3.141313,3.137911,6.279224

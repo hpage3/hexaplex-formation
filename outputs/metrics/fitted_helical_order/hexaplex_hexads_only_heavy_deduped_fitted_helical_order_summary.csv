@@ -1,0 +1,2 @@
+pdb_file,residue_count,axis_origin_x,axis_origin_y,axis_origin_z,axis_x,axis_y,axis_z,mean_radius_fitted,min_radius_fitted,max_radius_fitted,axial_t_min,axial_t_max,axial_span,angle_min,angle_max,angular_coverage_rad,z_axis_angle_degrees,unwrapped_angle_span_rad,approximate_turns,approximate_pitch_per_turn
+outputs/intermediates/normalized_structures/hexaplex_hexads_only_heavy_deduped.pdb,90,-0.000016,-0.000033,23.799983,0.001056,0.001601,0.999998,5.565012,5.551953,5.578114,-23.800429,23.800483,47.600912,-2.629511,3.137926,5.767437,0.109911,-5.243877,0.834589,57.035158

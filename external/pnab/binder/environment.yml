@@ -1,0 +1,6 @@
+name: pnab
+channels:
+    - conda-forge
+dependencies: 
+    - pnab=1.1.6
+    

@@ -1,0 +1,15 @@
+# AlphaFold/ESM proxy FASTA for chain-inferred Hexaplex scaffold.
+# WARNING: CYP and MEP are nonstandard residues and are represented as X in the proxy sequence.
+# This file is for candidate-only exploratory use, not for biological interpretation.
+>chain_A|chain_index=1|residues=30|nonstandard=15|source=full_hexaplex_anti_parallel_30deg_ideal.pdb
+XEXEXEXEXEXEXEXEXEXEXEXEXEXEXE
+>chain_B|chain_index=2|residues=30|nonstandard=15|source=full_hexaplex_anti_parallel_30deg_ideal.pdb
+XEXEXEXEXEXEXEXEXEXEXEXEXEXEXE
+>chain_C|chain_index=3|residues=30|nonstandard=15|source=full_hexaplex_anti_parallel_30deg_ideal.pdb
+XEXEXEXEXEXEXEXEXEXEXEXEXEXEXE
+>chain_D|chain_index=4|residues=30|nonstandard=15|source=full_hexaplex_anti_parallel_30deg_ideal.pdb
+XEXEXEXEXEXEXEXEXEXEXEXEXEXEXE
+>chain_E|chain_index=5|residues=30|nonstandard=15|source=full_hexaplex_anti_parallel_30deg_ideal.pdb
+XEXEXEXEXEXEXEXEXEXEXEXEXEXEXE
+>chain_F|chain_index=6|residues=30|nonstandard=15|source=full_hexaplex_anti_parallel_30deg_ideal.pdb
+XEXEXEXEXEXEXEXEXEXEXEXEXEXEXE

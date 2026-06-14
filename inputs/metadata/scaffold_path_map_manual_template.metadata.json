@@ -1,0 +1,12 @@
+{
+  "caution": "Manual/PyMOL path assignment validates map consistency, not biological truth or temporal assembly order.",
+  "instructions": [
+    "Inspect the scaffold path colors in PyMOL.",
+    "Fill strand_id and strand_label for each residue.",
+    "Save the edited copy as inputs/metadata/scaffold_path_map_manual.csv.",
+    "Rerun scripts/run_scaffold_path_map_workflow.sh to validate and compare maps."
+  ],
+  "residue_count": 180,
+  "source_pdb": "outputs/intermediates/normalized_structures/hexaplex_scaffold_only_complement_heavy_deduped.pdb",
+  "template_csv": "inputs/metadata/scaffold_path_map_manual_template.csv"
+}

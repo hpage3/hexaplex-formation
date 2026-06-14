@@ -1,0 +1,34 @@
+{
+  "detector_distance_mm": 338.4,
+  "detector_half_width_mm": 100.0,
+  "generated_at": "2026-06-08T00:53:41.556447+00:00",
+  "grid_limit_mm": 100.0,
+  "grid_size": 31,
+  "image_shape": [
+    31,
+    31
+  ],
+  "native_coordinate_units": "mm",
+  "native_output": "2D detector/image-plate intensity map",
+  "orientation_averaging": {
+    "mode": "powder",
+    "orientation_count": 24,
+    "phi_count": 6,
+    "psi_count": 2,
+    "theta_count": 2,
+    "theta_max_deg": 180.0,
+    "workers": 1
+  },
+  "output_image_filename": "outputs/mini_hexaplex/diffraction/lower_end_first12_units.npy",
+  "q_convention": "q = 2*pi/d",
+  "source_structure_filename": "outputs/mini_hexaplex/diffraction/lower_end_first12_units.xyz",
+  "wavelength_A": 0.7749,
+  "x_grid_limits_mm": [
+    -100.0,
+    100.0
+  ],
+  "z_grid_limits_mm": [
+    -100.0,
+    100.0
+  ]
+}

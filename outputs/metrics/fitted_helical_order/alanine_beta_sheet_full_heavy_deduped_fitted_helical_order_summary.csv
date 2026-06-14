@@ -1,0 +1,2 @@
+pdb_file,residue_count,axis_origin_x,axis_origin_y,axis_origin_z,axis_x,axis_y,axis_z,mean_radius_fitted,min_radius_fitted,max_radius_fitted,axial_t_min,axial_t_max,axial_span,angle_min,angle_max,angular_coverage_rad,z_axis_angle_degrees,unwrapped_angle_span_rad,approximate_turns,approximate_pitch_per_turn
+outputs/intermediates/normalized_structures/alanine_beta_sheet_full_heavy_deduped.pdb,10,14.598010,-4.428050,-0.693980,0.119035,0.948222,0.294460,0.000087,0.000065,0.000124,-0.085673,0.086417,0.172090,-1.817830,2.870974,4.688804,72.874865,-9.083452,1.445676,0.119038

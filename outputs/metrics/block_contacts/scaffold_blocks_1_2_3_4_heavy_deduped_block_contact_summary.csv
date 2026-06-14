@@ -1,0 +1,3 @@
+contact_category,contact_count,GLU_involved_count,GLU_GLU_count,backbone_O_to_GLU_sidechain_O_count,GLU_sidechain_O_to_GLU_sidechain_O_count,backbone_N_to_GLU_sidechain_O_count
+scaffold_between_blocks,101,60,30,0,0,0
+scaffold_within_block,228,172,56,0,0,0

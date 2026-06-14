@@ -1,0 +1,7 @@
+motif_type,count
+GLU-GLU,43
+GLU-any,116
+backbone_O_to_GLU_sidechain_O,0
+GLU_sidechain_O_to_GLU_sidechain_O,0
+backbone_N_to_GLU_sidechain_O,0
+other_GLU_contact,116

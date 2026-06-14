@@ -1,0 +1,16 @@
+{
+  "atom_count_input": 678,
+  "atom_count_used": 678,
+  "caution": "Simplified Debye-style comparative approximation; not a full fiber-diffraction simulation. The d ~= 4.5 A feature is reciprocal-space-like, not a literal atom contact. Component profiles are comparative controls, not additive decompositions.",
+  "distance_bin_width": 0.05,
+  "first_n_truncated": false,
+  "max_atoms": null,
+  "method": "histogram",
+  "pdb": "outputs/intermediates/ladder_structures/scaffold_blocks_1_2_3_heavy_deduped.pdb",
+  "q_max": 2.5,
+  "q_min": 0.2,
+  "q_step": 0.01,
+  "sample_atoms": null,
+  "sampling_used": false,
+  "truncated": false
+}

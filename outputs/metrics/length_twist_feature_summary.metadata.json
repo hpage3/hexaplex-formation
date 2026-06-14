@@ -1,0 +1,36 @@
+{
+  "builder_available": false,
+  "builder_location": "",
+  "native_npy_convention": "detector/image-plate intensity in mm coordinates; unchanged",
+  "q_convention": "q_Ainv = 2*pi/d_A",
+  "target_windows": [
+    {
+      "d_max_A": "5.00",
+      "d_min_A": "4.50",
+      "feature": "4.5-5.0 A",
+      "q_max_Ainv": "1.396263",
+      "q_min_Ainv": "1.256637"
+    },
+    {
+      "d_max_A": "3.55",
+      "d_min_A": "3.25",
+      "feature": "3.4 A",
+      "q_max_Ainv": "1.933288",
+      "q_min_Ainv": "1.769911"
+    },
+    {
+      "d_max_A": "3.10",
+      "d_min_A": "2.90",
+      "feature": "3.0 A",
+      "q_max_Ainv": "2.166616",
+      "q_min_Ainv": "2.026834"
+    },
+    {
+      "d_max_A": "8.40",
+      "d_min_A": "4.10",
+      "feature": "4.1-8.4 A",
+      "q_max_Ainv": "1.532484",
+      "q_min_Ainv": "0.747998"
+    }
+  ]
+}

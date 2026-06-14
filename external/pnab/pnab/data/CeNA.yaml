@@ -1,0 +1,114 @@
+Backbone:
+  file_path: CeNA_backbone.pdb
+  fixed_bonds: []
+  interconnects:
+  - 7
+  - 1
+  linker:
+  - 4
+  - 3
+HelicalParameters:
+  is_helical: true
+  x_displacement:
+  - -4.97
+  - -4.97
+  - 1
+  y_displacement:
+  - 0.18
+  - 0.18
+  - 1
+  h_rise:
+  - 2.45
+  - 2.45
+  - 1
+  inclination:
+  - 17.13
+  - 17.13
+  - 1
+  tip:
+  - -3.21
+  - -3.21
+  - 1
+  h_twist:
+  - 33.14
+  - 33.14
+  - 1
+  shift:
+  - 0.05
+  - 0.05
+  - 1
+  slide:
+  - -2.02
+  - -2.02
+  - 1
+  rise:
+  - 3.15
+  - 3.15
+  - 1
+  tilt:
+  - 1.81
+  - 1.81
+  - 1
+  roll:
+  - 9.63
+  - 9.63
+  - 1
+  twist:
+  - 31.70
+  - 31.70
+  - 1
+  shear:
+  - -0.04
+  - -0.04
+  - 1
+  stretch:
+  - -0.11
+  - -0.11
+  - 1
+  stagger:
+  - 0.27
+  - 0.27
+  - 1
+  buckle:
+  - -4.06
+  - -4.06
+  - 1
+  propeller:
+  - -12.46
+  - -12.46
+  - 1
+  opening:
+  - 0.09
+  - 0.09
+  - 1
+RuntimeParameters:
+  build_strand:
+  - true
+  - false
+  - false
+  - false
+  - false
+  - false
+  energy_filter:
+  - 0.5
+  - 2.5
+  - 4.0
+  - 10.0
+  - 1000.0
+  ff_type: GAFF
+  is_hexad: false
+  max_distance: 0.8
+  pair_A_U: true
+  search_algorithm: weighted random search
+  num_steps: 100000000
+  weighting_temperature: 300
+  num_candidates: 1
+  seed: 0
+  strand: GCGTAGCG
+  strand_orientation:
+  - true
+  - false
+  - false
+  - false
+  - false
+  - false

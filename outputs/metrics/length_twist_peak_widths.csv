@@ -1,0 +1,45 @@
+model_id,length_units,twist_deg,window_name,d_min_A,d_max_A,q_min_Ainv,q_max_Ainv,point_count,q_Ainv_at_max,d_A_at_max,max_intensity,integrated_intensity_sum,integrated_intensity_trapezoid_q,fwhm_q_Ainv,half_max_sample_width_q_Ainv,equivalent_width_q_Ainv,second_moment_width_q_Ainv,width_note
+length_4_central_twist_30,4,30.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,5,1.362005,4.613187,982255.809831,3444006.874750,55022.135408,,0.095937,0.056016,0.040397,half-maximum crossing is not bracketed on both sides inside the scored window
+length_4_central_twist_30,4,30.00,3.4 A,3.25,3.55,1.769911,1.933288,8,1.821348,3.449745,2771028.901837,7339796.804455,146142.142208,0.035836,0.000000,0.052739,0.048375,linear-interpolated FWHM within the scored simulated radial window
+length_4_central_twist_30,4,30.00,3.0 A,2.90,3.10,2.026834,2.166616,7,2.085607,3.012642,692547.247872,3302018.344523,57292.626141,,0.130779,0.082727,0.038322,half-maximum crossing is not bracketed on both sides inside the scored window
+length_4_central_twist_30,4,30.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,27,0.794853,7.904843,1515781.729190,21758250.232239,558310.683910,,0.567153,0.368332,0.219781,half-maximum crossing is not bracketed on both sides inside the scored window
+length_7_central_twist_30,7,30.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,5,1.362005,4.613187,1617937.051703,5112151.537978,89902.767907,,0.095937,0.055566,0.038387,half-maximum crossing is not bracketed on both sides inside the scored window
+length_7_central_twist_30,7,30.00,3.4 A,3.25,3.55,1.769911,1.933288,8,1.821348,3.449745,8080130.485419,18586021.083765,371438.375183,0.031711,0.000000,0.045969,0.047871,linear-interpolated FWHM within the scored simulated radial window
+length_7_central_twist_30,7,30.00,3.0 A,2.90,3.10,2.026834,2.166616,7,2.072510,3.031680,976323.308209,4524187.480741,81438.235702,,0.130779,0.083413,0.037224,half-maximum crossing is not bracketed on both sides inside the scored window
+length_7_central_twist_30,7,30.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,27,1.114502,5.637662,2833442.898303,38536302.364787,978437.479143,0.085391,0.689861,0.345318,0.220422,linear-interpolated FWHM within the scored simulated radial window
+length_8_central_twist_30,8,30.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,5,1.362005,4.613187,2137985.022838,6152765.982527,111741.221172,,0.013679,0.052265,0.036522,half-maximum crossing is not bracketed on both sides inside the scored window
+length_8_central_twist_30,8,30.00,3.4 A,3.25,3.55,1.769911,1.933288,8,1.821348,3.449745,10129274.237087,22997849.857152,459787.390444,0.031238,0.000000,0.045392,0.047670,linear-interpolated FWHM within the scored simulated radial window
+length_8_central_twist_30,8,30.00,3.0 A,2.90,3.10,2.026834,2.166616,7,2.072510,3.031680,1104613.000858,4807186.342551,89152.540787,,0.130779,0.080709,0.039051,half-maximum crossing is not bracketed on both sides inside the scored window
+length_8_central_twist_30,8,30.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,27,0.794853,7.904843,3746479.894462,43120455.120017,1090651.977620,,0.567153,0.291114,0.222716,half-maximum crossing is not bracketed on both sides inside the scored window
+length_12_central_twist_30,12,30.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,5,1.362005,4.613187,2954564.379462,8907574.386349,178484.374215,,0.054770,0.060410,0.033395,half-maximum crossing is not bracketed on both sides inside the scored window
+length_12_central_twist_30,12,30.00,3.4 A,3.25,3.55,1.769911,1.933288,8,1.821348,3.449745,20635004.731352,43524524.035499,875687.350351,0.029035,0.000000,0.042437,0.046415,linear-interpolated FWHM within the scored simulated radial window
+length_12_central_twist_30,12,30.00,3.0 A,2.90,3.10,2.026834,2.166616,7,2.072510,3.031680,1375745.737145,6736996.903022,130745.125530,0.047239,0.117645,0.095036,0.040543,linear-interpolated FWHM within the scored simulated radial window
+length_12_central_twist_30,12,30.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,27,1.114502,5.637662,6241424.360094,62290997.318548,1627651.164911,0.082255,0.333466,0.260782,0.222509,linear-interpolated FWHM within the scored simulated radial window
+full_length_twist_30,15,30.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,5,1.362005,4.613187,4197466.883417,12329206.192042,235821.120999,,0.054770,0.056182,0.035048,half-maximum crossing is not bracketed on both sides inside the scored window
+full_length_twist_30,15,30.00,3.4 A,3.25,3.55,1.769911,1.933288,8,1.821348,3.449745,29836765.954944,60652814.836791,1224404.960338,0.028212,0.000000,0.041037,0.045835,linear-interpolated FWHM within the scored simulated radial window
+full_length_twist_30,15,30.00,3.0 A,2.90,3.10,2.026834,2.166616,7,2.098691,2.993859,1865231.644592,8540328.003391,164774.798755,,0.117645,0.088340,0.042628,half-maximum crossing is not bracketed on both sides inside the scored window
+full_length_twist_30,15,30.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,27,1.114502,5.637662,8135811.112031,76027713.727574,2022157.732625,0.076167,0.567153,0.248550,0.218174,linear-interpolated FWHM within the scored simulated radial window
+full_length_twist_24_planned,15,24.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_24_planned,15,24.00,3.4 A,3.25,3.55,1.769911,1.933288,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_24_planned,15,24.00,3.0 A,2.90,3.10,2.026834,2.166616,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_24_planned,15,24.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_26_planned,15,26.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_26_planned,15,26.00,3.4 A,3.25,3.55,1.769911,1.933288,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_26_planned,15,26.00,3.0 A,2.90,3.10,2.026834,2.166616,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_26_planned,15,26.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_28_planned,15,28.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_28_planned,15,28.00,3.4 A,3.25,3.55,1.769911,1.933288,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_28_planned,15,28.00,3.0 A,2.90,3.10,2.026834,2.166616,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_28_planned,15,28.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_32_planned,15,32.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_32_planned,15,32.00,3.4 A,3.25,3.55,1.769911,1.933288,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_32_planned,15,32.00,3.0 A,2.90,3.10,2.026834,2.166616,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_32_planned,15,32.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_34_planned,15,34.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_34_planned,15,34.00,3.4 A,3.25,3.55,1.769911,1.933288,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_34_planned,15,34.00,3.0 A,2.90,3.10,2.026834,2.166616,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_34_planned,15,34.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_36_planned,15,36.00,4.5-5.0 A,4.50,5.00,1.256637,1.396263,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_36_planned,15,36.00,3.4 A,3.25,3.55,1.769911,1.933288,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_36_planned,15,36.00,3.0 A,2.90,3.10,2.026834,2.166616,0,,,,,,,,,,empty scored d-spacing window
+full_length_twist_36_planned,15,36.00,4.1-8.4 A,4.10,8.40,0.747998,1.532484,0,,,,,,,,,,empty scored d-spacing window

@@ -1,0 +1,114 @@
+Backbone:
+  file_path: threoninol_backbone.pdb
+  interconnects:
+  - 22
+  - 20
+  linker:
+  - 1
+  - 27
+  fixed_bonds:
+  - - 2
+    - 6
+HelicalParameters:
+  is_helical: true
+  x_displacement:
+  - 0
+  - 0
+  - 1
+  y_displacement:
+  - 0
+  - 0
+  - 1
+  h_rise:
+  - 3.4
+  - 3.4
+  - 1
+  inclination:
+  - 0
+  - 0
+  - 1
+  tip:
+  - 0 
+  - 0
+  - 1
+  h_twist:
+  - 0
+  - 60
+  - 11
+  shift:
+  - 0
+  - 0
+  - 1
+  slide:
+  - 0
+  - 0
+  - 1
+  rise:
+  - 3.4
+  - 3.4
+  - 1
+  tilt:
+  - 0
+  - 0
+  - 1
+  roll:
+  - 0
+  - 0
+  - 1
+  twist:
+  - 0
+  - 60
+  - 11
+  shear:
+  - 0
+  - 0
+  - 1
+  stretch:
+  - 0
+  - 0
+  - 1
+  stagger:
+  - 0
+  - 0
+  - 1
+  buckle:
+  - 0
+  - 0
+  - 1
+  propeller:
+  - 0
+  - 0
+  - 1
+  opening:
+  - 0
+  - 0
+  - 1
+RuntimeParameters:
+  search_algorithm: random search
+  seed: 0
+  energy_filter:
+  - 1
+  - 2
+  - 7
+  - 80
+  - 1000.0
+  is_hexad: true
+  build_strand:
+  - true
+  - true
+  - true
+  - true
+  - true
+  - true
+  strand_orientation:
+  - true
+  - true
+  - true
+  - true
+  - true
+  - true
+  max_distance: 0.2
+  num_steps: 10000000
+  num_candidates: 1
+  strand: EEEEEEEEEE
+  ff_type: MMFF94

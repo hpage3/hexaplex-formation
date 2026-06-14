@@ -1,0 +1,6 @@
+category,metric,unit6_value,unit7_value,difference_7_minus_6,fractional_difference_7_minus_6,classification,reasoning_category,notes
+absolute_network_growth,classification_count,0,8,8,,favors_7,absolute_network_growth,"8 metrics favor 7, 0 favor 6, 0 are mixed/negligible."
+geometric_register,classification_count,5,3,-2,,favors_6,geometric_register,"3 metrics favor 7, 5 favor 6, 1 are mixed/negligible."
+normalized_fraction,classification_count,5,9,4,,favors_7,normalized_fraction,"9 metrics favor 7, 5 favor 6, 4 are mixed/negligible."
+perturbation_retention,classification_count,2,0,-2,,favors_6,perturbation_retention,"0 metrics favor 7, 2 favor 6, 0 are mixed/negligible."
+possible_edge_effect,classification_count,1,4,3,,favors_7,possible_edge_effect,"4 metrics favor 7, 1 favor 6, 1 are mixed/negligible."

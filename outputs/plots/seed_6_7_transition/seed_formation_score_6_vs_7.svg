@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="420" viewBox="0 0 860 420">
+<rect width="100%" height="100%" fill="white"/>
+<text x="430" y="32" text-anchor="middle" font-family="Arial" font-size="18">seed formedness score</text>
+<line x1="80" y1="60" x2="80" y2="340" stroke="#333"/>
+<line x1="80" y1="340" x2="830" y2="340" stroke="#333"/>
+<rect x="105" y="264.28" width="90" height="75.72" fill="#4c78a8"/>
+<text x="150" y="256.28" text-anchor="middle" font-family="Arial" font-size="11">0.459</text>
+<text x="150" y="356" text-anchor="end" font-family="Arial" font-size="10" transform="rotate(-35 150,356)">6 loose_initial</text>
+<rect x="230" y="265.50" width="90" height="74.50" fill="#f58518"/>
+<text x="275" y="257.50" text-anchor="middle" font-family="Arial" font-size="11">0.456</text>
+<text x="275" y="356" text-anchor="end" font-family="Arial" font-size="10" transform="rotate(-35 275,356)">7 loose_initial</text>
+<rect x="355" y="305.00" width="90" height="35.00" fill="#4c78a8"/>
+<text x="400" y="297.00" text-anchor="middle" font-family="Arial" font-size="11">0.362</text>
+<text x="400" y="356" text-anchor="end" font-family="Arial" font-size="10" transform="rotate(-35 400,356)">6 angular_randomized_loose_initial</text>
+<rect x="480" y="304.92" width="90" height="35.08" fill="#f58518"/>
+<text x="525" y="296.92" text-anchor="middle" font-family="Arial" font-size="11">0.362</text>
+<text x="525" y="356" text-anchor="end" font-family="Arial" font-size="10" transform="rotate(-35 525,356)">7 angular_randomized_loose_initial</text>
+<rect x="605" y="75.00" width="90" height="265.00" fill="#4c78a8"/>
+<text x="650" y="67.00" text-anchor="middle" font-family="Arial" font-size="11">0.910</text>
+<text x="650" y="356" text-anchor="end" font-family="Arial" font-size="10" transform="rotate(-35 650,356)">6 formed_perturbed</text>
+<rect x="730" y="76.96" width="90" height="263.04" fill="#f58518"/>
+<text x="775" y="68.96" text-anchor="middle" font-family="Arial" font-size="11">0.905</text>
+<text x="775" y="356" text-anchor="end" font-family="Arial" font-size="10" transform="rotate(-35 775,356)">7 formed_perturbed</text>
+<text x="16" y="205" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 16,205)">seed_formation_score</text>
+</svg>

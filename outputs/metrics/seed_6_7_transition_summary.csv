@@ -1,0 +1,37 @@
+unit_count,ensemble_type,feature,feature_label,sample_count,mean,std,orientation
+6,angular_randomized_loose_initial,CYP_MEP_contact_fraction_vs_target,CYP/MEP contact formation,100,0.005938,0.013226,higher
+6,angular_randomized_loose_initial,RMSD_to_formed_seed_A,RMSD formedness,100,19.035960,3.910546,lower
+6,angular_randomized_loose_initial,axial_register_score,axial register,100,0.428850,0.081225,higher
+6,angular_randomized_loose_initial,compactness_score,compactness,100,0.597233,0.039797,higher
+6,angular_randomized_loose_initial,contact_fraction_vs_target,total contact formation,100,0.005931,0.013662,higher
+6,angular_randomized_loose_initial,seed_formation_score,seed formedness score,100,0.361553,0.032915,higher
+6,formed_perturbed,CYP_MEP_contact_fraction_vs_target,CYP/MEP contact formation,100,0.807726,0.050399,higher
+6,formed_perturbed,RMSD_to_formed_seed_A,RMSD formedness,100,0.618511,0.099845,lower
+6,formed_perturbed,axial_register_score,axial register,100,0.894824,0.032619,higher
+6,formed_perturbed,compactness_score,compactness,100,0.997380,0.003497,higher
+6,formed_perturbed,contact_fraction_vs_target,total contact formation,100,0.805178,0.050961,higher
+6,formed_perturbed,seed_formation_score,seed formedness score,100,0.909636,0.017860,higher
+6,loose_initial,CYP_MEP_contact_fraction_vs_target,CYP/MEP contact formation,100,0.039171,0.030000,higher
+6,loose_initial,RMSD_to_formed_seed_A,RMSD formedness,100,14.793849,1.150818,lower
+6,loose_initial,axial_register_score,axial register,100,0.437444,0.074775,higher
+6,loose_initial,compactness_score,compactness,100,0.575031,0.026285,higher
+6,loose_initial,contact_fraction_vs_target,total contact formation,100,0.040523,0.030257,higher
+6,loose_initial,seed_formation_score,seed formedness score,100,0.458598,0.018899,higher
+7,angular_randomized_loose_initial,CYP_MEP_contact_fraction_vs_target,CYP/MEP contact formation,100,0.007552,0.018058,higher
+7,angular_randomized_loose_initial,RMSD_to_formed_seed_A,RMSD formedness,100,19.521899,4.032127,lower
+7,angular_randomized_loose_initial,axial_register_score,axial register,100,0.440355,0.088080,higher
+7,angular_randomized_loose_initial,compactness_score,compactness,100,0.620286,0.031996,higher
+7,angular_randomized_loose_initial,contact_fraction_vs_target,total contact formation,100,0.007473,0.017116,higher
+7,angular_randomized_loose_initial,seed_formation_score,seed formedness score,100,0.361750,0.039264,higher
+7,formed_perturbed,CYP_MEP_contact_fraction_vs_target,CYP/MEP contact formation,100,0.809685,0.046037,higher
+7,formed_perturbed,RMSD_to_formed_seed_A,RMSD formedness,100,0.638805,0.094716,lower
+7,formed_perturbed,axial_register_score,axial register,100,0.885768,0.032794,higher
+7,formed_perturbed,compactness_score,compactness,100,0.996952,0.003636,higher
+7,formed_perturbed,contact_fraction_vs_target,total contact formation,100,0.805585,0.048641,higher
+7,formed_perturbed,seed_formation_score,seed formedness score,100,0.904958,0.018451,higher
+7,loose_initial,CYP_MEP_contact_fraction_vs_target,CYP/MEP contact formation,100,0.013643,0.015644,higher
+7,loose_initial,RMSD_to_formed_seed_A,RMSD formedness,100,15.105454,1.194950,lower
+7,loose_initial,axial_register_score,axial register,100,0.427521,0.083008,higher
+7,loose_initial,compactness_score,compactness,100,0.600787,0.028311,higher
+7,loose_initial,contact_fraction_vs_target,total contact formation,100,0.013621,0.015007,higher
+7,loose_initial,seed_formation_score,seed formedness score,100,0.455685,0.019943,higher

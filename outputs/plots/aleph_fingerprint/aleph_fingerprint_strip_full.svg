@@ -1,0 +1,294 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="775" height="373" viewBox="0 0 775 373">
+<rect width="100%" height="100%" fill="white"/>
+<text x="388" y="26" text-anchor="middle" font-family="Arial" font-size="17">full Aleph fingerprint strip</text>
+<text x="445" y="355" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>
+<text x="179" y="46" text-anchor="middle" font-family="Arial" font-size="10">1</text>
+<text x="217" y="46" text-anchor="middle" font-family="Arial" font-size="10">2</text>
+<text x="255" y="46" text-anchor="middle" font-family="Arial" font-size="10">3</text>
+<text x="293" y="46" text-anchor="middle" font-family="Arial" font-size="10">4</text>
+<text x="331" y="46" text-anchor="middle" font-family="Arial" font-size="10">5</text>
+<text x="369" y="46" text-anchor="middle" font-family="Arial" font-size="10">6</text>
+<text x="407" y="46" text-anchor="middle" font-family="Arial" font-size="10">7</text>
+<text x="445" y="46" text-anchor="middle" font-family="Arial" font-size="10">8</text>
+<text x="483" y="46" text-anchor="middle" font-family="Arial" font-size="10">9</text>
+<text x="521" y="46" text-anchor="middle" font-family="Arial" font-size="10">10</text>
+<text x="559" y="46" text-anchor="middle" font-family="Arial" font-size="10">11</text>
+<text x="597" y="46" text-anchor="middle" font-family="Arial" font-size="10">12</text>
+<text x="635" y="46" text-anchor="middle" font-family="Arial" font-size="10">13</text>
+<text x="673" y="46" text-anchor="middle" font-family="Arial" font-size="10">14</text>
+<text x="711" y="46" text-anchor="middle" font-family="Arial" font-size="10">15</text>
+<text x="152" y="71" text-anchor="end" font-family="Arial" font-size="11">abs twist</text>
+<rect x="160" y="54" width="36" height="24" fill="#688cb4" stroke="#ffffff"/>
+<title>full unit 1 abs twist: 4.973666</title>
+<rect x="198" y="54" width="36" height="24" fill="#567fac" stroke="#ffffff"/>
+<title>full unit 2 abs twist: 1.890827</title>
+<rect x="236" y="54" width="36" height="24" fill="#5e85b0" stroke="#ffffff"/>
+<title>full unit 3 abs twist: 3.308073</title>
+<rect x="274" y="54" width="36" height="24" fill="#92acc8" stroke="#ffffff"/>
+<title>full unit 4 abs twist: 12.532873</title>
+<rect x="312" y="54" width="36" height="24" fill="#e9ecef" stroke="#ffffff"/>
+<title>full unit 5 abs twist: 27.883961</title>
+<rect x="350" y="54" width="36" height="24" fill="#f5dcc3" stroke="#ffffff"/>
+<title>full unit 6 abs twist: 36.667335</title>
+<rect x="388" y="54" width="36" height="24" fill="#f0f1f2" stroke="#ffffff"/>
+<title>full unit 7 abs twist: 29.137090</title>
+<rect x="426" y="54" width="36" height="24" fill="#e2e7ec" stroke="#ffffff"/>
+<title>full unit 8 abs twist: 26.746728</title>
+<rect x="464" y="54" width="36" height="24" fill="#f5eee8" stroke="#ffffff"/>
+<title>full unit 9 abs twist: 31.708274</title>
+<rect x="502" y="54" width="36" height="24" fill="#e8ecef" stroke="#ffffff"/>
+<title>full unit 10 abs twist: 27.857233</title>
+<rect x="540" y="54" width="36" height="24" fill="#a0b6ce" stroke="#ffffff"/>
+<title>full unit 11 abs twist: 15.034763</title>
+<rect x="578" y="54" width="36" height="24" fill="#6a8eb5" stroke="#ffffff"/>
+<title>full unit 12 abs twist: 5.351470</title>
+<rect x="616" y="54" width="36" height="24" fill="#4e79a9" stroke="#ffffff"/>
+<title>full unit 13 abs twist: 0.439659</title>
+<rect x="654" y="54" width="36" height="24" fill="#6288b2" stroke="#ffffff"/>
+<title>full unit 14 abs twist: 3.984124</title>
+<rect x="692" y="54" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="100" text-anchor="end" font-family="Arial" font-size="11">signed twist</text>
+<rect x="160" y="83" width="36" height="24" fill="#f5ebe2" stroke="#ffffff"/>
+<title>full unit 1 signed twist: 4.973666</title>
+<rect x="198" y="83" width="36" height="24" fill="#f5f1ee" stroke="#ffffff"/>
+<title>full unit 2 signed twist: 1.890827</title>
+<rect x="236" y="83" width="36" height="24" fill="#ebeef0" stroke="#ffffff"/>
+<title>full unit 3 signed twist: -3.308073</title>
+<rect x="274" y="83" width="36" height="24" fill="#d1dae4" stroke="#ffffff"/>
+<title>full unit 4 signed twist: -12.532873</title>
+<rect x="312" y="83" width="36" height="24" fill="#a6bad1" stroke="#ffffff"/>
+<title>full unit 5 signed twist: -27.883961</title>
+<rect x="350" y="83" width="36" height="24" fill="#8da8c5" stroke="#ffffff"/>
+<title>full unit 6 signed twist: -36.667335</title>
+<rect x="388" y="83" width="36" height="24" fill="#a2b8cf" stroke="#ffffff"/>
+<title>full unit 7 signed twist: -29.137090</title>
+<rect x="426" y="83" width="36" height="24" fill="#a9bdd2" stroke="#ffffff"/>
+<title>full unit 8 signed twist: -26.746728</title>
+<rect x="464" y="83" width="36" height="24" fill="#9bb2cc" stroke="#ffffff"/>
+<title>full unit 9 signed twist: -31.708274</title>
+<rect x="502" y="83" width="36" height="24" fill="#a6bad1" stroke="#ffffff"/>
+<title>full unit 10 signed twist: -27.857233</title>
+<rect x="540" y="83" width="36" height="24" fill="#cad5e1" stroke="#ffffff"/>
+<title>full unit 11 signed twist: -15.034763</title>
+<rect x="578" y="83" width="36" height="24" fill="#e5e9ee" stroke="#ffffff"/>
+<title>full unit 12 signed twist: -5.351470</title>
+<rect x="616" y="83" width="36" height="24" fill="#f5f4f3" stroke="#ffffff"/>
+<title>full unit 13 signed twist: 0.439659</title>
+<rect x="654" y="83" width="36" height="24" fill="#f5ede6" stroke="#ffffff"/>
+<title>full unit 14 signed twist: 3.984124</title>
+<rect x="692" y="83" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="129" text-anchor="end" font-family="Arial" font-size="11">rise</text>
+<rect x="160" y="112" width="36" height="24" fill="#83a1c1" stroke="#ffffff"/>
+<title>full unit 1 rise: -2.353950</title>
+<rect x="198" y="112" width="36" height="24" fill="#7f9ebf" stroke="#ffffff"/>
+<title>full unit 2 rise: -2.475575</title>
+<rect x="236" y="112" width="36" height="24" fill="#97afca" stroke="#ffffff"/>
+<title>full unit 3 rise: -1.773348</title>
+<rect x="274" y="112" width="36" height="24" fill="#c4d1de" stroke="#ffffff"/>
+<title>full unit 4 rise: -0.435816</title>
+<rect x="312" y="112" width="36" height="24" fill="#f5f1ed" stroke="#ffffff"/>
+<title>full unit 5 rise: 1.178263</title>
+<rect x="350" y="112" width="36" height="24" fill="#f5d0ac" stroke="#ffffff"/>
+<title>full unit 6 rise: 2.637017</title>
+<rect x="388" y="112" width="36" height="24" fill="#f5bb84" stroke="#ffffff"/>
+<title>full unit 7 rise: 3.549654</title>
+<rect x="426" y="112" width="36" height="24" fill="#f5b97e" stroke="#ffffff"/>
+<title>full unit 8 rise: 3.670870</title>
+<rect x="464" y="112" width="36" height="24" fill="#f5c89e" stroke="#ffffff"/>
+<title>full unit 9 rise: 2.967612</title>
+<rect x="502" y="112" width="36" height="24" fill="#f5e6d9" stroke="#ffffff"/>
+<title>full unit 10 rise: 1.631034</title>
+<rect x="540" y="112" width="36" height="24" fill="#d3dce5" stroke="#ffffff"/>
+<title>full unit 11 rise: 0.016755</title>
+<rect x="578" y="112" width="36" height="24" fill="#a2b7cf" stroke="#ffffff"/>
+<title>full unit 12 rise: -1.441838</title>
+<rect x="616" y="112" width="36" height="24" fill="#83a1c1" stroke="#ffffff"/>
+<title>full unit 13 rise: -2.354558</title>
+<rect x="654" y="112" width="36" height="24" fill="#7f9ebf" stroke="#ffffff"/>
+<title>full unit 14 rise: -2.475316</title>
+<rect x="692" y="112" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="158" text-anchor="end" font-family="Arial" font-size="11">radial spread</text>
+<rect x="160" y="141" width="36" height="24" fill="#97afca" stroke="#ffffff"/>
+<title>full unit 1 radial spread: 0.893461</title>
+<rect x="198" y="141" width="36" height="24" fill="#a0b6ce" stroke="#ffffff"/>
+<title>full unit 2 radial spread: 1.001215</title>
+<rect x="236" y="141" width="36" height="24" fill="#99b1cb" stroke="#ffffff"/>
+<title>full unit 3 radial spread: 0.920876</title>
+<rect x="274" y="141" width="36" height="24" fill="#90aac7" stroke="#ffffff"/>
+<title>full unit 4 radial spread: 0.811964</title>
+<rect x="312" y="141" width="36" height="24" fill="#a6bad1" stroke="#ffffff"/>
+<title>full unit 5 radial spread: 1.069384</title>
+<rect x="350" y="141" width="36" height="24" fill="#bfcddc" stroke="#ffffff"/>
+<title>full unit 6 radial spread: 1.362550</title>
+<rect x="388" y="141" width="36" height="24" fill="#d6dee7" stroke="#ffffff"/>
+<title>full unit 7 radial spread: 1.640081</title>
+<rect x="426" y="141" width="36" height="24" fill="#d1dbe4" stroke="#ffffff"/>
+<title>full unit 8 radial spread: 1.584179</title>
+<rect x="464" y="141" width="36" height="24" fill="#d6dee7" stroke="#ffffff"/>
+<title>full unit 9 radial spread: 1.640239</title>
+<rect x="502" y="141" width="36" height="24" fill="#9cb3cc" stroke="#ffffff"/>
+<title>full unit 10 radial spread: 0.954126</title>
+<rect x="540" y="141" width="36" height="24" fill="#a6bad1" stroke="#ffffff"/>
+<title>full unit 11 radial spread: 1.069334</title>
+<rect x="578" y="141" width="36" height="24" fill="#a8bcd2" stroke="#ffffff"/>
+<title>full unit 12 radial spread: 1.099514</title>
+<rect x="616" y="141" width="36" height="24" fill="#99b1cb" stroke="#ffffff"/>
+<title>full unit 13 radial spread: 0.920943</title>
+<rect x="654" y="141" width="36" height="24" fill="#8ea9c6" stroke="#ffffff"/>
+<title>full unit 14 radial spread: 0.789829</title>
+<rect x="692" y="141" width="36" height="24" fill="#97afca" stroke="#ffffff"/>
+<title>full unit 15 radial spread: 0.893566</title>
+<text x="152" y="187" text-anchor="end" font-family="Arial" font-size="11">phase</text>
+<rect x="160" y="170" width="36" height="24" fill="#abbed3" stroke="#ffffff"/>
+<title>full unit 1 phase: 101.798955</title>
+<rect x="198" y="170" width="36" height="24" fill="#b0c2d5" stroke="#ffffff"/>
+<title>full unit 2 phase: 106.772621</title>
+<rect x="236" y="170" width="36" height="24" fill="#b2c3d6" stroke="#ffffff"/>
+<title>full unit 3 phase: 108.663449</title>
+<rect x="274" y="170" width="36" height="24" fill="#aec1d5" stroke="#ffffff"/>
+<title>full unit 4 phase: 105.355376</title>
+<rect x="312" y="170" width="36" height="24" fill="#a3b8cf" stroke="#ffffff"/>
+<title>full unit 5 phase: 92.822503</title>
+<rect x="350" y="170" width="36" height="24" fill="#88a5c3" stroke="#ffffff"/>
+<title>full unit 6 phase: 64.938542</title>
+<rect x="388" y="170" width="36" height="24" fill="#668bb4" stroke="#ffffff"/>
+<title>full unit 7 phase: 28.271208</title>
+<rect x="426" y="170" width="36" height="24" fill="#f58519" stroke="#ffffff"/>
+<title>full unit 8 phase: -0.865882</title>
+<rect x="464" y="170" width="36" height="24" fill="#f59639" stroke="#ffffff"/>
+<title>full unit 9 phase: -27.612610</title>
+<rect x="502" y="170" width="36" height="24" fill="#f5a960" stroke="#ffffff"/>
+<title>full unit 10 phase: -59.320884</title>
+<rect x="540" y="170" width="36" height="24" fill="#f5bb83" stroke="#ffffff"/>
+<title>full unit 11 phase: -87.178117</title>
+<rect x="578" y="170" width="36" height="24" fill="#f5c495" stroke="#ffffff"/>
+<title>full unit 12 phase: -102.212881</title>
+<rect x="616" y="170" width="36" height="24" fill="#f5c79c" stroke="#ffffff"/>
+<title>full unit 13 phase: -107.564351</title>
+<rect x="654" y="170" width="36" height="24" fill="#f5c79b" stroke="#ffffff"/>
+<title>full unit 14 phase: -107.124692</title>
+<rect x="692" y="170" width="36" height="24" fill="#f5c596" stroke="#ffffff"/>
+<title>full unit 15 phase: -103.140567</title>
+<text x="152" y="216" text-anchor="end" font-family="Arial" font-size="11">base bend</text>
+<rect x="160" y="199" width="36" height="24" fill="#f5cea9" stroke="#ffffff"/>
+<title>full unit 1 base bend: 60.303546</title>
+<rect x="198" y="199" width="36" height="24" fill="#f5cea9" stroke="#ffffff"/>
+<title>full unit 2 base bend: 60.328493</title>
+<rect x="236" y="199" width="36" height="24" fill="#f5cda6" stroke="#ffffff"/>
+<title>full unit 3 base bend: 60.997053</title>
+<rect x="274" y="199" width="36" height="24" fill="#f5cea8" stroke="#ffffff"/>
+<title>full unit 4 base bend: 60.562146</title>
+<rect x="312" y="199" width="36" height="24" fill="#9eb5cd" stroke="#ffffff"/>
+<title>full unit 5 base bend: 21.960743</title>
+<rect x="350" y="199" width="36" height="24" fill="#f5ae6a" stroke="#ffffff"/>
+<title>full unit 6 base bend: 73.290608</title>
+<rect x="388" y="199" width="36" height="24" fill="#f5eee7" stroke="#ffffff"/>
+<title>full unit 7 base bend: 47.748361</title>
+<rect x="426" y="199" width="36" height="24" fill="#f5eee7" stroke="#ffffff"/>
+<title>full unit 8 base bend: 47.745443</title>
+<rect x="464" y="199" width="36" height="24" fill="#f5b271" stroke="#ffffff"/>
+<title>full unit 9 base bend: 71.732527</title>
+<rect x="502" y="199" width="36" height="24" fill="#a7bbd1" stroke="#ffffff"/>
+<title>full unit 10 base bend: 24.246012</title>
+<rect x="540" y="199" width="36" height="24" fill="#f5cca5" stroke="#ffffff"/>
+<title>full unit 11 base bend: 61.107024</title>
+<rect x="578" y="199" width="36" height="24" fill="#f5cea9" stroke="#ffffff"/>
+<title>full unit 12 base bend: 60.460354</title>
+<rect x="616" y="199" width="36" height="24" fill="#f5cea9" stroke="#ffffff"/>
+<title>full unit 13 base bend: 60.336837</title>
+<rect x="654" y="199" width="36" height="24" fill="#f5cfaa" stroke="#ffffff"/>
+<title>full unit 14 base bend: 60.145240</title>
+<rect x="692" y="199" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="245" text-anchor="end" font-family="Arial" font-size="11">scaffold bend</text>
+<rect x="160" y="228" width="36" height="24" fill="#f5c79b" stroke="#ffffff"/>
+<title>full unit 1 scaffold bend: 63.297982</title>
+<rect x="198" y="228" width="36" height="24" fill="#f5cfab" stroke="#ffffff"/>
+<title>full unit 2 scaffold bend: 60.000003</title>
+<rect x="236" y="228" width="36" height="24" fill="#f5973b" stroke="#ffffff"/>
+<title>full unit 3 scaffold bend: 82.711836</title>
+<rect x="274" y="228" width="36" height="24" fill="#f58920" stroke="#ffffff"/>
+<title>full unit 4 scaffold bend: 88.215689</title>
+<rect x="312" y="228" width="36" height="24" fill="#f5e6d8" stroke="#ffffff"/>
+<title>full unit 5 scaffold bend: 50.751935</title>
+<rect x="350" y="228" width="36" height="24" fill="#8ba6c4" stroke="#ffffff"/>
+<title>full unit 6 scaffold bend: 16.879458</title>
+<rect x="388" y="228" width="36" height="24" fill="#7395ba" stroke="#ffffff"/>
+<title>full unit 7 scaffold bend: 10.587377</title>
+<rect x="426" y="228" width="36" height="24" fill="#b7c7d9" stroke="#ffffff"/>
+<title>full unit 8 scaffold bend: 28.729456</title>
+<rect x="464" y="228" width="36" height="24" fill="#a3b8cf" stroke="#ffffff"/>
+<title>full unit 9 scaffold bend: 23.226429</title>
+<rect x="502" y="228" width="36" height="24" fill="#ccd7e2" stroke="#ffffff"/>
+<title>full unit 10 scaffold bend: 34.212385</title>
+<rect x="540" y="228" width="36" height="24" fill="#90aac7" stroke="#ffffff"/>
+<title>full unit 11 scaffold bend: 18.266669</title>
+<rect x="578" y="228" width="36" height="24" fill="#f5d1ae" stroke="#ffffff"/>
+<title>full unit 12 scaffold bend: 59.401144</title>
+<rect x="616" y="228" width="36" height="24" fill="#f5c79c" stroke="#ffffff"/>
+<title>full unit 13 scaffold bend: 63.085887</title>
+<rect x="654" y="228" width="36" height="24" fill="#f5d0ac" stroke="#ffffff"/>
+<title>full unit 14 scaffold bend: 59.720872</title>
+<rect x="692" y="228" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="274" text-anchor="end" font-family="Arial" font-size="11">chain coherence</text>
+<rect x="160" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 1 chain coherence: 0.001079</title>
+<rect x="198" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 2 chain coherence: 0.000082</title>
+<rect x="236" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 3 chain coherence: 0.002450</title>
+<rect x="274" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 4 chain coherence: 0.000659</title>
+<rect x="312" y="257" width="36" height="24" fill="#4f7aa9" stroke="#ffffff"/>
+<title>full unit 5 chain coherence: 0.010036</title>
+<rect x="350" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 6 chain coherence: 0.001490</title>
+<rect x="388" y="257" width="36" height="24" fill="#6489b3" stroke="#ffffff"/>
+<title>full unit 7 chain coherence: 0.071692</title>
+<rect x="426" y="257" width="36" height="24" fill="#507ba9" stroke="#ffffff"/>
+<title>full unit 8 chain coherence: 0.012961</title>
+<rect x="464" y="257" width="36" height="24" fill="#6489b3" stroke="#ffffff"/>
+<title>full unit 9 chain coherence: 0.071713</title>
+<rect x="502" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 10 chain coherence: 0.002617</title>
+<rect x="540" y="257" width="36" height="24" fill="#4f7aa9" stroke="#ffffff"/>
+<title>full unit 11 chain coherence: 0.010033</title>
+<rect x="578" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 12 chain coherence: 0.000242</title>
+<rect x="616" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 13 chain coherence: 0.002455</title>
+<rect x="654" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 14 chain coherence: 0.000264</title>
+<rect x="692" y="257" width="36" height="24" fill="#4c78a8" stroke="#ffffff"/>
+<title>full unit 15 chain coherence: 0.001078</title>
+<text x="152" y="303" text-anchor="end" font-family="Arial" font-size="11">QC flag</text>
+<rect x="160" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="179" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="198" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="217" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="236" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="255" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="274" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="293" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="312" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="331" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="350" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="369" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="388" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="407" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="426" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="445" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="464" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="483" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="502" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="521" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="540" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="559" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="578" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="597" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="616" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="635" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="654" y="286" width="36" height="24" fill="#d62728" stroke="#ffffff"/>
+<text x="673" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="white">!</text>
+<rect x="692" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="711" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+</svg>

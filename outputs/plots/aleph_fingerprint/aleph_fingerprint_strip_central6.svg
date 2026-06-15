@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="433" height="373" viewBox="0 0 433 373">
+<rect width="100%" height="100%" fill="white"/>
+<text x="216" y="26" text-anchor="middle" font-family="Arial" font-size="17">central6 Aleph fingerprint strip</text>
+<text x="274" y="355" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>
+<text x="179" y="46" text-anchor="middle" font-family="Arial" font-size="10">1</text>
+<text x="217" y="46" text-anchor="middle" font-family="Arial" font-size="10">2</text>
+<text x="255" y="46" text-anchor="middle" font-family="Arial" font-size="10">3</text>
+<text x="293" y="46" text-anchor="middle" font-family="Arial" font-size="10">4</text>
+<text x="331" y="46" text-anchor="middle" font-family="Arial" font-size="10">5</text>
+<text x="369" y="46" text-anchor="middle" font-family="Arial" font-size="10">6</text>
+<text x="152" y="71" text-anchor="end" font-family="Arial" font-size="11">abs twist</text>
+<rect x="160" y="54" width="36" height="24" fill="#f5a252" stroke="#ffffff"/>
+<title>central6 unit 1 abs twist: 51.991137</title>
+<rect x="198" y="54" width="36" height="24" fill="#92acc8" stroke="#ffffff"/>
+<title>central6 unit 2 abs twist: 12.552053</title>
+<rect x="236" y="54" width="36" height="24" fill="#5981ae" stroke="#ffffff"/>
+<title>central6 unit 3 abs twist: 2.347160</title>
+<rect x="274" y="54" width="36" height="24" fill="#5b83af" stroke="#ffffff"/>
+<title>central6 unit 4 abs twist: 2.817622</title>
+<rect x="312" y="54" width="36" height="24" fill="#cfd9e4" stroke="#ffffff"/>
+<title>central6 unit 5 abs twist: 23.408366</title>
+<rect x="350" y="54" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="100" text-anchor="end" font-family="Arial" font-size="11">signed twist</text>
+<rect x="160" y="83" width="36" height="24" fill="#6288b2" stroke="#ffffff"/>
+<title>central6 unit 1 signed twist: -51.991137</title>
+<rect x="198" y="83" width="36" height="24" fill="#d1dae4" stroke="#ffffff"/>
+<title>central6 unit 2 signed twist: -12.552053</title>
+<rect x="236" y="83" width="36" height="24" fill="#eef0f1" stroke="#ffffff"/>
+<title>central6 unit 3 signed twist: -2.347160</title>
+<rect x="274" y="83" width="36" height="24" fill="#edeff1" stroke="#ffffff"/>
+<title>central6 unit 4 signed twist: -2.817622</title>
+<rect x="312" y="83" width="36" height="24" fill="#b3c4d6" stroke="#ffffff"/>
+<title>central6 unit 5 signed twist: -23.408366</title>
+<rect x="350" y="83" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="129" text-anchor="end" font-family="Arial" font-size="11">rise</text>
+<rect x="160" y="112" width="36" height="24" fill="#f5c18f" stroke="#ffffff"/>
+<title>central6 unit 1 rise: 3.294062</title>
+<rect x="198" y="112" width="36" height="24" fill="#f5ad67" stroke="#ffffff"/>
+<title>central6 unit 2 rise: 4.208245</title>
+<rect x="236" y="112" width="36" height="24" fill="#f5a354" stroke="#ffffff"/>
+<title>central6 unit 3 rise: 4.635702</title>
+<rect x="274" y="112" width="36" height="24" fill="#f5a75c" stroke="#ffffff"/>
+<title>central6 unit 4 rise: 4.460662</title>
+<rect x="312" y="112" width="36" height="24" fill="#f5b77c" stroke="#ffffff"/>
+<title>central6 unit 5 rise: 3.730022</title>
+<rect x="350" y="112" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="158" text-anchor="end" font-family="Arial" font-size="11">radial spread</text>
+<rect x="160" y="141" width="36" height="24" fill="#f5b06e" stroke="#ffffff"/>
+<title>central6 unit 1 radial spread: 3.219213</title>
+<rect x="198" y="141" width="36" height="24" fill="#f5dfca" stroke="#ffffff"/>
+<title>central6 unit 2 radial spread: 2.388998</title>
+<rect x="236" y="141" width="36" height="24" fill="#f1f2f3" stroke="#ffffff"/>
+<title>central6 unit 3 radial spread: 1.962656</title>
+<rect x="274" y="141" width="36" height="24" fill="#85a2c2" stroke="#ffffff"/>
+<title>central6 unit 4 radial spread: 0.683562</title>
+<rect x="312" y="141" width="36" height="24" fill="#f1f2f3" stroke="#ffffff"/>
+<title>central6 unit 5 radial spread: 1.962294</title>
+<rect x="350" y="141" width="36" height="24" fill="#f5b576" stroke="#ffffff"/>
+<title>central6 unit 6 radial spread: 3.140434</title>
+<text x="152" y="187" text-anchor="end" font-family="Arial" font-size="11">phase</text>
+<rect x="160" y="170" width="36" height="24" fill="#90aac7" stroke="#ffffff"/>
+<title>central6 unit 1 phase: 72.805278</title>
+<rect x="198" y="170" width="36" height="24" fill="#5f86b0" stroke="#ffffff"/>
+<title>central6 unit 2 phase: 20.814141</title>
+<rect x="236" y="170" width="36" height="24" fill="#537dab" stroke="#ffffff"/>
+<title>central6 unit 3 phase: 8.262088</title>
+<rect x="274" y="170" width="36" height="24" fill="#517caa" stroke="#ffffff"/>
+<title>central6 unit 4 phase: 5.914928</title>
+<rect x="312" y="170" width="36" height="24" fill="#4e7aa9" stroke="#ffffff"/>
+<title>central6 unit 5 phase: 3.097306</title>
+<rect x="350" y="170" width="36" height="24" fill="#f59130" stroke="#ffffff"/>
+<title>central6 unit 6 phase: -20.311060</title>
+<text x="152" y="216" text-anchor="end" font-family="Arial" font-size="11">base bend</text>
+<rect x="160" y="199" width="36" height="24" fill="#9eb5cd" stroke="#ffffff"/>
+<title>central6 unit 1 base bend: 21.960743</title>
+<rect x="198" y="199" width="36" height="24" fill="#f5ae6a" stroke="#ffffff"/>
+<title>central6 unit 2 base bend: 73.290608</title>
+<rect x="236" y="199" width="36" height="24" fill="#f5eee7" stroke="#ffffff"/>
+<title>central6 unit 3 base bend: 47.748361</title>
+<rect x="274" y="199" width="36" height="24" fill="#f5eee7" stroke="#ffffff"/>
+<title>central6 unit 4 base bend: 47.745443</title>
+<rect x="312" y="199" width="36" height="24" fill="#f5b271" stroke="#ffffff"/>
+<title>central6 unit 5 base bend: 71.732527</title>
+<rect x="350" y="199" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="245" text-anchor="end" font-family="Arial" font-size="11">scaffold bend</text>
+<rect x="160" y="228" width="36" height="24" fill="#f5e6d8" stroke="#ffffff"/>
+<title>central6 unit 1 scaffold bend: 50.751935</title>
+<rect x="198" y="228" width="36" height="24" fill="#8ba6c4" stroke="#ffffff"/>
+<title>central6 unit 2 scaffold bend: 16.879458</title>
+<rect x="236" y="228" width="36" height="24" fill="#7395ba" stroke="#ffffff"/>
+<title>central6 unit 3 scaffold bend: 10.587377</title>
+<rect x="274" y="228" width="36" height="24" fill="#b7c7d9" stroke="#ffffff"/>
+<title>central6 unit 4 scaffold bend: 28.729456</title>
+<rect x="312" y="228" width="36" height="24" fill="#a3b8cf" stroke="#ffffff"/>
+<title>central6 unit 5 scaffold bend: 23.226429</title>
+<rect x="350" y="228" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="152" y="274" text-anchor="end" font-family="Arial" font-size="11">chain coherence</text>
+<rect x="160" y="257" width="36" height="24" fill="#6288b2" stroke="#ffffff"/>
+<title>central6 unit 1 chain coherence: 0.065993</title>
+<rect x="198" y="257" width="36" height="24" fill="#4f7aa9" stroke="#ffffff"/>
+<title>central6 unit 2 chain coherence: 0.010573</title>
+<rect x="236" y="257" width="36" height="24" fill="#7999bc" stroke="#ffffff"/>
+<title>central6 unit 3 chain coherence: 0.135804</title>
+<rect x="274" y="257" width="36" height="24" fill="#4e7aa9" stroke="#ffffff"/>
+<title>central6 unit 4 chain coherence: 0.008183</title>
+<rect x="312" y="257" width="36" height="24" fill="#7999bc" stroke="#ffffff"/>
+<title>central6 unit 5 chain coherence: 0.135781</title>
+<rect x="350" y="257" width="36" height="24" fill="#4f7aa9" stroke="#ffffff"/>
+<title>central6 unit 6 chain coherence: 0.009638</title>
+<text x="152" y="303" text-anchor="end" font-family="Arial" font-size="11">QC flag</text>
+<rect x="160" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="179" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="198" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="217" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="236" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="255" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="274" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="293" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="312" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="331" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+<rect x="350" y="286" width="36" height="24" fill="#e6e6e6" stroke="#ffffff"/>
+<text x="369" y="302" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">-</text>
+</svg>

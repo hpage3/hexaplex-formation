@@ -716,6 +716,70 @@ def collect_signal(rows: list[dict[str, str]], structure_id: str, column: str) -
     return values
 
 
+FINGERPRINT_FEATURES = [
+    ("local_abs_twist_deg", "abs twist", 0.0, 60.0, False),
+    ("local_twist_deg", "signed twist", -60.0, 60.0, False),
+    ("local_rise_A", "rise", -4.0, 6.0, False),
+    ("base_radial_spread_A", "radial spread", 0.0, 4.0, False),
+    ("aleph_phase_deg", "phase", None, None, True),
+    ("aleph_base_plane_bend_deg", "base bend", 0.0, 90.0, False),
+    ("aleph_scaffold_plane_bend_deg", "scaffold bend", 0.0, 90.0, False),
+    ("chain_mean_resultant_length", "chain coherence", 0.0, 1.0, False),
+]
+
+
+def normalize_feature_value(value: object, minimum: float | None, maximum: float | None, cyclic: bool = False) -> float | None:
+    parsed = safe_float(value)
+    if parsed is None:
+        return None
+    if cyclic:
+        parsed = parsed % 360.0
+        minimum = 0.0
+        maximum = 360.0
+    if minimum is None or maximum is None or maximum == minimum:
+        return 0.5
+    return min(1.0, max(0.0, (parsed - minimum) / (maximum - minimum)))
+
+
+def value_color(norm_value: float | None, warning: bool = False) -> str:
+    if warning:
+        return "#d62728"
+    if norm_value is None:
+        return "#e6e6e6"
+    # Blue to white to orange, deliberately simple for SVG portability.
+    if norm_value <= 0.5:
+        t = norm_value / 0.5
+        r = int(76 + (245 - 76) * t)
+        g = int(120 + (245 - 120) * t)
+        b = int(168 + (245 - 168) * t)
+    else:
+        t = (norm_value - 0.5) / 0.5
+        r = int(245 + (245 - 245) * t)
+        g = int(245 + (133 - 245) * t)
+        b = int(245 + (24 - 245) * t)
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def row_has_qc_warning(row: dict[str, str]) -> bool:
+    warning_fields = ["local_twist_warning", "local_rise_warning", "plane_fit_warning", "warnings"]
+    if any(row.get(field, "").strip() for field in warning_fields):
+        return True
+    return safe_float(row.get("missing_chain_count")) not in (None, 0.0)
+
+
+def qc_warning_count(row: dict[str, str]) -> int:
+    count = 0
+    for field in ["local_twist_warning", "local_rise_warning", "plane_fit_warning", "warnings"]:
+        if row.get(field, "").strip():
+            count += 1
+    negative = safe_float(row.get("negative_rise_count")) or 0.0
+    if negative > 0:
+        count += int(negative)
+    if row.get("phase_unwrap_ok") == "false":
+        count += 1
+    return count
+
+
 def svg_line_plot(title: str, rows: list[dict[str, str]], y_column: str, y_label: str, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     width = 900
@@ -805,7 +869,163 @@ def svg_fft_plot(rows: list[dict[str, str]], path: Path) -> None:
     path.write_text("\n".join(parts) + "\n", encoding="utf-8")
 
 
-def write_plots(per_unit_rows: list[dict[str, str]], fft_rows: list[dict[str, str]], plot_dir: Path) -> list[Path]:
+def svg_fingerprint_strip(structure_id: str, rows: list[dict[str, str]], path: Path, title: str | None = None) -> None:
+    selected = sorted([row for row in rows if row["structure_id"] == structure_id], key=lambda row: int(row["unit_index"]))
+    if not selected:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    cell_w = 38
+    cell_h = 24
+    left = 160
+    top = 54
+    row_gap = 5
+    width = left + cell_w * len(selected) + 45
+    height = top + (len(FINGERPRINT_FEATURES) + 1) * (cell_h + row_gap) + 58
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        f'<text x="{width / 2:.0f}" y="26" text-anchor="middle" font-family="Arial" font-size="17">{title or structure_id + " Aleph fingerprint strip"}</text>',
+        f'<text x="{left + (cell_w * len(selected)) / 2:.0f}" y="{height - 18}" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>',
+    ]
+    for index, row in enumerate(selected):
+        x = left + index * cell_w
+        parts.append(f'<text x="{x + cell_w / 2:.0f}" y="46" text-anchor="middle" font-family="Arial" font-size="10">{row["unit_index"]}</text>')
+    for feature_index, (column, label, minimum, maximum, cyclic) in enumerate(FINGERPRINT_FEATURES):
+        y = top + feature_index * (cell_h + row_gap)
+        parts.append(f'<text x="{left - 8}" y="{y + 17}" text-anchor="end" font-family="Arial" font-size="11">{label}</text>')
+        for unit_index, row in enumerate(selected):
+            x = left + unit_index * cell_w
+            color = value_color(normalize_feature_value(row.get(column), minimum, maximum, cyclic))
+            value = row.get(column, "")
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w - 2}" height="{cell_h}" fill="{color}" stroke="#ffffff"/>')
+            if value:
+                parts.append(f'<title>{structure_id} unit {row["unit_index"]} {label}: {value}</title>')
+    y = top + len(FINGERPRINT_FEATURES) * (cell_h + row_gap)
+    parts.append(f'<text x="{left - 8}" y="{y + 17}" text-anchor="end" font-family="Arial" font-size="11">QC flag</text>')
+    for unit_index, row in enumerate(selected):
+        x = left + unit_index * cell_w
+        flagged = row_has_qc_warning(row)
+        parts.append(f'<rect x="{x}" y="{y}" width="{cell_w - 2}" height="{cell_h}" fill="{value_color(None, flagged)}" stroke="#ffffff"/>')
+        parts.append(f'<text x="{x + cell_w / 2:.0f}" y="{y + 16}" text-anchor="middle" font-family="Arial" font-size="12" fill="{"white" if flagged else "#666"}">{"!" if flagged else "-"}</text>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
+def svg_fingerprint_comparison(rows: list[dict[str, str]], path: Path) -> None:
+    structures = [structure for structure in ["full", "central6", "central7"] if any(row["structure_id"] == structure for row in rows)]
+    if not structures:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    max_units = max(int(row["unit_index"]) for row in rows)
+    cell_w = 27
+    cell_h = 14
+    left = 176
+    top = 56
+    row_gap = 3
+    panel_gap = 18
+    feature_count = len(FINGERPRINT_FEATURES) + 1
+    panel_h = feature_count * (cell_h + row_gap) + 18
+    width = left + max_units * cell_w + 50
+    height = top + len(structures) * (panel_h + panel_gap) + 36
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        f'<text x="{width / 2:.0f}" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph fingerprint comparison</text>',
+    ]
+    for s_index, structure_id in enumerate(structures):
+        selected = {int(row["unit_index"]): row for row in rows if row["structure_id"] == structure_id}
+        panel_y = top + s_index * (panel_h + panel_gap)
+        parts.append(f'<text x="18" y="{panel_y + 14}" font-family="Arial" font-size="13" font-weight="bold">{structure_id}</text>')
+        for unit_index in range(1, max_units + 1):
+            x = left + (unit_index - 1) * cell_w
+            if s_index == 0:
+                parts.append(f'<text x="{x + cell_w / 2:.0f}" y="48" text-anchor="middle" font-family="Arial" font-size="9">{unit_index}</text>')
+        for feature_index, (column, label, minimum, maximum, cyclic) in enumerate(FINGERPRINT_FEATURES):
+            y = panel_y + feature_index * (cell_h + row_gap)
+            parts.append(f'<text x="{left - 8}" y="{y + 11}" text-anchor="end" font-family="Arial" font-size="9">{label}</text>')
+            for unit_index in range(1, max_units + 1):
+                row = selected.get(unit_index)
+                color = value_color(normalize_feature_value(row.get(column), minimum, maximum, cyclic) if row else None)
+                x = left + (unit_index - 1) * cell_w
+                parts.append(f'<rect x="{x}" y="{y}" width="{cell_w - 1}" height="{cell_h}" fill="{color}" stroke="#ffffff"/>')
+        y = panel_y + len(FINGERPRINT_FEATURES) * (cell_h + row_gap)
+        parts.append(f'<text x="{left - 8}" y="{y + 11}" text-anchor="end" font-family="Arial" font-size="9">QC flag</text>')
+        for unit_index in range(1, max_units + 1):
+            row = selected.get(unit_index)
+            flagged = bool(row and row_has_qc_warning(row))
+            x = left + (unit_index - 1) * cell_w
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w - 1}" height="{cell_h}" fill="{value_color(None, flagged)}" stroke="#ffffff"/>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
+def svg_qc_summary_plot(summary_rows: list[dict[str, str]], qc_rows: list[dict[str, str]], path: Path) -> None:
+    if not summary_rows:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    qc_by_structure = {row["structure_id"]: row for row in qc_rows}
+    metrics = [
+        ("mean_abs_local_twist_deg", "mean abs twist", "summary"),
+        ("std_abs_local_twist_deg", "twist std", "summary"),
+        ("negative_rise_count", "negative rises", "qc"),
+        ("aleph_regular_score", "regular score", "summary"),
+        ("qc_warning_count", "QC warnings", "derived"),
+    ]
+    width = 920
+    height = 430
+    left = 85
+    top = 52
+    bottom = 338
+    group_w = 150
+    bar_w = 20
+    colors = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#e45756"]
+    structures = [row["structure_id"] for row in summary_rows]
+    values_by_metric: list[list[float]] = []
+    for column, _, source in metrics:
+        values = []
+        for summary in summary_rows:
+            qc = qc_by_structure.get(summary["structure_id"], {})
+            if source == "summary":
+                value = safe_float(summary.get(column)) or 0.0
+            elif source == "qc":
+                value = safe_float(qc.get(column)) or 0.0
+            else:
+                value = float(qc_warning_count(qc))
+            values.append(value)
+        max_value = max(values + [1.0])
+        values_by_metric.append([value / max_value if max_value else 0.0 for value in values])
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        '<text x="460" y="28" text-anchor="middle" font-family="Arial" font-size="17">Aleph QC summary</text>',
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#333"/>',
+        f'<line x1="{left}" y1="{bottom}" x2="{width - 30}" y2="{bottom}" stroke="#333"/>',
+    ]
+    for s_index, structure_id in enumerate(structures):
+        group_x = left + 30 + s_index * group_w
+        parts.append(f'<text x="{group_x + 45}" y="{bottom + 20}" text-anchor="middle" font-family="Arial" font-size="12">{structure_id}</text>')
+        for m_index, (_, label, _) in enumerate(metrics):
+            value = values_by_metric[m_index][s_index]
+            h = value * 245
+            x = group_x + m_index * (bar_w + 5)
+            y = bottom - h
+            parts.append(f'<rect x="{x}" y="{y:.2f}" width="{bar_w}" height="{h:.2f}" fill="{colors[m_index]}"/>')
+    for m_index, (_, label, _) in enumerate(metrics):
+        legend_x = 575
+        legend_y = 62 + m_index * 21
+        parts.append(f'<rect x="{legend_x}" y="{legend_y}" width="12" height="12" fill="{colors[m_index]}"/>')
+        parts.append(f'<text x="{legend_x + 18}" y="{legend_y + 11}" font-family="Arial" font-size="11">{label} normalized across structures</text>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
+def write_plots(
+    per_unit_rows: list[dict[str, str]],
+    summary_rows: list[dict[str, str]],
+    qc_rows: list[dict[str, str]],
+    fft_rows: list[dict[str, str]],
+    plot_dir: Path,
+) -> list[Path]:
     specs = [
         ("aleph_local_twist_vs_unit.svg", "Aleph local twist after phase unwrapping", "local_twist_deg", "local twist (deg)"),
         ("aleph_local_rise_vs_unit.svg", "Aleph local rise after axis orientation", "local_rise_A", "local rise (A)"),
@@ -820,6 +1040,19 @@ def write_plots(per_unit_rows: list[dict[str, str]], fft_rows: list[dict[str, st
         svg_line_plot(title, per_unit_rows, column, label, path)
         if path.exists():
             paths.append(path)
+    for structure_id in ["full", "central6", "central7"]:
+        path = plot_dir / f"aleph_fingerprint_strip_{structure_id}.svg"
+        svg_fingerprint_strip(structure_id, per_unit_rows, path)
+        if path.exists():
+            paths.append(path)
+    comparison_path = plot_dir / "aleph_fingerprint_comparison.svg"
+    svg_fingerprint_comparison(per_unit_rows, comparison_path)
+    if comparison_path.exists():
+        paths.append(comparison_path)
+    qc_path = plot_dir / "aleph_fingerprint_qc_summary.svg"
+    svg_qc_summary_plot(summary_rows, qc_rows, qc_path)
+    if qc_path.exists():
+        paths.append(qc_path)
     fft_path = plot_dir / "aleph_fft_dominant_amplitudes.svg"
     svg_fft_plot(fft_rows, fft_path)
     if fft_path.exists():
@@ -883,6 +1116,29 @@ def report_text(
             f"{row['observed_unit_count']} | {row['units_with_missing_chains']} | {row['negative_rise_count']} | "
             f"{row['local_twist_warning']} | {row['local_rise_warning']} | {row['plane_fit_warning']} |"
         )
+
+    lines.extend(
+        [
+            "",
+            "## Visual Aleph fingerprint",
+            "",
+            "Aleph converts the hexaplex into ordered per-unit geometric traces. The fingerprint strip places unit index on the x-axis and stacks Aleph features as rows, so changes in twist, rise, radial spread, phase, plane bend, chain coherence, and QC flags can be read as a compact structural barcode.",
+            "",
+            "Rows labeled `abs twist` and `signed twist` show the local angular step after phase unwrapping; `rise` shows the axis-oriented local axial step; `radial spread` tracks base-like radial variability; `phase` shows the unwrapped angular progression; `base bend` and `scaffold bend` compare adjacent fitted plane normals; `chain coherence` reports the circular mean resultant length; and the QC row marks per-unit warnings.",
+            "",
+            "Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg Aleph signal because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its mean absolute local twist is lower than nominal, so it is best treated as a shorter local diagnostic. The full model is also diagnostic: the current full-model warnings indicate that layer assignment and antiparallel ordering require further inspection.",
+            "",
+            "The visualization is a structural fingerprint, not a diffraction simulation. It reveals axial ordering, local geometric irregularity, phase progression, and QC behavior that pair-distance counts do not show directly.",
+            "",
+            "Visual outputs:",
+            "",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_strip_full.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_strip_central6.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_strip_central7.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_comparison.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_qc_summary.svg`",
+        ]
+    )
 
     lines.extend(
         [
@@ -970,7 +1226,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
     write_csv(args.summary_csv, summary_rows, SUMMARY_COLUMNS)
     write_csv(args.fft_csv, fft_rows, FFT_COLUMNS)
     write_csv(args.qc_csv, qc_rows, QC_COLUMNS)
-    plot_paths = write_plots(per_unit_rows, fft_rows, args.plot_dir)
+    plot_paths = write_plots(per_unit_rows, summary_rows, qc_rows, fft_rows, args.plot_dir)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(report_text(fingerprints, fft_rows, qc_rows, plot_paths, "; ".join(input_warnings), args), encoding="utf-8")
     return {

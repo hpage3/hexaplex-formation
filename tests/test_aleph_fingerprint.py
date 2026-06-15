@@ -125,6 +125,77 @@ def test_fft_summary_handles_short_signal():
     assert "too short" in row["warnings"]
 
 
+def test_feature_normalization_handles_missing_values():
+    assert aleph.normalize_feature_value("", 0.0, 1.0) is None
+    assert aleph.normalize_feature_value("bad", 0.0, 1.0) is None
+    assert aleph.normalize_feature_value("5", 0.0, 10.0) == pytest.approx(0.5)
+    assert aleph.normalize_feature_value("370", None, None, cyclic=True) == pytest.approx(10.0 / 360.0)
+
+
+def test_qc_warning_row_is_created():
+    row = {"local_twist_warning": "", "local_rise_warning": "negative rise", "plane_fit_warning": "", "warnings": "", "missing_chain_count": "0"}
+
+    assert aleph.row_has_qc_warning(row)
+
+
+def test_fingerprint_strip_plot_writes_svg(tmp_path):
+    rows = [
+        {
+            "structure_id": "central7",
+            "unit_index": "1",
+            "local_abs_twist_deg": "30",
+            "local_twist_deg": "-30",
+            "local_rise_A": "3.4",
+            "base_radial_spread_A": "1.0",
+            "aleph_phase_deg": "45",
+            "aleph_base_plane_bend_deg": "10",
+            "aleph_scaffold_plane_bend_deg": "12",
+            "chain_mean_resultant_length": "0.7",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        }
+    ]
+    path = tmp_path / "strip.svg"
+
+    aleph.svg_fingerprint_strip("central7", rows, path)
+
+    assert path.exists()
+    assert path.read_text(encoding="utf-8").startswith("<svg")
+
+
+def test_fingerprint_comparison_plot_writes_svg(tmp_path):
+    rows = []
+    for structure_id in ["full", "central6", "central7"]:
+        rows.append(
+            {
+                "structure_id": structure_id,
+                "unit_index": "1",
+                "local_abs_twist_deg": "30",
+                "local_twist_deg": "-30",
+                "local_rise_A": "3.4",
+                "base_radial_spread_A": "1.0",
+                "aleph_phase_deg": "45",
+                "aleph_base_plane_bend_deg": "10",
+                "aleph_scaffold_plane_bend_deg": "12",
+                "chain_mean_resultant_length": "0.7",
+                "local_twist_warning": "",
+                "local_rise_warning": "",
+                "plane_fit_warning": "",
+                "warnings": "",
+                "missing_chain_count": "0",
+            }
+        )
+    path = tmp_path / "comparison.svg"
+
+    aleph.svg_fingerprint_comparison(rows, path)
+
+    assert path.exists()
+    assert "Aleph fingerprint comparison" in path.read_text(encoding="utf-8")
+
+
 def test_output_schemas_are_written(tmp_path):
     full = tmp_path / "full.pdb"
     c6 = tmp_path / "c6.pdb"

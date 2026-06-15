@@ -31,7 +31,9 @@ Aleph asks whether each model has an ordered repeating geometric signature along
 
 The Aleph series fingerprint is the primary visual fingerprint in this prototype. It is closer to a true structural fingerprint because it represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.
 
-The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis is Aleph unit-transition index, so transition 1 corresponds to the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. A 30 deg reference line is shown where useful, and markers with QC warnings are highlighted.
+The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis labels show unit transitions along the hexaplex, so `U1->U2` is the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. The dashed 30 deg line is a geometric reference, not an experimental target, and markers with QC warnings are highlighted.
+
+Richer unit labels are stored in the per-unit CSV. `unit_label` gives the concise unit name, `transition_label` gives the plotted transition label where a local transition exists, and `residue_label_summary` records the chain/residue labels contributing to each unit.
 
 Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg-like Aleph series fingerprint because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its signed twist trace and mean absolute twist deviate from the nominal 30 deg value. The full model remains a geometry-definition diagnostic case because its current warnings indicate that layer assignment and antiparallel ordering require further inspection.
 
@@ -66,15 +68,15 @@ Feature comparison panel outputs:
 
 | Structure | Signal | Samples | Dominant index | Normalized amplitude | Warning |
 |---|---|---:|---:|---:|---|
-| full | local_twist_deg | 14 | 1 | 0.681473 | numpy unavailable; used standard-library DFT fallback |
-| full | local_rise_A | 14 | 1 | 0.816357 | numpy unavailable; used standard-library DFT fallback |
-| full | radial_spread_A | 15 | 1 | 0.384917 | numpy unavailable; used standard-library DFT fallback |
-| central6 | local_twist_deg | 5 | 1 | 0.703753 | numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited |
-| central6 | local_rise_A | 5 | 1 | 0.834914 | numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited |
-| central6 | radial_spread_A | 6 | 1 | 0.631820 | numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited |
-| central7 | local_twist_deg | 6 | 1 | 0.655957 | numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited |
-| central7 | local_rise_A | 6 | 1 | 0.806969 | numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited |
-| central7 | radial_spread_A | 7 | 1 | 0.681759 | numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited |
+| full | local_twist_deg | 14 | 1 | 0.681473 |  |
+| full | local_rise_A | 14 | 1 | 0.816357 |  |
+| full | radial_spread_A | 15 | 1 | 0.384917 |  |
+| central6 | local_twist_deg | 5 | 1 | 0.703753 | short signal; spectral interpretation is limited |
+| central6 | local_rise_A | 5 | 1 | 0.834914 | short signal; spectral interpretation is limited |
+| central6 | radial_spread_A | 6 | 1 | 0.631820 | short signal; spectral interpretation is limited |
+| central7 | local_twist_deg | 6 | 1 | 0.655957 | short signal; spectral interpretation is limited |
+| central7 | local_rise_A | 6 | 1 | 0.806969 | short signal; spectral interpretation is limited |
+| central7 | radial_spread_A | 7 | 1 | 0.681759 | short signal; spectral interpretation is limited |
 
 ## Interpretation
 

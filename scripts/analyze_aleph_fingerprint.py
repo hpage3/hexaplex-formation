@@ -45,6 +45,9 @@ PER_UNIT_COLUMNS = [
     "structure_id",
     "source_pdb",
     "unit_index",
+    "unit_label",
+    "transition_label",
+    "residue_label_summary",
     "chain_count",
     "axial_position_A",
     "layer_centroid_x",
@@ -251,6 +254,16 @@ def repeat_units_by_chain(atoms: list[PDBAtom]) -> tuple[dict[str, list[RepeatUn
             units.append(RepeatUnit(chain_id=chain_id, unit_index=unit_index, base_residue=base_residue, scaffold_residue=scaffold))
         units_by_chain[chain_id] = units
     return units_by_chain, warnings
+
+
+def residue_label(residue: ResidueRecord) -> str:
+    number = "" if residue.residue_number is None else str(residue.residue_number)
+    return f"{residue.chain_id}:{residue.residue_name}{number}{residue.insertion_code}".strip()
+
+
+def residue_label_summary(unit_index: int, units: list[RepeatUnit]) -> str:
+    labels = [residue_label(unit.base_residue) for unit in units]
+    return f"U{unit_index}: " + "/".join(labels)
 
 
 def centroid(atoms: list[PDBAtom] | tuple[PDBAtom, ...]) -> tuple[float, float, float] | None:
@@ -465,6 +478,8 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
         raw_layers.append(
             {
                 "unit_index": unit_index,
+                "unit_label": f"U{unit_index}",
+                "residue_label_summary": residue_label_summary(unit_index, chain_units),
                 "chain_count": len(chain_units),
                 "missing_chain_count": max(0, expected_chain_count - len(chain_units)),
                 "layer_centroid": layer_centroid,
@@ -541,6 +556,9 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
                 "structure_id": structure_id,
                 "source_pdb": str(path),
                 "unit_index": str(layer["unit_index"]),
+                "unit_label": layer["unit_label"],
+                "transition_label": f"{layer['unit_label']}->{next_layer['unit_label']}" if next_layer is not None else "",
+                "residue_label_summary": layer["residue_label_summary"],
                 "chain_count": str(layer["chain_count"]),
                 "axial_position_A": format_float(layer["axial_position"]),
                 "layer_centroid_x": format_float(centroid_point[0] if centroid_point else None),
@@ -780,46 +798,84 @@ def qc_warning_count(row: dict[str, str]) -> int:
     return count
 
 
-def series_points(rows: list[dict[str, str]], structure_id: str, column: str) -> list[tuple[float, float, bool]]:
-    points: list[tuple[float, float, bool]] = []
+def series_points(rows: list[dict[str, str]], structure_id: str, column: str) -> list[dict[str, object]]:
+    points: list[dict[str, object]] = []
     for row in sorted([item for item in rows if item["structure_id"] == structure_id], key=lambda item: int(item["unit_index"])):
         value = safe_float(row.get(column))
         transition = safe_float(row.get("unit_index"))
         if value is None or transition is None:
             continue
-        points.append((transition, value, row_has_qc_warning(row)))
+        points.append(
+            {
+                "x": transition,
+                "y": value,
+                "label": row.get("transition_label") or row.get("unit_label") or f"U{int(transition)}",
+                "warning": row_has_qc_warning(row),
+            }
+        )
     return points
+
+
+def nice_ticks(min_value: float, max_value: float, reference: float | None = None, count: int = 5) -> list[float]:
+    if min_value == max_value:
+        min_value -= 1.0
+        max_value += 1.0
+    if reference is not None:
+        min_value = min(min_value, reference)
+        max_value = max(max_value, reference)
+    if min_value <= 0.0 <= max_value:
+        min_value = min(min_value, 0.0)
+        max_value = max(max_value, 0.0)
+    raw_step = (max_value - min_value) / max(1, count - 1)
+    magnitude = 10 ** math.floor(math.log10(raw_step)) if raw_step > 0 else 1.0
+    candidates = [1.0, 2.0, 5.0, 10.0]
+    step = min((candidate * magnitude for candidate in candidates), key=lambda value: abs(value - raw_step))
+    start = math.floor(min_value / step) * step
+    end = math.ceil(max_value / step) * step
+    ticks = []
+    value = start
+    while value <= end + step * 0.5:
+        ticks.append(0.0 if abs(value) < 1e-9 else value)
+        value += step
+    if reference is not None and all(abs(tick - reference) > step * 0.2 for tick in ticks):
+        ticks.append(reference)
+    if min_value <= 0.0 <= max_value and all(abs(tick) > step * 0.2 for tick in ticks):
+        ticks.append(0.0)
+    return sorted(set(round(tick, 6) for tick in ticks))
 
 
 def svg_series_plot(
     title: str,
-    points_by_label: OrderedDict[str, list[tuple[float, float, bool]]],
+    points_by_label: OrderedDict[str, list[dict[str, object]]],
     y_label: str,
     path: Path,
     reference_y: float | None = None,
     stacked: bool = False,
+    subtitle: str = "Aleph series fingerprint: signed local twist by unit transition",
+    reference_by_label: dict[str, float] | None = None,
 ) -> None:
     if not points_by_label or not any(points for points in points_by_label.values()):
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     width = 920
-    panel_h = 230 if stacked else 330
-    top = 48
-    left = 78
+    panel_h = 250 if stacked else 360
+    top = 62
+    left = 94
     right = 34
-    gap = 36
+    gap = 44
     panel_count = len(points_by_label) if stacked else 1
     height = top + panel_count * panel_h + (panel_count - 1) * gap + 58
     colors = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#e45756"]
     all_points = [point for points in points_by_label.values() for point in points]
-    min_x = min(point[0] for point in all_points)
-    max_x = max(point[0] for point in all_points)
+    min_x = min(float(point["x"]) for point in all_points)
+    max_x = max(float(point["x"]) for point in all_points)
     if max_x == min_x:
         max_x += 1.0
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
         '<rect width="100%" height="100%" fill="white"/>',
         f'<text x="{width / 2:.0f}" y="26" text-anchor="middle" font-family="Arial" font-size="17">{title}</text>',
+        f'<text x="{width / 2:.0f}" y="46" text-anchor="middle" font-family="Arial" font-size="11" fill="#555">{subtitle}</text>',
     ]
     plot_w = width - left - right
 
@@ -828,10 +884,11 @@ def svg_series_plot(
 
     panels = list(points_by_label.items()) if stacked else [("combined", all_points)]
     for panel_index, (label, panel_points) in enumerate(panels):
+        panel_reference = reference_by_label.get(label) if reference_by_label else reference_y
         y0 = top + panel_index * (panel_h + gap)
-        panel_values = [point[1] for point in panel_points]
-        min_y = min(panel_values + ([reference_y] if reference_y is not None else []))
-        max_y = max(panel_values + ([reference_y] if reference_y is not None else []))
+        panel_values = [float(point["y"]) for point in panel_points]
+        min_y = min(panel_values + ([panel_reference] if panel_reference is not None else []))
+        max_y = max(panel_values + ([panel_reference] if panel_reference is not None else []))
         pad = max(1.0, (max_y - min_y) * 0.12)
         min_y -= pad
         max_y += pad
@@ -844,10 +901,27 @@ def svg_series_plot(
         axis_bottom = y0 + panel_h - 22
         parts.append(f'<line x1="{left}" y1="{y0 + 12}" x2="{left}" y2="{axis_bottom}" stroke="#333"/>')
         parts.append(f'<line x1="{left}" y1="{axis_bottom}" x2="{width - right}" y2="{axis_bottom}" stroke="#333"/>')
+        ticks = nice_ticks(min_y, max_y, panel_reference)
+        for tick in ticks:
+            if min_y <= tick <= max_y:
+                ty = sy(tick)
+                parts.append(f'<line x1="{left - 4}" y1="{ty:.2f}" x2="{width - right}" y2="{ty:.2f}" stroke="#e2e2e2"/>')
+                parts.append(f'<text x="{left - 8}" y="{ty + 4:.2f}" text-anchor="end" font-family="Arial" font-size="10">{tick:g}</text>')
+        x_labels = OrderedDict()
+        for point in panel_points:
+            x_labels.setdefault(float(point["x"]), str(point.get("label", "")))
+        rotate_labels = len(x_labels) > 8
+        for x_value, x_label in x_labels.items():
+            x_pos = sx(x_value)
+            parts.append(f'<line x1="{x_pos:.2f}" y1="{axis_bottom}" x2="{x_pos:.2f}" y2="{axis_bottom + 4}" stroke="#333"/>')
+            if rotate_labels:
+                parts.append(f'<text x="{x_pos:.2f}" y="{axis_bottom + 12}" text-anchor="end" font-family="Arial" font-size="9" transform="rotate(-45 {x_pos:.2f},{axis_bottom + 12})">{x_label}</text>')
+            else:
+                parts.append(f'<text x="{x_pos:.2f}" y="{axis_bottom + 16}" text-anchor="middle" font-family="Arial" font-size="10">{x_label}</text>')
         if stacked:
             parts.append(f'<text x="18" y="{y0 + 26}" font-family="Arial" font-size="12" font-weight="bold">{label}</text>')
-        if reference_y is not None and min_y <= reference_y <= max_y:
-            ref_y = sy(reference_y)
+        if panel_reference is not None and min_y <= panel_reference <= max_y:
+            ref_y = sy(panel_reference)
             parts.append(f'<line x1="{left}" y1="{ref_y:.2f}" x2="{width - right}" y2="{ref_y:.2f}" stroke="#777" stroke-dasharray="4 4"/>')
             parts.append(f'<text x="{width - right - 4}" y="{ref_y - 4:.2f}" text-anchor="end" font-family="Arial" font-size="10">30 deg reference</text>')
         if stacked:
@@ -855,19 +929,27 @@ def svg_series_plot(
         else:
             drawable = [(series_label, series_points, colors[index % len(colors)]) for index, (series_label, series_points) in enumerate(points_by_label.items())]
         for series_label, series_points_for_label, color in drawable:
-            series_points_for_label = sorted(series_points_for_label)
-            coords = " ".join(f"{sx(x):.2f},{sy(y):.2f}" for x, y, _ in series_points_for_label)
+            series_points_for_label = sorted(series_points_for_label, key=lambda point: float(point["x"]))
+            coords = " ".join(f"{sx(float(point['x'])):.2f},{sy(float(point['y'])):.2f}" for point in series_points_for_label)
             if coords:
                 parts.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2"/>')
-            for x, y, warning in series_points_for_label:
-                parts.append(f'<circle cx="{sx(x):.2f}" cy="{sy(y):.2f}" r="4" fill="{"#d62728" if warning else color}" stroke="white" stroke-width="1"/>')
+            for point in series_points_for_label:
+                x = float(point["x"])
+                y = float(point["y"])
+                warning = bool(point.get("warning"))
+                x_pos = sx(x)
+                y_pos = sy(y)
+                if warning:
+                    parts.append(f'<rect x="{x_pos - 4:.2f}" y="{y_pos - 4:.2f}" width="8" height="8" transform="rotate(45 {x_pos:.2f},{y_pos:.2f})" fill="#d62728" stroke="white" stroke-width="1"/>')
+                else:
+                    parts.append(f'<circle cx="{x_pos:.2f}" cy="{y_pos:.2f}" r="4" fill="{color}" stroke="white" stroke-width="1"/>')
         if not stacked:
             for index, (series_label, _) in enumerate(points_by_label.items()):
                 legend_y = y0 + 18 + index * 18
                 parts.append(f'<rect x="735" y="{legend_y}" width="11" height="11" fill="{colors[index % len(colors)]}"/>')
                 parts.append(f'<text x="752" y="{legend_y + 10}" font-family="Arial" font-size="11">{series_label}</text>')
         parts.append(f'<text x="18" y="{y0 + panel_h / 2:.0f}" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,{y0 + panel_h / 2:.0f})">{y_label}</text>')
-    parts.append(f'<text x="{width / 2:.0f}" y="{height - 16}" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit-transition index</text>')
+    parts.append(f'<text x="{width / 2:.0f}" y="{height - 16}" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit transition</text>')
     parts.append("</svg>")
     path.write_text("\n".join(parts) + "\n", encoding="utf-8")
 
@@ -917,6 +999,8 @@ def svg_companion_traces(structure_id: str, rows: list[dict[str, str]], path: Pa
         path,
         reference_y=None,
         stacked=True,
+        subtitle="Aleph companion traces by unit transition",
+        reference_by_label={"signed twist": 30.0},
     )
 
 
@@ -1278,7 +1362,9 @@ def report_text(
             "",
             "The Aleph series fingerprint is the primary visual fingerprint in this prototype. It is closer to a true structural fingerprint because it represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.",
             "",
-            "The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis is Aleph unit-transition index, so transition 1 corresponds to the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. A 30 deg reference line is shown where useful, and markers with QC warnings are highlighted.",
+            "The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis labels show unit transitions along the hexaplex, so `U1->U2` is the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. The dashed 30 deg line is a geometric reference, not an experimental target, and markers with QC warnings are highlighted.",
+            "",
+            "Richer unit labels are stored in the per-unit CSV. `unit_label` gives the concise unit name, `transition_label` gives the plotted transition label where a local transition exists, and `residue_label_summary` records the chain/residue labels contributing to each unit.",
             "",
             "Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg-like Aleph series fingerprint because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its signed twist trace and mean absolute twist deviate from the nominal 30 deg value. The full model remains a geometry-definition diagnostic case because its current warnings indicate that layer assignment and antiparallel ordering require further inspection.",
             "",

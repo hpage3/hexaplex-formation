@@ -201,6 +201,8 @@ def test_series_points_use_signed_local_twist():
         {
             "structure_id": "central7",
             "unit_index": "1",
+            "unit_label": "U1",
+            "transition_label": "U1->U2",
             "local_twist_deg": "-30",
             "local_abs_twist_deg": "30",
             "local_rise_A": "3.4",
@@ -214,7 +216,7 @@ def test_series_points_use_signed_local_twist():
 
     points = aleph.series_points(rows, "central7", "local_twist_deg")
 
-    assert points == [(1.0, -30.0, False)]
+    assert points == [{"x": 1.0, "y": -30.0, "label": "U1->U2", "warning": False}]
 
 
 def test_series_fingerprint_plot_writes_svg(tmp_path):
@@ -222,6 +224,8 @@ def test_series_fingerprint_plot_writes_svg(tmp_path):
         {
             "structure_id": "central7",
             "unit_index": "1",
+            "unit_label": "U1",
+            "transition_label": "U1->U2",
             "local_twist_deg": "-30",
             "local_abs_twist_deg": "30",
             "local_rise_A": "3.4",
@@ -240,6 +244,7 @@ def test_series_fingerprint_plot_writes_svg(tmp_path):
 
     assert path.exists()
     assert "Aleph series fingerprint" in path.read_text(encoding="utf-8")
+    assert "U1-&gt;U2" in path.read_text(encoding="utf-8") or "U1->U2" in path.read_text(encoding="utf-8")
 
 
 def test_companion_traces_handle_missing_short_data(tmp_path):
@@ -247,6 +252,8 @@ def test_companion_traces_handle_missing_short_data(tmp_path):
         {
             "structure_id": "full",
             "unit_index": "1",
+            "unit_label": "Unit 1 with a long readable label",
+            "transition_label": "Unit 1 with a long readable label->Unit 2 with a long readable label",
             "local_twist_deg": "-12",
             "local_abs_twist_deg": "12",
             "local_rise_A": "",
@@ -265,6 +272,13 @@ def test_companion_traces_handle_missing_short_data(tmp_path):
 
     assert path.exists()
     assert "companion traces" in path.read_text(encoding="utf-8")
+
+
+def test_y_axis_ticks_handle_short_data():
+    ticks = aleph.nice_ticks(-2.0, 4.0, reference=30.0)
+
+    assert 30.0 in ticks
+    assert any(abs(tick) < 1e-9 for tick in ticks)
 
 
 def test_output_schemas_are_written(tmp_path):

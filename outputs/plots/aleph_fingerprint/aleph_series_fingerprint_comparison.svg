@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="868" viewBox="0 0 920 868">
+<rect width="100%" height="100%" fill="white"/>
+<text x="460" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph series fingerprint comparison</text>
+<line x1="78" y1="60" x2="78" y2="256" stroke="#333"/>
+<line x1="78" y1="256" x2="886" y2="256" stroke="#333"/>
+<text x="18" y="74" font-family="Arial" font-size="12" font-weight="bold">full</text>
+<line x1="78" y1="78.97" x2="886" y2="78.97" stroke="#777" stroke-dasharray="4 4"/>
+<text x="882" y="74.97" text-anchor="end" font-family="Arial" font-size="10">30 deg reference</text>
+<polyline points="78.00,138.30 140.15,145.61 202.31,157.94 264.46,179.81 326.62,216.21 388.77,237.03 450.92,219.18 513.08,213.51 575.23,225.27 637.38,216.14 699.54,185.74 761.69,162.78 823.85,149.05 886.00,140.65" fill="none" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="78.00" cy="138.30" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<circle cx="140.15" cy="145.61" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<circle cx="202.31" cy="157.94" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<circle cx="264.46" cy="179.81" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<circle cx="326.62" cy="216.21" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="388.77" cy="237.03" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="450.92" cy="219.18" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="513.08" cy="213.51" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="575.23" cy="225.27" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="637.38" cy="216.14" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="699.54" cy="185.74" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="761.69" cy="162.78" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<circle cx="823.85" cy="149.05" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<circle cx="886.00" cy="140.65" r="4" fill="#d62728" stroke="white" stroke-width="1"/>
+<text x="18" y="163" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,163)">signed local twist (deg)</text>
+<line x1="78" y1="326" x2="78" y2="522" stroke="#333"/>
+<line x1="78" y1="522" x2="886" y2="522" stroke="#333"/>
+<text x="18" y="340" font-family="Arial" font-size="12" font-weight="bold">central6</text>
+<line x1="78" y1="344.97" x2="886" y2="344.97" stroke="#777" stroke-dasharray="4 4"/>
+<text x="882" y="340.97" text-anchor="end" font-family="Arial" font-size="10">30 deg reference</text>
+<polyline points="78.00,503.03 140.15,427.00 202.31,407.33 264.46,408.23 326.62,447.93" fill="none" stroke="#f58518" stroke-width="2"/>
+<circle cx="78.00" cy="503.03" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="140.15" cy="427.00" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="202.31" cy="407.33" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="264.46" cy="408.23" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="326.62" cy="447.93" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<text x="18" y="429" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,429)">signed local twist (deg)</text>
+<line x1="78" y1="592" x2="78" y2="788" stroke="#333"/>
+<line x1="78" y1="788" x2="886" y2="788" stroke="#333"/>
+<text x="18" y="606" font-family="Arial" font-size="12" font-weight="bold">central7</text>
+<line x1="78" y1="610.97" x2="886" y2="610.97" stroke="#777" stroke-dasharray="4 4"/>
+<text x="882" y="606.97" text-anchor="end" font-family="Arial" font-size="10">30 deg reference</text>
+<polyline points="78.00,738.36 140.15,670.59 202.31,655.07 264.46,655.31 326.62,677.50 388.77,769.03" fill="none" stroke="#54a24b" stroke-width="2"/>
+<circle cx="78.00" cy="738.36" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="140.15" cy="670.59" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="202.31" cy="655.07" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="264.46" cy="655.31" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="326.62" cy="677.50" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="388.77" cy="769.03" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<text x="18" y="695" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,695)">signed local twist (deg)</text>
+<text x="460" y="852" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit-transition index</text>
+</svg>

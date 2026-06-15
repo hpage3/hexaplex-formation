@@ -196,6 +196,77 @@ def test_fingerprint_comparison_plot_writes_svg(tmp_path):
     assert "Aleph fingerprint comparison" in path.read_text(encoding="utf-8")
 
 
+def test_series_points_use_signed_local_twist():
+    rows = [
+        {
+            "structure_id": "central7",
+            "unit_index": "1",
+            "local_twist_deg": "-30",
+            "local_abs_twist_deg": "30",
+            "local_rise_A": "3.4",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        }
+    ]
+
+    points = aleph.series_points(rows, "central7", "local_twist_deg")
+
+    assert points == [(1.0, -30.0, False)]
+
+
+def test_series_fingerprint_plot_writes_svg(tmp_path):
+    rows = [
+        {
+            "structure_id": "central7",
+            "unit_index": "1",
+            "local_twist_deg": "-30",
+            "local_abs_twist_deg": "30",
+            "local_rise_A": "3.4",
+            "aleph_base_plane_bend_deg": "10",
+            "aleph_scaffold_plane_bend_deg": "12",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        }
+    ]
+    path = tmp_path / "series.svg"
+
+    aleph.svg_series_fingerprint("central7", rows, path)
+
+    assert path.exists()
+    assert "Aleph series fingerprint" in path.read_text(encoding="utf-8")
+
+
+def test_companion_traces_handle_missing_short_data(tmp_path):
+    rows = [
+        {
+            "structure_id": "full",
+            "unit_index": "1",
+            "local_twist_deg": "-12",
+            "local_abs_twist_deg": "12",
+            "local_rise_A": "",
+            "aleph_base_plane_bend_deg": "20",
+            "aleph_scaffold_plane_bend_deg": "",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        }
+    ]
+    path = tmp_path / "companions.svg"
+
+    aleph.svg_companion_traces("full", rows, path)
+
+    assert path.exists()
+    assert "companion traces" in path.read_text(encoding="utf-8")
+
+
 def test_output_schemas_are_written(tmp_path):
     full = tmp_path / "full.pdb"
     c6 = tmp_path / "c6.pdb"

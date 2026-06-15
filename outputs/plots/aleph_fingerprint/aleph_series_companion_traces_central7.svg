@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="1134" viewBox="0 0 920 1134">
+<rect width="100%" height="100%" fill="white"/>
+<text x="460" y="26" text-anchor="middle" font-family="Arial" font-size="17">central7 Aleph series companion traces</text>
+<line x1="78" y1="60" x2="78" y2="256" stroke="#333"/>
+<line x1="78" y1="256" x2="886" y2="256" stroke="#333"/>
+<text x="18" y="74" font-family="Arial" font-size="12" font-weight="bold">signed twist</text>
+<polyline points="78.00,194.50 239.60,100.49 401.20,78.97 562.80,79.30 724.40,110.09 886.00,237.03" fill="none" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="78.00" cy="194.50" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="239.60" cy="100.49" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="401.20" cy="78.97" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="562.80" cy="79.30" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="724.40" cy="110.09" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<circle cx="886.00" cy="237.03" r="4" fill="#4c78a8" stroke="white" stroke-width="1"/>
+<text x="18" y="163" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,163)">feature value</text>
+<line x1="78" y1="326" x2="78" y2="522" stroke="#333"/>
+<line x1="78" y1="522" x2="886" y2="522" stroke="#333"/>
+<text x="18" y="340" font-family="Arial" font-size="12" font-weight="bold">local rise</text>
+<polyline points="78.00,452.22 239.60,403.30 401.20,377.80 562.80,382.63 724.40,416.49 886.00,470.20" fill="none" stroke="#f58518" stroke-width="2"/>
+<circle cx="78.00" cy="452.22" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="239.60" cy="403.30" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="401.20" cy="377.80" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="562.80" cy="382.63" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="724.40" cy="416.49" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<circle cx="886.00" cy="470.20" r="4" fill="#f58518" stroke="white" stroke-width="1"/>
+<text x="18" y="429" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,429)">feature value</text>
+<line x1="78" y1="592" x2="78" y2="788" stroke="#333"/>
+<line x1="78" y1="788" x2="886" y2="788" stroke="#333"/>
+<text x="18" y="606" font-family="Arial" font-size="12" font-weight="bold">base-plane bend</text>
+<polyline points="78.00,769.03 239.60,610.97 401.20,689.62 562.80,689.63 724.40,615.77 886.00,762.00" fill="none" stroke="#54a24b" stroke-width="2"/>
+<circle cx="78.00" cy="769.03" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="239.60" cy="610.97" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="401.20" cy="689.62" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="562.80" cy="689.63" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="724.40" cy="615.77" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<circle cx="886.00" cy="762.00" r="4" fill="#54a24b" stroke="white" stroke-width="1"/>
+<text x="18" y="695" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,695)">feature value</text>
+<line x1="78" y1="858" x2="78" y2="1054" stroke="#333"/>
+<line x1="78" y1="1054" x2="886" y2="1054" stroke="#333"/>
+<text x="18" y="872" font-family="Arial" font-size="12" font-weight="bold">scaffold-plane bend</text>
+<polyline points="78.00,876.97 239.60,1010.27 401.20,1035.03 562.80,963.64 724.40,985.29 886.00,942.06" fill="none" stroke="#b279a2" stroke-width="2"/>
+<circle cx="78.00" cy="876.97" r="4" fill="#b279a2" stroke="white" stroke-width="1"/>
+<circle cx="239.60" cy="1010.27" r="4" fill="#b279a2" stroke="white" stroke-width="1"/>
+<circle cx="401.20" cy="1035.03" r="4" fill="#b279a2" stroke="white" stroke-width="1"/>
+<circle cx="562.80" cy="963.64" r="4" fill="#b279a2" stroke="white" stroke-width="1"/>
+<circle cx="724.40" cy="985.29" r="4" fill="#b279a2" stroke="white" stroke-width="1"/>
+<circle cx="886.00" cy="942.06" r="4" fill="#b279a2" stroke="white" stroke-width="1"/>
+<text x="18" y="961" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,961)">feature value</text>
+<text x="460" y="1118" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit-transition index</text>
+</svg>

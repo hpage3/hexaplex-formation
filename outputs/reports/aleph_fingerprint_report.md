@@ -27,17 +27,34 @@ Aleph asks whether each model has an ordered repeating geometric signature along
 | central6 | true | true | 6 | 6 | 0 | 0 | mean absolute local twist differs from nominal 30 deg by >10 deg |  |  |
 | central7 | true | true | 7 | 7 | 0 | 0 |  |  |  |
 
-## Visual Aleph fingerprint
+## Series-style Aleph fingerprint
 
-Aleph converts the hexaplex into ordered per-unit geometric traces. The fingerprint strip places unit index on the x-axis and stacks Aleph features as rows, so changes in twist, rise, radial spread, phase, plane bend, chain coherence, and QC flags can be read as a compact structural barcode.
+The Aleph series fingerprint is the primary visual fingerprint in this prototype. It is closer to a true structural fingerprint because it represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.
+
+The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis is Aleph unit-transition index, so transition 1 corresponds to the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. A 30 deg reference line is shown where useful, and markers with QC warnings are highlighted.
+
+Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg-like Aleph series fingerprint because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its signed twist trace and mean absolute twist deviate from the nominal 30 deg value. The full model remains a geometry-definition diagnostic case because its current warnings indicate that layer assignment and antiparallel ordering require further inspection.
+
+This representation provides a more natural ordered signal for future DFT/FFT exploration than the feature comparison panel. Whether spectral analysis adds value remains an open question.
+
+Series outputs:
+
+- `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_full.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central6.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central7.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_comparison.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_companion_traces_full.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_companion_traces_central7.svg`
+
+## Visual Aleph feature comparison panel
+
+Aleph converts the hexaplex into ordered per-unit geometric traces. The feature comparison panel places unit index on the x-axis and stacks Aleph features as rows, so changes in twist, rise, radial spread, phase, plane bend, chain coherence, and QC flags can be scanned compactly.
 
 Rows labeled `abs twist` and `signed twist` show the local angular step after phase unwrapping; `rise` shows the axis-oriented local axial step; `radial spread` tracks base-like radial variability; `phase` shows the unwrapped angular progression; `base bend` and `scaffold bend` compare adjacent fitted plane normals; `chain coherence` reports the circular mean resultant length; and the QC row marks per-unit warnings.
 
-Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg Aleph signal because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its mean absolute local twist is lower than nominal, so it is best treated as a shorter local diagnostic. The full model is also diagnostic: the current full-model warnings indicate that layer assignment and antiparallel ordering require further inspection.
-
 The visualization is a structural fingerprint, not a diffraction simulation. It reveals axial ordering, local geometric irregularity, phase progression, and QC behavior that pair-distance counts do not show directly.
 
-Visual outputs:
+Feature comparison panel outputs:
 
 - `outputs\plots\aleph_fingerprint\aleph_fingerprint_strip_full.svg`
 - `outputs\plots\aleph_fingerprint\aleph_fingerprint_strip_central6.svg`
@@ -88,6 +105,12 @@ This QC pass should be read before expanding FFT interpretation: stable axis ori
 - Plot: `outputs\plots\aleph_fingerprint\aleph_phase_raw_vs_unit.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_phase_progression_vs_unit.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_chain_resultant_vs_unit.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_full.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central6.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central7.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_comparison.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_companion_traces_full.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_companion_traces_central7.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_fingerprint_strip_full.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_fingerprint_strip_central6.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_fingerprint_strip_central7.svg`

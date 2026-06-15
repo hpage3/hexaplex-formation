@@ -780,6 +780,146 @@ def qc_warning_count(row: dict[str, str]) -> int:
     return count
 
 
+def series_points(rows: list[dict[str, str]], structure_id: str, column: str) -> list[tuple[float, float, bool]]:
+    points: list[tuple[float, float, bool]] = []
+    for row in sorted([item for item in rows if item["structure_id"] == structure_id], key=lambda item: int(item["unit_index"])):
+        value = safe_float(row.get(column))
+        transition = safe_float(row.get("unit_index"))
+        if value is None or transition is None:
+            continue
+        points.append((transition, value, row_has_qc_warning(row)))
+    return points
+
+
+def svg_series_plot(
+    title: str,
+    points_by_label: OrderedDict[str, list[tuple[float, float, bool]]],
+    y_label: str,
+    path: Path,
+    reference_y: float | None = None,
+    stacked: bool = False,
+) -> None:
+    if not points_by_label or not any(points for points in points_by_label.values()):
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    width = 920
+    panel_h = 230 if stacked else 330
+    top = 48
+    left = 78
+    right = 34
+    gap = 36
+    panel_count = len(points_by_label) if stacked else 1
+    height = top + panel_count * panel_h + (panel_count - 1) * gap + 58
+    colors = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#e45756"]
+    all_points = [point for points in points_by_label.values() for point in points]
+    min_x = min(point[0] for point in all_points)
+    max_x = max(point[0] for point in all_points)
+    if max_x == min_x:
+        max_x += 1.0
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        f'<text x="{width / 2:.0f}" y="26" text-anchor="middle" font-family="Arial" font-size="17">{title}</text>',
+    ]
+    plot_w = width - left - right
+
+    def sx(value: float) -> float:
+        return left + (value - min_x) / (max_x - min_x) * plot_w
+
+    panels = list(points_by_label.items()) if stacked else [("combined", all_points)]
+    for panel_index, (label, panel_points) in enumerate(panels):
+        y0 = top + panel_index * (panel_h + gap)
+        panel_values = [point[1] for point in panel_points]
+        min_y = min(panel_values + ([reference_y] if reference_y is not None else []))
+        max_y = max(panel_values + ([reference_y] if reference_y is not None else []))
+        pad = max(1.0, (max_y - min_y) * 0.12)
+        min_y -= pad
+        max_y += pad
+        if max_y == min_y:
+            max_y += 1.0
+
+        def sy(value: float) -> float:
+            return y0 + 12 + (max_y - value) / (max_y - min_y) * (panel_h - 34)
+
+        axis_bottom = y0 + panel_h - 22
+        parts.append(f'<line x1="{left}" y1="{y0 + 12}" x2="{left}" y2="{axis_bottom}" stroke="#333"/>')
+        parts.append(f'<line x1="{left}" y1="{axis_bottom}" x2="{width - right}" y2="{axis_bottom}" stroke="#333"/>')
+        if stacked:
+            parts.append(f'<text x="18" y="{y0 + 26}" font-family="Arial" font-size="12" font-weight="bold">{label}</text>')
+        if reference_y is not None and min_y <= reference_y <= max_y:
+            ref_y = sy(reference_y)
+            parts.append(f'<line x1="{left}" y1="{ref_y:.2f}" x2="{width - right}" y2="{ref_y:.2f}" stroke="#777" stroke-dasharray="4 4"/>')
+            parts.append(f'<text x="{width - right - 4}" y="{ref_y - 4:.2f}" text-anchor="end" font-family="Arial" font-size="10">30 deg reference</text>')
+        if stacked:
+            drawable = [(label, panel_points, colors[panel_index % len(colors)])]
+        else:
+            drawable = [(series_label, series_points, colors[index % len(colors)]) for index, (series_label, series_points) in enumerate(points_by_label.items())]
+        for series_label, series_points_for_label, color in drawable:
+            series_points_for_label = sorted(series_points_for_label)
+            coords = " ".join(f"{sx(x):.2f},{sy(y):.2f}" for x, y, _ in series_points_for_label)
+            if coords:
+                parts.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2"/>')
+            for x, y, warning in series_points_for_label:
+                parts.append(f'<circle cx="{sx(x):.2f}" cy="{sy(y):.2f}" r="4" fill="{"#d62728" if warning else color}" stroke="white" stroke-width="1"/>')
+        if not stacked:
+            for index, (series_label, _) in enumerate(points_by_label.items()):
+                legend_y = y0 + 18 + index * 18
+                parts.append(f'<rect x="735" y="{legend_y}" width="11" height="11" fill="{colors[index % len(colors)]}"/>')
+                parts.append(f'<text x="752" y="{legend_y + 10}" font-family="Arial" font-size="11">{series_label}</text>')
+        parts.append(f'<text x="18" y="{y0 + panel_h / 2:.0f}" text-anchor="middle" font-family="Arial" font-size="11" transform="rotate(-90 18,{y0 + panel_h / 2:.0f})">{y_label}</text>')
+    parts.append(f'<text x="{width / 2:.0f}" y="{height - 16}" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit-transition index</text>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
+def svg_series_fingerprint(structure_id: str, rows: list[dict[str, str]], path: Path) -> None:
+    points = series_points(rows, structure_id, "local_twist_deg")
+    svg_series_plot(
+        f"{structure_id} Aleph series fingerprint",
+        OrderedDict([(structure_id, points)]),
+        "signed local twist (deg)",
+        path,
+        reference_y=30.0,
+    )
+
+
+def svg_series_comparison(rows: list[dict[str, str]], path: Path) -> None:
+    points_by_label = OrderedDict(
+        (structure_id, series_points(rows, structure_id, "local_twist_deg"))
+        for structure_id in ["full", "central6", "central7"]
+        if series_points(rows, structure_id, "local_twist_deg")
+    )
+    svg_series_plot(
+        "Aleph series fingerprint comparison",
+        points_by_label,
+        "signed local twist (deg)",
+        path,
+        reference_y=30.0,
+        stacked=True,
+    )
+
+
+def svg_companion_traces(structure_id: str, rows: list[dict[str, str]], path: Path) -> None:
+    traces = OrderedDict()
+    for column, label in [
+        ("local_twist_deg", "signed twist"),
+        ("local_rise_A", "local rise"),
+        ("aleph_base_plane_bend_deg", "base-plane bend"),
+        ("aleph_scaffold_plane_bend_deg", "scaffold-plane bend"),
+    ]:
+        points = series_points(rows, structure_id, column)
+        if points:
+            traces[label] = points
+    svg_series_plot(
+        f"{structure_id} Aleph series companion traces",
+        traces,
+        "feature value",
+        path,
+        reference_y=None,
+        stacked=True,
+    )
+
+
 def svg_line_plot(title: str, rows: list[dict[str, str]], y_column: str, y_label: str, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     width = 900
@@ -1041,6 +1181,20 @@ def write_plots(
         if path.exists():
             paths.append(path)
     for structure_id in ["full", "central6", "central7"]:
+        path = plot_dir / f"aleph_series_fingerprint_{structure_id}.svg"
+        svg_series_fingerprint(structure_id, per_unit_rows, path)
+        if path.exists():
+            paths.append(path)
+    series_comparison_path = plot_dir / "aleph_series_fingerprint_comparison.svg"
+    svg_series_comparison(per_unit_rows, series_comparison_path)
+    if series_comparison_path.exists():
+        paths.append(series_comparison_path)
+    for structure_id in ["full", "central7"]:
+        path = plot_dir / f"aleph_series_companion_traces_{structure_id}.svg"
+        svg_companion_traces(structure_id, per_unit_rows, path)
+        if path.exists():
+            paths.append(path)
+    for structure_id in ["full", "central6", "central7"]:
         path = plot_dir / f"aleph_fingerprint_strip_{structure_id}.svg"
         svg_fingerprint_strip(structure_id, per_unit_rows, path)
         if path.exists():
@@ -1120,17 +1274,34 @@ def report_text(
     lines.extend(
         [
             "",
-            "## Visual Aleph fingerprint",
+            "## Series-style Aleph fingerprint",
             "",
-            "Aleph converts the hexaplex into ordered per-unit geometric traces. The fingerprint strip places unit index on the x-axis and stacks Aleph features as rows, so changes in twist, rise, radial spread, phase, plane bend, chain coherence, and QC flags can be read as a compact structural barcode.",
+            "The Aleph series fingerprint is the primary visual fingerprint in this prototype. It is closer to a true structural fingerprint because it represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.",
+            "",
+            "The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis is Aleph unit-transition index, so transition 1 corresponds to the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. A 30 deg reference line is shown where useful, and markers with QC warnings are highlighted.",
+            "",
+            "Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg-like Aleph series fingerprint because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its signed twist trace and mean absolute twist deviate from the nominal 30 deg value. The full model remains a geometry-definition diagnostic case because its current warnings indicate that layer assignment and antiparallel ordering require further inspection.",
+            "",
+            "This representation provides a more natural ordered signal for future DFT/FFT exploration than the feature comparison panel. Whether spectral analysis adds value remains an open question.",
+            "",
+            "Series outputs:",
+            "",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_full.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_central6.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_central7.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_comparison.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_companion_traces_full.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_companion_traces_central7.svg`",
+            "",
+            "## Visual Aleph feature comparison panel",
+            "",
+            "Aleph converts the hexaplex into ordered per-unit geometric traces. The feature comparison panel places unit index on the x-axis and stacks Aleph features as rows, so changes in twist, rise, radial spread, phase, plane bend, chain coherence, and QC flags can be scanned compactly.",
             "",
             "Rows labeled `abs twist` and `signed twist` show the local angular step after phase unwrapping; `rise` shows the axis-oriented local axial step; `radial spread` tracks base-like radial variability; `phase` shows the unwrapped angular progression; `base bend` and `scaffold bend` compare adjacent fitted plane normals; `chain coherence` reports the circular mean resultant length; and the QC row marks per-unit warnings.",
             "",
-            "Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg Aleph signal because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its mean absolute local twist is lower than nominal, so it is best treated as a shorter local diagnostic. The full model is also diagnostic: the current full-model warnings indicate that layer assignment and antiparallel ordering require further inspection.",
-            "",
             "The visualization is a structural fingerprint, not a diffraction simulation. It reveals axial ordering, local geometric irregularity, phase progression, and QC behavior that pair-distance counts do not show directly.",
             "",
-            "Visual outputs:",
+            "Feature comparison panel outputs:",
             "",
             "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_strip_full.svg`",
             "- `outputs\\plots\\aleph_fingerprint\\aleph_fingerprint_strip_central6.svg`",

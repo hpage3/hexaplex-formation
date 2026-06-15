@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="440" viewBox="0 0 980 440">
+<rect width="100%" height="100%" fill="white"/>
+<text x="490" y="30" text-anchor="middle" font-family="Arial" font-size="17">3p4 atom-pair class contributions</text>
+<line x1="80" y1="55" x2="80" y2="350" stroke="#333"/>
+<line x1="80" y1="350" x2="950" y2="350" stroke="#333"/>
+<rect x="110" y="305.36" width="30" height="44.64" fill="#4c78a8"/>
+<text x="125" y="300.36" text-anchor="middle" font-family="Arial" font-size="8">45</text>
+<rect x="144" y="320.24" width="30" height="29.76" fill="#f58518"/>
+<text x="159" y="315.24" text-anchor="middle" font-family="Arial" font-size="8">30</text>
+<rect x="178" y="260.71" width="30" height="89.29" fill="#54a24b"/>
+<text x="193" y="255.71" text-anchor="middle" font-family="Arial" font-size="8">90</text>
+<text x="161" y="368" text-anchor="middle" font-family="Arial" font-size="12">central6</text>
+<rect x="262" y="293.45" width="30" height="56.55" fill="#4c78a8"/>
+<text x="277" y="288.45" text-anchor="middle" font-family="Arial" font-size="8">57</text>
+<rect x="296" y="314.29" width="30" height="35.71" fill="#f58518"/>
+<text x="311" y="309.29" text-anchor="middle" font-family="Arial" font-size="8">36</text>
+<rect x="330" y="242.86" width="30" height="107.14" fill="#54a24b"/>
+<text x="345" y="237.86" text-anchor="middle" font-family="Arial" font-size="8">108</text>
+<text x="313" y="368" text-anchor="middle" font-family="Arial" font-size="12">central7</text>
+<rect x="414" y="222.02" width="30" height="127.98" fill="#4c78a8"/>
+<text x="429" y="217.02" text-anchor="middle" font-family="Arial" font-size="8">129</text>
+<rect x="448" y="266.67" width="30" height="83.33" fill="#f58518"/>
+<text x="463" y="261.67" text-anchor="middle" font-family="Arial" font-size="8">84</text>
+<rect x="482" y="100.00" width="30" height="250.00" fill="#54a24b"/>
+<text x="497" y="95.00" text-anchor="middle" font-family="Arial" font-size="8">252</text>
+<text x="465" y="368" text-anchor="middle" font-family="Arial" font-size="12">full</text>
+<rect x="690" y="55" width="12" height="12" fill="#4c78a8"/>
+<text x="707" y="65" font-family="Arial" font-size="11">backbone_like_vs_backbone_like</text>
+<rect x="690" y="74" width="12" height="12" fill="#f58518"/>
+<text x="707" y="84" font-family="Arial" font-size="11">backbone_like_vs_base_like</text>
+<rect x="690" y="93" width="12" height="12" fill="#54a24b"/>
+<text x="707" y="103" font-family="Arial" font-size="11">base_like_vs_base_like</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="440" viewBox="0 0 980 440">
+<rect width="100%" height="100%" fill="white"/>
+<text x="490" y="30" text-anchor="middle" font-family="Arial" font-size="17">Full model atom-pair class counts across windows</text>
+<line x1="80" y1="55" x2="80" y2="350" stroke="#333"/>
+<line x1="80" y1="350" x2="950" y2="350" stroke="#333"/>
+<rect x="110" y="350.00" width="28" height="0.00" fill="#4c78a8"/>
+<text x="124" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="142" y="349.30" width="28" height="0.70" fill="#f58518"/>
+<text x="156" y="344.30" text-anchor="middle" font-family="Arial" font-size="8">45</text>
+<rect x="174" y="350.00" width="28" height="0.00" fill="#54a24b"/>
+<text x="188" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="206" y="350.00" width="28" height="0.00" fill="#b279a2"/>
+<text x="220" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="238" y="350.00" width="28" height="0.00" fill="#e45756"/>
+<text x="252" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="270" y="350.00" width="28" height="0.00" fill="#72b7b2"/>
+<text x="284" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<text x="206" y="368" text-anchor="middle" font-family="Arial" font-size="12">3p0</text>
+<rect x="352" y="348.00" width="28" height="2.00" fill="#4c78a8"/>
+<text x="366" y="343.00" text-anchor="middle" font-family="Arial" font-size="8">129</text>
+<rect x="384" y="348.70" width="28" height="1.30" fill="#f58518"/>
+<text x="398" y="343.70" text-anchor="middle" font-family="Arial" font-size="8">84</text>
+<rect x="416" y="350.00" width="28" height="0.00" fill="#54a24b"/>
+<text x="430" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="448" y="346.09" width="28" height="3.91" fill="#b279a2"/>
+<text x="462" y="341.09" text-anchor="middle" font-family="Arial" font-size="8">252</text>
+<rect x="480" y="350.00" width="28" height="0.00" fill="#e45756"/>
+<text x="494" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="512" y="350.00" width="28" height="0.00" fill="#72b7b2"/>
+<text x="526" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<text x="448" y="368" text-anchor="middle" font-family="Arial" font-size="12">3p4</text>
+<rect x="594" y="334.49" width="28" height="15.51" fill="#4c78a8"/>
+<text x="608" y="329.49" text-anchor="middle" font-family="Arial" font-size="8">999</text>
+<rect x="626" y="334.91" width="28" height="15.09" fill="#f58518"/>
+<text x="640" y="329.91" text-anchor="middle" font-family="Arial" font-size="8">972</text>
+<rect x="658" y="341.90" width="28" height="8.10" fill="#54a24b"/>
+<text x="672" y="336.90" text-anchor="middle" font-family="Arial" font-size="8">522</text>
+<rect x="690" y="289.88" width="28" height="60.12" fill="#b279a2"/>
+<text x="704" y="284.88" text-anchor="middle" font-family="Arial" font-size="8">3873</text>
+<rect x="722" y="350.00" width="28" height="0.00" fill="#e45756"/>
+<text x="736" y="345.00" text-anchor="middle" font-family="Arial" font-size="8">0</text>
+<rect x="754" y="348.74" width="28" height="1.26" fill="#72b7b2"/>
+<text x="768" y="343.74" text-anchor="middle" font-family="Arial" font-size="8">81</text>
+<text x="690" y="368" text-anchor="middle" font-family="Arial" font-size="12">4p5_5p0</text>
+<rect x="836" y="307.53" width="28" height="42.47" fill="#4c78a8"/>
+<text x="850" y="302.53" text-anchor="middle" font-family="Arial" font-size="8">2736</text>
+<rect x="868" y="285.25" width="28" height="64.75" fill="#f58518"/>
+<text x="882" y="280.25" text-anchor="middle" font-family="Arial" font-size="8">4171</text>
+<rect x="900" y="329.88" width="28" height="20.12" fill="#54a24b"/>
+<text x="914" y="324.88" text-anchor="middle" font-family="Arial" font-size="8">1296</text>
+<rect x="932" y="233.99" width="28" height="116.01" fill="#b279a2"/>
+<text x="946" y="228.99" text-anchor="middle" font-family="Arial" font-size="8">7473</text>
+<rect x="964" y="345.30" width="28" height="4.70" fill="#e45756"/>
+<text x="978" y="340.30" text-anchor="middle" font-family="Arial" font-size="8">303</text>
+<rect x="996" y="343.71" width="28" height="6.29" fill="#72b7b2"/>
+<text x="1010" y="338.71" text-anchor="middle" font-family="Arial" font-size="8">405</text>
+<text x="932" y="368" text-anchor="middle" font-family="Arial" font-size="12">guessed_5p0_6p0</text>
+<rect x="1078" y="288.90" width="28" height="61.10" fill="#4c78a8"/>
+<text x="1092" y="283.90" text-anchor="middle" font-family="Arial" font-size="8">3936</text>
+<rect x="1110" y="222.24" width="28" height="127.76" fill="#f58518"/>
+<text x="1124" y="217.24" text-anchor="middle" font-family="Arial" font-size="8">8230</text>
+<rect x="1142" y="298.58" width="28" height="51.42" fill="#54a24b"/>
+<text x="1156" y="293.58" text-anchor="middle" font-family="Arial" font-size="8">3312</text>
+<rect x="1174" y="146.34" width="28" height="203.66" fill="#b279a2"/>
+<text x="1188" y="141.34" text-anchor="middle" font-family="Arial" font-size="8">13119</text>
+<rect x="1206" y="335.90" width="28" height="14.10" fill="#e45756"/>
+<text x="1220" y="330.90" text-anchor="middle" font-family="Arial" font-size="8">908</text>
+<rect x="1238" y="339.75" width="28" height="10.25" fill="#72b7b2"/>
+<text x="1252" y="334.75" text-anchor="middle" font-family="Arial" font-size="8">660</text>
+<text x="1174" y="368" text-anchor="middle" font-family="Arial" font-size="12">guessed_6p5_7p5</text>
+<rect x="1320" y="288.34" width="28" height="61.66" fill="#4c78a8"/>
+<text x="1334" y="283.34" text-anchor="middle" font-family="Arial" font-size="8">3972</text>
+<rect x="1352" y="126.75" width="28" height="223.25" fill="#f58518"/>
+<text x="1366" y="121.75" text-anchor="middle" font-family="Arial" font-size="8">14381</text>
+<rect x="1384" y="264.59" width="28" height="85.41" fill="#54a24b"/>
+<text x="1398" y="259.59" text-anchor="middle" font-family="Arial" font-size="8">5502</text>
+<rect x="1416" y="100.00" width="28" height="250.00" fill="#b279a2"/>
+<text x="1430" y="95.00" text-anchor="middle" font-family="Arial" font-size="8">16104</text>
+<rect x="1448" y="301.61" width="28" height="48.39" fill="#e45756"/>
+<text x="1462" y="296.61" text-anchor="middle" font-family="Arial" font-size="8">3117</text>
+<rect x="1480" y="326.76" width="28" height="23.24" fill="#72b7b2"/>
+<text x="1494" y="321.76" text-anchor="middle" font-family="Arial" font-size="8">1497</text>
+<text x="1416" y="368" text-anchor="middle" font-family="Arial" font-size="12">guessed_7p8_9p0</text>
+<rect x="690" y="55" width="12" height="12" fill="#4c78a8"/>
+<text x="707" y="65" font-family="Arial" font-size="11">backbone_like_vs_backbone_like</text>
+<rect x="690" y="74" width="12" height="12" fill="#f58518"/>
+<text x="707" y="84" font-family="Arial" font-size="11">backbone_like_vs_base_like</text>
+<rect x="690" y="93" width="12" height="12" fill="#54a24b"/>
+<text x="707" y="103" font-family="Arial" font-size="11">backbone_like_vs_scaffold_linker</text>
+<rect x="690" y="112" width="12" height="12" fill="#b279a2"/>
+<text x="707" y="122" font-family="Arial" font-size="11">base_like_vs_base_like</text>
+<rect x="690" y="131" width="12" height="12" fill="#e45756"/>
+<text x="707" y="141" font-family="Arial" font-size="11">base_like_vs_scaffold_linker</text>
+<rect x="690" y="150" width="12" height="12" fill="#72b7b2"/>
+<text x="707" y="160" font-family="Arial" font-size="11">scaffold_linker_vs_scaffold_linker</text>
+</svg>

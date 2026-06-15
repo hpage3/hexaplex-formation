@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="440" viewBox="0 0 980 440">
+<rect width="100%" height="100%" fill="white"/>
+<text x="490" y="30" text-anchor="middle" font-family="Arial" font-size="17">guessed_5p0_6p0 same-chain vs interchain</text>
+<line x1="80" y1="55" x2="80" y2="350" stroke="#333"/>
+<line x1="80" y1="350" x2="950" y2="350" stroke="#333"/>
+<rect x="110" y="277.83" width="30" height="72.17" fill="#4c78a8"/>
+<text x="125" y="272.83" text-anchor="middle" font-family="Arial" font-size="8">2639</text>
+<rect x="144" y="266.06" width="30" height="83.94" fill="#f58518"/>
+<text x="159" y="261.06" text-anchor="middle" font-family="Arial" font-size="8">3069</text>
+<text x="144" y="368" text-anchor="middle" font-family="Arial" font-size="12">central6</text>
+<rect x="228" y="263.85" width="30" height="86.15" fill="#4c78a8"/>
+<text x="243" y="258.85" text-anchor="middle" font-family="Arial" font-size="8">3150</text>
+<rect x="262" y="241.12" width="30" height="108.88" fill="#f58518"/>
+<text x="277" y="236.12" text-anchor="middle" font-family="Arial" font-size="8">3981</text>
+<text x="262" y="368" text-anchor="middle" font-family="Arial" font-size="12">central7</text>
+<rect x="346" y="151.91" width="30" height="198.09" fill="#4c78a8"/>
+<text x="361" y="146.91" text-anchor="middle" font-family="Arial" font-size="8">7243</text>
+<rect x="380" y="100.00" width="30" height="250.00" fill="#f58518"/>
+<text x="395" y="95.00" text-anchor="middle" font-family="Arial" font-size="8">9141</text>
+<text x="380" y="368" text-anchor="middle" font-family="Arial" font-size="12">full</text>
+<rect x="690" y="55" width="12" height="12" fill="#4c78a8"/>
+<text x="707" y="65" font-family="Arial" font-size="11">same_chain</text>
+<rect x="690" y="74" width="12" height="12" fill="#f58518"/>
+<text x="707" y="84" font-family="Arial" font-size="11">interchain</text>
+</svg>

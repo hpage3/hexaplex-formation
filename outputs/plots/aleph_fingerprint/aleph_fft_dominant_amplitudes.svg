@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="430" viewBox="0 0 900 430">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450" y="28" text-anchor="middle" font-family="Arial" font-size="17">Aleph FFT normalized dominant amplitudes</text>
+<line x1="80" y1="55" x2="80" y2="340" stroke="#333"/>
+<line x1="80" y1="340" x2="870" y2="340" stroke="#333"/>
+<rect x="100" y="169.63" width="28" height="170.37" fill="#4c78a8"/>
+<text x="114" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 114,354)">full local_twist_deg</text>
+<rect x="136" y="135.91" width="28" height="204.09" fill="#4c78a8"/>
+<text x="150" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 150,354)">full local_rise_A</text>
+<rect x="172" y="243.77" width="28" height="96.23" fill="#4c78a8"/>
+<text x="186" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 186,354)">full radial_spread_A</text>
+<rect x="208" y="164.06" width="28" height="175.94" fill="#4c78a8"/>
+<text x="222" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 222,354)">central6 local_twist_deg</text>
+<rect x="244" y="131.27" width="28" height="208.73" fill="#4c78a8"/>
+<text x="258" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 258,354)">central6 local_rise_A</text>
+<rect x="280" y="182.04" width="28" height="157.96" fill="#4c78a8"/>
+<text x="294" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 294,354)">central6 radial_spread_A</text>
+<rect x="316" y="176.01" width="28" height="163.99" fill="#4c78a8"/>
+<text x="330" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 330,354)">central7 local_twist_deg</text>
+<rect x="352" y="138.26" width="28" height="201.74" fill="#4c78a8"/>
+<text x="366" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 366,354)">central7 local_rise_A</text>
+<rect x="388" y="169.56" width="28" height="170.44" fill="#4c78a8"/>
+<text x="402" y="354" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 402,354)">central7 radial_spread_A</text>
+</svg>

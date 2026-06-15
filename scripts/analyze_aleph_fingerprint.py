@@ -1,0 +1,828 @@
+#!/usr/bin/env python3
+"""Prototype Aleph geometric fingerprint for hexaplex structures."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import math
+import sys
+from collections import OrderedDict
+from dataclasses import dataclass
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from hexaplex_formation.geometry import (  # noqa: E402
+    build_perpendicular_basis,
+    covariance_matrix_3d,
+    cross,
+    distance,
+    dot,
+    group_atoms_by_residue,
+    mean_point,
+    normalize_vector,
+    power_iteration_principal_axis,
+    project_point_to_axis,
+    vector_sub,
+)
+from hexaplex_formation.pdb_utils import PDBAtom, chain_ids, dedupe_exact_atoms, heavy_atoms, load_pdb_atoms  # noqa: E402
+
+
+BASE_RESIDUES = {"CYP", "MEP"}
+BACKBONE_LIKE_ATOMS = {"N", "CA", "C", "O", "OXT"}
+DEFAULT_STRUCTURES = [
+    ("full", Path("outputs/intermediates/ai_candidate_inputs/full_hexaplex_anti_parallel_30deg_ideal_deduped_6chain.pdb")),
+    ("central6", Path("outputs/mini_hexaplex/structures/mini_hexaplex_central6_units.pdb")),
+    ("central7", Path("outputs/mini_hexaplex/structures/mini_hexaplex_central7_units.pdb")),
+]
+
+PER_UNIT_COLUMNS = [
+    "structure_id",
+    "source_pdb",
+    "unit_index",
+    "chain_count",
+    "axial_position_A",
+    "layer_centroid_x",
+    "layer_centroid_y",
+    "layer_centroid_z",
+    "base_mean_radius_A",
+    "base_radial_spread_A",
+    "aleph_phase_deg",
+    "local_twist_deg",
+    "local_rise_A",
+    "base_plane_normal_x",
+    "base_plane_normal_y",
+    "base_plane_normal_z",
+    "aleph_base_plane_bend_deg",
+    "scaffold_plane_normal_x",
+    "scaffold_plane_normal_y",
+    "scaffold_plane_normal_z",
+    "aleph_scaffold_plane_bend_deg",
+    "chain_angular_dispersion_deg",
+    "warnings",
+]
+
+SUMMARY_COLUMNS = [
+    "structure_id",
+    "source_pdb",
+    "unit_count",
+    "chain_count",
+    "mean_local_twist_deg",
+    "std_local_twist_deg",
+    "mean_local_rise_A",
+    "std_local_rise_A",
+    "mean_base_radial_spread_A",
+    "std_base_radial_spread_A",
+    "mean_base_plane_bend_deg",
+    "mean_scaffold_plane_bend_deg",
+    "mean_chain_angular_dispersion_deg",
+    "aleph_regular_score",
+    "warnings",
+]
+
+FFT_COLUMNS = [
+    "structure_id",
+    "signal_name",
+    "sample_count",
+    "dominant_frequency_index",
+    "dominant_amplitude",
+    "normalized_dominant_amplitude",
+    "too_short_for_reliable_interpretation",
+    "warnings",
+]
+
+
+@dataclass(frozen=True)
+class ResidueRecord:
+    chain_id: str
+    residue_name: str
+    residue_number: int | None
+    insertion_code: str
+    atoms: tuple[PDBAtom, ...]
+
+
+@dataclass(frozen=True)
+class RepeatUnit:
+    chain_id: str
+    unit_index: int
+    base_residue: ResidueRecord
+    scaffold_residue: ResidueRecord | None
+
+
+@dataclass(frozen=True)
+class StructureFingerprint:
+    structure_id: str
+    path: Path
+    raw_atom_count: int
+    deduped_atom_count: int
+    heavy_atom_count: int
+    chain_count: int
+    per_unit_rows: list[dict[str, str]]
+    summary_row: dict[str, str]
+    warnings: tuple[str, ...]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--per-unit-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_per_unit.csv"))
+    parser.add_argument("--summary-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_summary.csv"))
+    parser.add_argument("--fft-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_fft_summary.csv"))
+    parser.add_argument("--report", type=Path, default=Path("outputs/reports/aleph_fingerprint_report.md"))
+    parser.add_argument("--plot-dir", type=Path, default=Path("outputs/plots/aleph_fingerprint"))
+    parser.add_argument("--include-optional-twists", action="store_true", default=True)
+    return parser.parse_args()
+
+
+def atom_xyz(atom: PDBAtom) -> tuple[float, float, float]:
+    return atom.x, atom.y, atom.z
+
+
+def format_float(value: float | None, digits: int = 6) -> str:
+    if value is None or not math.isfinite(value):
+        return ""
+    return f"{value:.{digits}f}"
+
+
+def safe_float(value: object) -> float | None:
+    try:
+        parsed = float(str(value))
+    except (TypeError, ValueError):
+        return None
+    return parsed if math.isfinite(parsed) else None
+
+
+def mean(values: list[float]) -> float | None:
+    return sum(values) / len(values) if values else None
+
+
+def sample_std(values: list[float]) -> float | None:
+    if not values:
+        return None
+    if len(values) == 1:
+        return 0.0
+    avg = sum(values) / len(values)
+    return math.sqrt(sum((value - avg) ** 2 for value in values) / (len(values) - 1))
+
+
+def atom_class(atom: PDBAtom) -> str:
+    if atom.atom_name.strip().upper() in BACKBONE_LIKE_ATOMS:
+        return "backbone_like"
+    if atom.residue_name in BASE_RESIDUES:
+        return "base_like"
+    if atom.residue_name == "GLU":
+        return "scaffold_linker"
+    return "other"
+
+
+def infer_axis(points: list[tuple[float, float, float]]) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+    if len(points) < 3:
+        raise ValueError("At least three points are required for Aleph axis fitting")
+    origin = mean_point(points)
+    axis = power_iteration_principal_axis(covariance_matrix_3d(points))
+    return origin, axis
+
+
+def residue_records(atoms: list[PDBAtom]) -> OrderedDict[str, list[ResidueRecord]]:
+    grouped: OrderedDict[str, list[ResidueRecord]] = OrderedDict()
+    for (chain_id, residue_name, residue_number, insertion_code), residue_atoms in group_atoms_by_residue(atoms).items():
+        grouped.setdefault(chain_id, []).append(
+            ResidueRecord(
+                chain_id=chain_id,
+                residue_name=residue_name,
+                residue_number=residue_number,
+                insertion_code=insertion_code,
+                atoms=tuple(residue_atoms),
+            )
+        )
+    return grouped
+
+
+def repeat_units_by_chain(atoms: list[PDBAtom]) -> tuple[dict[str, list[RepeatUnit]], list[str]]:
+    warnings: list[str] = []
+    units_by_chain: dict[str, list[RepeatUnit]] = {}
+    for chain_id, residues in residue_records(atoms).items():
+        units: list[RepeatUnit] = []
+        base_records = [(index, residue) for index, residue in enumerate(residues) if residue.residue_name in BASE_RESIDUES]
+        for unit_index, (residue_index, base_residue) in enumerate(base_records, start=1):
+            scaffold = residues[residue_index + 1] if residue_index + 1 < len(residues) and residues[residue_index + 1].residue_name == "GLU" else None
+            if scaffold is None:
+                warnings.append(f"chain {chain_id} unit {unit_index} has no following GLU scaffold residue")
+            units.append(RepeatUnit(chain_id=chain_id, unit_index=unit_index, base_residue=base_residue, scaffold_residue=scaffold))
+        units_by_chain[chain_id] = units
+    return units_by_chain, warnings
+
+
+def centroid(atoms: list[PDBAtom] | tuple[PDBAtom, ...]) -> tuple[float, float, float] | None:
+    selected = list(atoms)
+    if not selected:
+        return None
+    return mean_point(atom_xyz(atom) for atom in selected)
+
+
+def radius_from_axis(point: tuple[float, float, float], origin: tuple[float, float, float], axis: tuple[float, float, float]) -> float:
+    _, projected = project_point_to_axis(point, origin, axis)
+    return distance(point, projected)
+
+
+def angle_about_axis(
+    point: tuple[float, float, float],
+    origin: tuple[float, float, float],
+    axis: tuple[float, float, float],
+    basis_u: tuple[float, float, float],
+    basis_v: tuple[float, float, float],
+) -> float:
+    _, projected = project_point_to_axis(point, origin, axis)
+    radial = vector_sub(point, projected)
+    return math.atan2(dot(radial, basis_v), dot(radial, basis_u))
+
+
+def unwrap_radians(values: list[float | None]) -> list[float | None]:
+    unwrapped: list[float | None] = []
+    previous: float | None = None
+    offset = 0.0
+    for value in values:
+        if value is None:
+            unwrapped.append(None)
+            continue
+        adjusted = value + offset
+        if previous is not None:
+            while adjusted - previous > math.pi:
+                offset -= 2.0 * math.pi
+                adjusted = value + offset
+            while adjusted - previous < -math.pi:
+                offset += 2.0 * math.pi
+                adjusted = value + offset
+        unwrapped.append(adjusted)
+        previous = adjusted
+    return unwrapped
+
+
+def circular_dispersion_deg(angles: list[float]) -> float | None:
+    if not angles:
+        return None
+    sin_mean = sum(math.sin(value) for value in angles) / len(angles)
+    cos_mean = sum(math.cos(value) for value in angles) / len(angles)
+    resultant = min(1.0, max(0.0, math.sqrt(sin_mean * sin_mean + cos_mean * cos_mean)))
+    if resultant <= 0:
+        return 180.0
+    return math.degrees(math.sqrt(max(0.0, -2.0 * math.log(resultant))))
+
+
+def plane_normal(points: list[tuple[float, float, float]]) -> tuple[float, float, float] | None:
+    if len(points) < 3:
+        return None
+    center = mean_point(points)
+    centered = [vector_sub(point, center) for point in points]
+    best = None
+    best_length = 0.0
+    for i, first in enumerate(centered):
+        for second in centered[i + 1 :]:
+            candidate = cross(first, second)
+            length = math.sqrt(dot(candidate, candidate))
+            if length > best_length:
+                best = candidate
+                best_length = length
+    if best is None or best_length == 0:
+        return None
+    return normalize_vector(best)
+
+
+def normal_angle_deg(a: tuple[float, float, float] | None, b: tuple[float, float, float] | None) -> float | None:
+    if a is None or b is None:
+        return None
+    value = max(-1.0, min(1.0, abs(dot(a, b))))
+    return math.degrees(math.acos(value))
+
+
+def find_optional_twists() -> list[tuple[str, Path]]:
+    patterns = {
+        "compact24": ["outputs/**/compact_hexaplex_twist_24.pdb", "outputs/**/*twist_24*.pdb"],
+        "compact30": ["outputs/**/compact_hexaplex_twist_30.pdb", "outputs/**/*twist_30*.pdb"],
+        "compact36": ["outputs/**/compact_hexaplex_twist_36.pdb", "outputs/**/*twist_36*.pdb"],
+    }
+    found: list[tuple[str, Path]] = []
+    for structure_id, globs in patterns.items():
+        match = None
+        for pattern in globs:
+            matches = sorted(REPO_ROOT.glob(pattern))
+            if matches:
+                match = matches[0]
+                break
+        if match is not None:
+            found.append((structure_id, match.relative_to(REPO_ROOT)))
+    return found
+
+
+def load_structure_inputs(include_optional_twists: bool = True) -> tuple[list[tuple[str, Path]], list[str]]:
+    inputs = list(DEFAULT_STRUCTURES)
+    warnings: list[str] = []
+    optional = find_optional_twists() if include_optional_twists else []
+    if optional:
+        inputs.extend(optional)
+    else:
+        warnings.append("optional compact 24/30/36 variants were not found in this repo")
+    return inputs, warnings
+
+
+def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
+    raw_atoms = load_pdb_atoms(path)
+    atoms = dedupe_exact_atoms(raw_atoms)
+    selected_heavy = heavy_atoms(atoms)
+    warnings: list[str] = []
+    if len(raw_atoms) != len(atoms):
+        warnings.append(f"removed {len(raw_atoms) - len(atoms)} exact duplicate atoms")
+    units_by_chain, unit_warnings = repeat_units_by_chain(selected_heavy)
+    warnings.extend(unit_warnings)
+    unit_count = max((len(units) for units in units_by_chain.values()), default=0)
+    chains = sorted(units_by_chain)
+    base_centroids = []
+    for units in units_by_chain.values():
+        for unit in units:
+            atoms_for_base = [atom for atom in heavy_atoms(unit.base_residue.atoms) if atom_class(atom) == "base_like"]
+            point = centroid(atoms_for_base) or centroid(heavy_atoms(unit.base_residue.atoms))
+            if point is not None:
+                base_centroids.append(point)
+    preliminary_layer_centroids = []
+    for unit_index in range(1, unit_count + 1):
+        layer_points = []
+        for chain in chains:
+            if len(units_by_chain[chain]) < unit_index:
+                continue
+            unit = units_by_chain[chain][unit_index - 1]
+            atoms_for_base = [atom for atom in heavy_atoms(unit.base_residue.atoms) if atom_class(atom) == "base_like"]
+            point = centroid(atoms_for_base) or centroid(heavy_atoms(unit.base_residue.atoms))
+            if point is not None:
+                layer_points.append(point)
+        if layer_points:
+            preliminary_layer_centroids.append(mean_point(layer_points))
+    axis_points = preliminary_layer_centroids if len(preliminary_layer_centroids) >= 3 else base_centroids
+    origin, axis = infer_axis(axis_points if len(axis_points) >= 3 else [atom_xyz(atom) for atom in selected_heavy])
+    basis_u, basis_v = build_perpendicular_basis(axis)
+
+    raw_layers = []
+    for unit_index in range(1, unit_count + 1):
+        chain_units = [units_by_chain[chain][unit_index - 1] for chain in chains if len(units_by_chain[chain]) >= unit_index]
+        base_points = []
+        scaffold_points = []
+        chain_angles = []
+        for unit in chain_units:
+            base_atoms = [atom for atom in heavy_atoms(unit.base_residue.atoms) if atom_class(atom) == "base_like"]
+            base_point = centroid(base_atoms) or centroid(heavy_atoms(unit.base_residue.atoms))
+            if base_point is not None:
+                base_points.append(base_point)
+                chain_angles.append(angle_about_axis(base_point, origin, axis, basis_u, basis_v))
+            if unit.scaffold_residue is not None:
+                scaffold_atoms = [atom for atom in heavy_atoms(unit.scaffold_residue.atoms) if atom_class(atom) == "scaffold_linker"]
+                scaffold_point = centroid(scaffold_atoms) or centroid(heavy_atoms(unit.scaffold_residue.atoms))
+                if scaffold_point is not None:
+                    scaffold_points.append(scaffold_point)
+        layer_centroid = mean_point(base_points) if base_points else None
+        anchor_point = base_points[0] if base_points else None
+        phase = angle_about_axis(anchor_point, origin, axis, basis_u, basis_v) if anchor_point is not None else None
+        axial_position = project_point_to_axis(anchor_point, origin, axis)[0] if anchor_point is not None else None
+        radii = [radius_from_axis(point, origin, axis) for point in base_points]
+        raw_layers.append(
+            {
+                "unit_index": unit_index,
+                "chain_count": len(chain_units),
+                "layer_centroid": layer_centroid,
+                "axial_position": axial_position,
+                "base_mean_radius": mean(radii),
+                "base_radial_spread": sample_std(radii),
+                "phase": phase,
+                "base_plane_normal": plane_normal(base_points),
+                "scaffold_plane_normal": plane_normal(scaffold_points),
+                "chain_angular_dispersion": circular_dispersion_deg(chain_angles),
+                "warnings": "",
+            }
+        )
+
+    unwrapped_phase = unwrap_radians([layer["phase"] for layer in raw_layers])
+    per_unit_rows: list[dict[str, str]] = []
+    twist_values: list[float] = []
+    rise_values: list[float] = []
+    spread_values: list[float] = []
+    base_bends: list[float] = []
+    scaffold_bends: list[float] = []
+    dispersions: list[float] = []
+    for index, layer in enumerate(raw_layers):
+        next_layer = raw_layers[index + 1] if index + 1 < len(raw_layers) else None
+        local_twist = None
+        if next_layer is not None and unwrapped_phase[index] is not None and unwrapped_phase[index + 1] is not None:
+            local_twist = math.degrees(unwrapped_phase[index + 1] - unwrapped_phase[index])
+            twist_values.append(local_twist)
+        local_rise = None
+        if next_layer is not None and layer["axial_position"] is not None and next_layer["axial_position"] is not None:
+            local_rise = next_layer["axial_position"] - layer["axial_position"]
+            rise_values.append(local_rise)
+        base_bend = normal_angle_deg(layer["base_plane_normal"], next_layer["base_plane_normal"]) if next_layer else None
+        if base_bend is not None:
+            base_bends.append(base_bend)
+        scaffold_bend = normal_angle_deg(layer["scaffold_plane_normal"], next_layer["scaffold_plane_normal"]) if next_layer else None
+        if scaffold_bend is not None:
+            scaffold_bends.append(scaffold_bend)
+        if layer["base_radial_spread"] is not None:
+            spread_values.append(layer["base_radial_spread"])
+        if layer["chain_angular_dispersion"] is not None:
+            dispersions.append(layer["chain_angular_dispersion"])
+        centroid_point = layer["layer_centroid"]
+        base_normal = layer["base_plane_normal"]
+        scaffold_normal = layer["scaffold_plane_normal"]
+        per_unit_rows.append(
+            {
+                "structure_id": structure_id,
+                "source_pdb": str(path),
+                "unit_index": str(layer["unit_index"]),
+                "chain_count": str(layer["chain_count"]),
+                "axial_position_A": format_float(layer["axial_position"]),
+                "layer_centroid_x": format_float(centroid_point[0] if centroid_point else None),
+                "layer_centroid_y": format_float(centroid_point[1] if centroid_point else None),
+                "layer_centroid_z": format_float(centroid_point[2] if centroid_point else None),
+                "base_mean_radius_A": format_float(layer["base_mean_radius"]),
+                "base_radial_spread_A": format_float(layer["base_radial_spread"]),
+                "aleph_phase_deg": format_float(math.degrees(unwrapped_phase[index]) if unwrapped_phase[index] is not None else None),
+                "local_twist_deg": format_float(local_twist),
+                "local_rise_A": format_float(local_rise),
+                "base_plane_normal_x": format_float(base_normal[0] if base_normal else None),
+                "base_plane_normal_y": format_float(base_normal[1] if base_normal else None),
+                "base_plane_normal_z": format_float(base_normal[2] if base_normal else None),
+                "aleph_base_plane_bend_deg": format_float(base_bend),
+                "scaffold_plane_normal_x": format_float(scaffold_normal[0] if scaffold_normal else None),
+                "scaffold_plane_normal_y": format_float(scaffold_normal[1] if scaffold_normal else None),
+                "scaffold_plane_normal_z": format_float(scaffold_normal[2] if scaffold_normal else None),
+                "aleph_scaffold_plane_bend_deg": format_float(scaffold_bend),
+                "chain_angular_dispersion_deg": format_float(layer["chain_angular_dispersion"]),
+                "warnings": layer["warnings"],
+            }
+        )
+
+    twist_std = sample_std(twist_values)
+    rise_std = sample_std(rise_values)
+    spread_std = sample_std(spread_values)
+    regular_score = None
+    if twist_std is not None and rise_std is not None and spread_std is not None:
+        regular_score = 1.0 / (1.0 + abs(twist_std) / 30.0 + abs(rise_std) / 3.4 + abs(spread_std))
+    summary_row = {
+        "structure_id": structure_id,
+        "source_pdb": str(path),
+        "unit_count": str(unit_count),
+        "chain_count": str(len(chains)),
+        "mean_local_twist_deg": format_float(mean(twist_values)),
+        "std_local_twist_deg": format_float(twist_std),
+        "mean_local_rise_A": format_float(mean(rise_values)),
+        "std_local_rise_A": format_float(rise_std),
+        "mean_base_radial_spread_A": format_float(mean(spread_values)),
+        "std_base_radial_spread_A": format_float(spread_std),
+        "mean_base_plane_bend_deg": format_float(mean(base_bends)),
+        "mean_scaffold_plane_bend_deg": format_float(mean(scaffold_bends)),
+        "mean_chain_angular_dispersion_deg": format_float(mean(dispersions)),
+        "aleph_regular_score": format_float(regular_score),
+        "warnings": "; ".join(warnings),
+    }
+    return StructureFingerprint(
+        structure_id=structure_id,
+        path=path,
+        raw_atom_count=len(raw_atoms),
+        deduped_atom_count=len(atoms),
+        heavy_atom_count=len(selected_heavy),
+        chain_count=len(chains),
+        per_unit_rows=per_unit_rows,
+        summary_row=summary_row,
+        warnings=tuple(warnings),
+    )
+
+
+def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def fft_summary(structure_id: str, signal_name: str, values: list[float]) -> dict[str, str]:
+    warning = ""
+    if len(values) < 4:
+        return {
+            "structure_id": structure_id,
+            "signal_name": signal_name,
+            "sample_count": str(len(values)),
+            "dominant_frequency_index": "",
+            "dominant_amplitude": "",
+            "normalized_dominant_amplitude": "",
+            "too_short_for_reliable_interpretation": "true",
+            "warnings": "signal is too short for discrete spectral interpretation",
+        }
+    centered = [value - (sum(values) / len(values)) for value in values]
+    try:
+        import numpy as np
+
+        arr = np.asarray(centered, dtype=float)
+        spectrum = np.fft.rfft(arr)
+        amplitudes = [float(value) for value in np.abs(spectrum)]
+    except Exception:
+        warning = "numpy unavailable; used standard-library DFT fallback"
+        amplitudes = []
+        count = len(centered)
+        for frequency_index in range(count // 2 + 1):
+            real = 0.0
+            imag = 0.0
+            for sample_index, value in enumerate(centered):
+                angle = -2.0 * math.pi * frequency_index * sample_index / count
+                real += value * math.cos(angle)
+                imag += value * math.sin(angle)
+            amplitudes.append(math.sqrt(real * real + imag * imag))
+    if len(amplitudes) <= 1:
+        dominant_index = 0
+        dominant_amplitude = 0.0
+    else:
+        search = amplitudes[1:]
+        dominant_index = max(range(1, len(amplitudes)), key=lambda index: amplitudes[index])
+        dominant_amplitude = float(amplitudes[dominant_index])
+    total = float(sum(amplitudes[1:]))
+    normalized = dominant_amplitude / total if total > 0 else 0.0
+    if len(values) < 10:
+        warning = f"{warning}; short signal; spectral interpretation is limited" if warning else "short signal; spectral interpretation is limited"
+    return {
+        "structure_id": structure_id,
+        "signal_name": signal_name,
+        "sample_count": str(len(values)),
+        "dominant_frequency_index": str(dominant_index),
+        "dominant_amplitude": format_float(dominant_amplitude),
+        "normalized_dominant_amplitude": format_float(normalized),
+        "too_short_for_reliable_interpretation": "true" if len(values) < 10 else "false",
+        "warnings": warning,
+    }
+
+
+def collect_signal(rows: list[dict[str, str]], structure_id: str, column: str) -> list[float]:
+    values = []
+    for row in rows:
+        if row["structure_id"] != structure_id:
+            continue
+        value = safe_float(row.get(column))
+        if value is not None:
+            values.append(value)
+    return values
+
+
+def svg_line_plot(title: str, rows: list[dict[str, str]], y_column: str, y_label: str, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    width = 900
+    height = 430
+    left = 70
+    right = 30
+    top = 45
+    bottom = 60
+    series = OrderedDict()
+    for row in rows:
+        value = safe_float(row.get(y_column))
+        unit = safe_float(row.get("unit_index"))
+        if value is None or unit is None:
+            continue
+        series.setdefault(row["structure_id"], []).append((unit, value))
+    all_points = [point for points in series.values() for point in points]
+    if not all_points:
+        return
+    min_x = min(point[0] for point in all_points)
+    max_x = max(point[0] for point in all_points)
+    min_y = min(point[1] for point in all_points)
+    max_y = max(point[1] for point in all_points)
+    if max_x == min_x:
+        max_x += 1
+    if max_y == min_y:
+        max_y += 1
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+    colors = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#e45756", "#72b7b2"]
+
+    def sx(value: float) -> float:
+        return left + (value - min_x) / (max_x - min_x) * plot_w
+
+    def sy(value: float) -> float:
+        return top + (max_y - value) / (max_y - min_y) * plot_h
+
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        f'<text x="{width / 2:.0f}" y="26" text-anchor="middle" font-family="Arial" font-size="17">{title}</text>',
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + plot_h}" stroke="#333"/>',
+        f'<line x1="{left}" y1="{top + plot_h}" x2="{left + plot_w}" y2="{top + plot_h}" stroke="#333"/>',
+        f'<text x="{width / 2:.0f}" y="{height - 15}" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>',
+        f'<text x="18" y="{top + plot_h / 2:.0f}" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,{top + plot_h / 2:.0f})">{y_label}</text>',
+    ]
+    for index, (structure_id, points) in enumerate(series.items()):
+        points = sorted(points)
+        color = colors[index % len(colors)]
+        coords = " ".join(f"{sx(x):.2f},{sy(y):.2f}" for x, y in points)
+        parts.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2"/>')
+        for x, y in points:
+            parts.append(f'<circle cx="{sx(x):.2f}" cy="{sy(y):.2f}" r="2.5" fill="{color}"/>')
+        legend_y = 50 + index * 20
+        parts.append(f'<rect x="700" y="{legend_y}" width="12" height="12" fill="{color}"/>')
+        parts.append(f'<text x="718" y="{legend_y + 11}" font-family="Arial" font-size="12">{structure_id}</text>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
+def svg_fft_plot(rows: list[dict[str, str]], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    width = 900
+    height = 430
+    left = 80
+    bottom = 340
+    filtered = [row for row in rows if row["dominant_frequency_index"]]
+    if not filtered:
+        return
+    labels = [f"{row['structure_id']} {row['signal_name']}" for row in filtered]
+    values = [safe_float(row["normalized_dominant_amplitude"]) or 0.0 for row in filtered]
+    max_value = max(values + [1.0])
+    bar_w = max(10, min(28, int(650 / max(1, len(values)))))
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        '<text x="450" y="28" text-anchor="middle" font-family="Arial" font-size="17">Aleph FFT normalized dominant amplitudes</text>',
+        f'<line x1="{left}" y1="55" x2="{left}" y2="{bottom}" stroke="#333"/>',
+        f'<line x1="{left}" y1="{bottom}" x2="{width - 30}" y2="{bottom}" stroke="#333"/>',
+    ]
+    for index, value in enumerate(values):
+        h = value / max_value * 250 if max_value else 0
+        x = left + 20 + index * (bar_w + 8)
+        y = bottom - h
+        parts.append(f'<rect x="{x}" y="{y:.2f}" width="{bar_w}" height="{h:.2f}" fill="#4c78a8"/>')
+        parts.append(f'<text x="{x + bar_w / 2:.0f}" y="{bottom + 14}" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-55 {x + bar_w / 2:.0f},{bottom + 14})">{labels[index]}</text>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
+def write_plots(per_unit_rows: list[dict[str, str]], fft_rows: list[dict[str, str]], plot_dir: Path) -> list[Path]:
+    specs = [
+        ("aleph_local_twist_vs_unit.svg", "Aleph local twist vs unit index", "local_twist_deg", "local twist (deg)"),
+        ("aleph_local_rise_vs_unit.svg", "Aleph local rise vs unit index", "local_rise_A", "local rise (A)"),
+        ("aleph_radial_spread_vs_unit.svg", "Aleph radial spread vs unit index", "base_radial_spread_A", "base radial spread (A)"),
+        ("aleph_phase_progression_vs_unit.svg", "Aleph base-like angular phase progression", "aleph_phase_deg", "Aleph phase (deg)"),
+    ]
+    paths = []
+    for filename, title, column, label in specs:
+        path = plot_dir / filename
+        svg_line_plot(title, per_unit_rows, column, label, path)
+        if path.exists():
+            paths.append(path)
+    fft_path = plot_dir / "aleph_fft_dominant_amplitudes.svg"
+    svg_fft_plot(fft_rows, fft_path)
+    if fft_path.exists():
+        paths.append(fft_path)
+    return paths
+
+
+def report_text(
+    fingerprints: list[StructureFingerprint],
+    fft_rows: list[dict[str, str]],
+    plot_paths: list[Path],
+    optional_warning: str,
+    args: argparse.Namespace,
+) -> str:
+    lines = [
+        "# Aleph Geometric Fingerprint Prototype",
+        "",
+        "Aleph is an exploratory one-dimensional geometric fingerprint along the fitted hexaplex axis. It is not a diffraction simulator and does not prove formation, stability, or experimental correctness.",
+        "",
+        "Aleph asks whether each model has an ordered repeating geometric signature along its axis that can be plotted as per-unit signals and summarized with a discrete FFT.",
+        "",
+        "## Inputs",
+        "",
+    ]
+    for fingerprint in fingerprints:
+        lines.append(
+            f"- `{fingerprint.structure_id}`: `{fingerprint.path}` ({fingerprint.chain_count} chains, {fingerprint.summary_row['unit_count']} units, {fingerprint.heavy_atom_count} heavy atoms)"
+        )
+    if optional_warning:
+        lines.append(f"- Optional compact twist variants: {optional_warning}")
+
+    lines.extend(
+        [
+            "",
+            "## Aleph Summary",
+            "",
+            "| Structure | Units | Mean local twist | Twist std | Mean rise | Rise std | Regular score |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for fingerprint in fingerprints:
+        row = fingerprint.summary_row
+        lines.append(
+            f"| {row['structure_id']} | {row['unit_count']} | {row['mean_local_twist_deg']} | {row['std_local_twist_deg']} | "
+            f"{row['mean_local_rise_A']} | {row['std_local_rise_A']} | {row['aleph_regular_score']} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## FFT Summary",
+            "",
+            "| Structure | Signal | Samples | Dominant index | Normalized amplitude | Warning |",
+            "|---|---|---:|---:|---:|---|",
+        ]
+    )
+    for row in fft_rows:
+        lines.append(
+            f"| {row['structure_id']} | {row['signal_name']} | {row['sample_count']} | {row['dominant_frequency_index']} | "
+            f"{row['normalized_dominant_amplitude']} | {row['warnings']} |"
+        )
+
+    full = next((fingerprint for fingerprint in fingerprints if fingerprint.structure_id == "full"), None)
+    central6 = next((fingerprint for fingerprint in fingerprints if fingerprint.structure_id == "central6"), None)
+    central7 = next((fingerprint for fingerprint in fingerprints if fingerprint.structure_id == "central7"), None)
+    lines.extend(["", "## Interpretation", ""])
+    if full is not None:
+        lines.append(
+            "The full model is the best first Aleph FFT target because it has the longest ordered per-unit signal; shorter central6 and central7 fragments are useful for local comparison but have limited spectral resolution."
+        )
+    if central6 is not None and central7 is not None:
+        lines.append(
+            "central6 and central7 can be compared to the full model by local twist, local rise, radial spread, and phase progression rather than by pair-distance counts alone."
+        )
+    lines.append(
+        "Backbone/scaffold Aleph bend and base-like Aleph bend are reported separately where per-layer plane normals are computable; disagreement between them would indicate different scaffold and base-like geometric signals."
+    )
+    lines.append(
+        "This first prototype looks promising only if the plots reveal repeat regularity or variant differences that were not already obvious from distance-window attribution."
+    )
+    lines.extend(
+        [
+            "",
+                "## Assumptions And Cautions",
+                "",
+                "- Unit assignment uses base-like CYP/MEP residues as repeat anchors by residue order within each chain.",
+            "- The Aleph phase and axial position use the first available chain-specific base-like centroid as an angular/axial anchor for each unit, while the layer centroid is still reported separately. This avoids symmetry cancellation of the six-strand layer centroid.",
+            "- FFT summaries for 6- and 7-unit models are explicitly marked as short-signal diagnostics.",
+            "- Aleph is a geometric fingerprint, not a diffraction simulator or structural mechanism.",
+            "",
+            "## Outputs",
+            "",
+            f"- Per-unit CSV: `{args.per_unit_csv}`",
+            f"- Summary CSV: `{args.summary_csv}`",
+            f"- FFT CSV: `{args.fft_csv}`",
+            f"- Plot directory: `{args.plot_dir}`",
+        ]
+    )
+    for path in plot_paths:
+        lines.append(f"- Plot: `{path}`")
+    warnings = [warning for fingerprint in fingerprints for warning in fingerprint.warnings]
+    if warnings:
+        lines.extend(["", "## Warnings", ""])
+        for warning in warnings:
+            lines.append(f"- {warning}")
+    return "\n".join(lines) + "\n"
+
+
+def run(args: argparse.Namespace) -> dict[str, object]:
+    inputs, input_warnings = load_structure_inputs(args.include_optional_twists)
+    fingerprints: list[StructureFingerprint] = []
+    for structure_id, path in inputs:
+        if path.exists():
+            fingerprints.append(analyze_structure(structure_id, path))
+    per_unit_rows = [row for fingerprint in fingerprints for row in fingerprint.per_unit_rows]
+    summary_rows = [fingerprint.summary_row for fingerprint in fingerprints]
+    fft_rows: list[dict[str, str]] = []
+    for fingerprint in fingerprints:
+        for signal_name, column in [
+            ("local_twist_deg", "local_twist_deg"),
+            ("local_rise_A", "local_rise_A"),
+            ("radial_spread_A", "base_radial_spread_A"),
+        ]:
+            fft_rows.append(fft_summary(fingerprint.structure_id, signal_name, collect_signal(per_unit_rows, fingerprint.structure_id, column)))
+
+    write_csv(args.per_unit_csv, per_unit_rows, PER_UNIT_COLUMNS)
+    write_csv(args.summary_csv, summary_rows, SUMMARY_COLUMNS)
+    write_csv(args.fft_csv, fft_rows, FFT_COLUMNS)
+    plot_paths = write_plots(per_unit_rows, fft_rows, args.plot_dir)
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(report_text(fingerprints, fft_rows, plot_paths, "; ".join(input_warnings), args), encoding="utf-8")
+    return {
+        "per_unit_rows": len(per_unit_rows),
+        "summary_rows": len(summary_rows),
+        "fft_rows": len(fft_rows),
+        "plots": plot_paths,
+        "fingerprints": fingerprints,
+        "input_warnings": input_warnings,
+    }
+
+
+def main() -> None:
+    result = run(parse_args())
+    print(f"Wrote {result['per_unit_rows']} Aleph per-unit rows")
+    print(f"Wrote {result['summary_rows']} Aleph summary rows")
+    print(f"Wrote {result['fft_rows']} Aleph FFT rows")
+    print(f"Wrote {len(result['plots'])} plots")
+    if result["input_warnings"]:
+        print("; ".join(result["input_warnings"]))
+
+
+if __name__ == "__main__":
+    main()

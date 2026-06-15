@@ -1,0 +1,10 @@
+structure_id,signal_name,sample_count,dominant_frequency_index,dominant_amplitude,normalized_dominant_amplitude,too_short_for_reliable_interpretation,warnings
+full,local_twist_deg,14,1,138.936028,0.681473,false,numpy unavailable; used standard-library DFT fallback
+full,local_rise_A,14,1,22.565866,0.816357,false,numpy unavailable; used standard-library DFT fallback
+full,radial_spread_A,15,1,2.478339,0.384917,false,numpy unavailable; used standard-library DFT fallback
+central6,local_twist_deg,5,1,59.871209,0.703753,true,numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited
+central6,local_rise_A,5,1,1.705740,0.834914,true,numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited
+central6,radial_spread_A,6,1,3.400677,0.631820,true,numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited
+central7,local_twist_deg,6,1,123.889540,0.655957,true,numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited
+central7,local_rise_A,6,1,2.749384,0.806969,true,numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited
+central7,radial_spread_A,7,1,4.160920,0.681759,true,numpy unavailable; used standard-library DFT fallback; short signal; spectral interpretation is limited

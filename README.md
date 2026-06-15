@@ -35,11 +35,13 @@ This project may consume exported PDBs, CSVs, JSON metadata, and figures from th
 
 ## Setup
 
-Use the existing virtual environment for this repo, then install the local package in editable mode:
+Create or use the repo-local virtual environment, then install the local package and development test requirements:
 
 ```bash
+python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
+python -m pip install -r requirements-dev.txt
 ```
 
 The first scripts intentionally use only the Python standard library. `pytest` is needed for the test suite.
@@ -47,7 +49,7 @@ The first scripts intentionally use only the Python standard library. `pytest` i
 ## Tests
 
 ```bash
-pytest
+python -m pytest tests
 ```
 
 ## Initial Metrics

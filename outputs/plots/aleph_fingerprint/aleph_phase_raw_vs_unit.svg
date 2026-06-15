@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="430" viewBox="0 0 900 430">
 <rect width="100%" height="100%" fill="white"/>
-<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph unwrapped angular phase progression</text>
+<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph raw angular phase progression</text>
 <line x1="70" y1="45" x2="70" y2="370" stroke="#333"/>
 <line x1="70" y1="370" x2="870" y2="370" stroke="#333"/>
 <text x="450" y="415" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>
-<text x="18" y="208" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,208)">unwrapped Aleph phase (deg)</text>
+<text x="18" y="208" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,208)">raw Aleph phase (deg)</text>
 <polyline points="70.00,55.32 127.14,47.84 184.29,45.00 241.43,49.97 298.57,68.81 355.71,110.72 412.86,165.83 470.00,209.63 527.14,249.83 584.29,297.49 641.43,339.36 698.57,361.96 755.71,370.00 812.86,369.34 870.00,363.35" fill="none" stroke="#4c78a8" stroke-width="2"/>
 <circle cx="70.00" cy="55.32" r="2.5" fill="#4c78a8"/>
 <circle cx="127.14" cy="47.84" r="2.5" fill="#4c78a8"/>

@@ -1,42 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="430" viewBox="0 0 900 430">
 <rect width="100%" height="100%" fill="white"/>
-<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph local rise vs unit index</text>
+<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph local rise after axis orientation</text>
 <line x1="70" y1="45" x2="70" y2="370" stroke="#333"/>
 <line x1="70" y1="370" x2="870" y2="370" stroke="#333"/>
 <text x="450" y="415" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>
 <text x="18" y="208" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,208)">local rise (A)</text>
-<polyline points="70.00,50.56 131.54,45.00 193.08,77.09 254.62,138.22 316.15,211.99 377.69,278.66 439.23,320.37 500.77,325.91 562.31,293.76 623.85,232.68 685.38,158.90 746.92,92.24 808.46,50.53 870.00,45.01" fill="none" stroke="#4c78a8" stroke-width="2"/>
-<circle cx="70.00" cy="50.56" r="2.5" fill="#4c78a8"/>
-<circle cx="131.54" cy="45.00" r="2.5" fill="#4c78a8"/>
-<circle cx="193.08" cy="77.09" r="2.5" fill="#4c78a8"/>
-<circle cx="254.62" cy="138.22" r="2.5" fill="#4c78a8"/>
-<circle cx="316.15" cy="211.99" r="2.5" fill="#4c78a8"/>
-<circle cx="377.69" cy="278.66" r="2.5" fill="#4c78a8"/>
-<circle cx="439.23" cy="320.37" r="2.5" fill="#4c78a8"/>
-<circle cx="500.77" cy="325.91" r="2.5" fill="#4c78a8"/>
-<circle cx="562.31" cy="293.76" r="2.5" fill="#4c78a8"/>
-<circle cx="623.85" cy="232.68" r="2.5" fill="#4c78a8"/>
-<circle cx="685.38" cy="158.90" r="2.5" fill="#4c78a8"/>
-<circle cx="746.92" cy="92.24" r="2.5" fill="#4c78a8"/>
-<circle cx="808.46" cy="50.53" r="2.5" fill="#4c78a8"/>
-<circle cx="870.00" cy="45.01" r="2.5" fill="#4c78a8"/>
+<polyline points="70.00,364.44 131.54,370.00 193.08,337.91 254.62,276.78 316.15,203.01 377.69,136.34 439.23,94.63 500.77,89.09 562.31,121.24 623.85,182.32 685.38,256.10 746.92,322.76 808.46,364.47 870.00,369.99" fill="none" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="70.00" cy="364.44" r="2.5" fill="#4c78a8"/>
+<circle cx="131.54" cy="370.00" r="2.5" fill="#4c78a8"/>
+<circle cx="193.08" cy="337.91" r="2.5" fill="#4c78a8"/>
+<circle cx="254.62" cy="276.78" r="2.5" fill="#4c78a8"/>
+<circle cx="316.15" cy="203.01" r="2.5" fill="#4c78a8"/>
+<circle cx="377.69" cy="136.34" r="2.5" fill="#4c78a8"/>
+<circle cx="439.23" cy="94.63" r="2.5" fill="#4c78a8"/>
+<circle cx="500.77" cy="89.09" r="2.5" fill="#4c78a8"/>
+<circle cx="562.31" cy="121.24" r="2.5" fill="#4c78a8"/>
+<circle cx="623.85" cy="182.32" r="2.5" fill="#4c78a8"/>
+<circle cx="685.38" cy="256.10" r="2.5" fill="#4c78a8"/>
+<circle cx="746.92" cy="322.76" r="2.5" fill="#4c78a8"/>
+<circle cx="808.46" cy="364.47" r="2.5" fill="#4c78a8"/>
+<circle cx="870.00" cy="369.99" r="2.5" fill="#4c78a8"/>
 <rect x="700" y="50" width="12" height="12" fill="#4c78a8"/>
 <text x="718" y="61" font-family="Arial" font-size="12">full</text>
-<polyline points="70.00,308.68 131.54,350.46 193.08,370.00 254.62,362.00 316.15,328.61" fill="none" stroke="#f58518" stroke-width="2"/>
-<circle cx="70.00" cy="308.68" r="2.5" fill="#f58518"/>
-<circle cx="131.54" cy="350.46" r="2.5" fill="#f58518"/>
-<circle cx="193.08" cy="370.00" r="2.5" fill="#f58518"/>
-<circle cx="254.62" cy="362.00" r="2.5" fill="#f58518"/>
-<circle cx="316.15" cy="328.61" r="2.5" fill="#f58518"/>
+<polyline points="70.00,106.32 131.54,64.54 193.08,45.00 254.62,53.00 316.15,86.39" fill="none" stroke="#f58518" stroke-width="2"/>
+<circle cx="70.00" cy="106.32" r="2.5" fill="#f58518"/>
+<circle cx="131.54" cy="64.54" r="2.5" fill="#f58518"/>
+<circle cx="193.08" cy="45.00" r="2.5" fill="#f58518"/>
+<circle cx="254.62" cy="53.00" r="2.5" fill="#f58518"/>
+<circle cx="316.15" cy="86.39" r="2.5" fill="#f58518"/>
 <rect x="700" y="70" width="12" height="12" fill="#f58518"/>
 <text x="718" y="81" font-family="Arial" font-size="12">central6</text>
-<polyline points="70.00,303.46 131.54,346.63 193.08,369.12 254.62,364.85 316.15,334.98 377.69,287.60" fill="none" stroke="#54a24b" stroke-width="2"/>
-<circle cx="70.00" cy="303.46" r="2.5" fill="#54a24b"/>
-<circle cx="131.54" cy="346.63" r="2.5" fill="#54a24b"/>
-<circle cx="193.08" cy="369.12" r="2.5" fill="#54a24b"/>
-<circle cx="254.62" cy="364.85" r="2.5" fill="#54a24b"/>
-<circle cx="316.15" cy="334.98" r="2.5" fill="#54a24b"/>
-<circle cx="377.69" cy="287.60" r="2.5" fill="#54a24b"/>
+<polyline points="70.00,111.54 131.54,68.37 193.08,45.88 254.62,50.15 316.15,80.02 377.69,127.40" fill="none" stroke="#54a24b" stroke-width="2"/>
+<circle cx="70.00" cy="111.54" r="2.5" fill="#54a24b"/>
+<circle cx="131.54" cy="68.37" r="2.5" fill="#54a24b"/>
+<circle cx="193.08" cy="45.88" r="2.5" fill="#54a24b"/>
+<circle cx="254.62" cy="50.15" r="2.5" fill="#54a24b"/>
+<circle cx="316.15" cy="80.02" r="2.5" fill="#54a24b"/>
+<circle cx="377.69" cy="127.40" r="2.5" fill="#54a24b"/>
 <rect x="700" y="90" width="12" height="12" fill="#54a24b"/>
 <text x="718" y="101" font-family="Arial" font-size="12">central7</text>
 </svg>

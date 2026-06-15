@@ -77,6 +77,34 @@ def test_axis_fitting_returns_unit_vector():
     assert math.sqrt(sum(value * value for value in axis)) == pytest.approx(1.0)
 
 
+def test_angle_wrapping_and_unwrapping():
+    assert aleph.wrap_degrees(190.0) == pytest.approx(-170.0)
+    assert aleph.wrap_degrees(-190.0) == pytest.approx(170.0)
+    raw = [math.radians(170.0), math.radians(-170.0), math.radians(-150.0)]
+    unwrapped = aleph.unwrap_radians(raw)
+
+    assert aleph.phase_unwrap_ok(raw, unwrapped)
+    assert math.degrees(unwrapped[1] - unwrapped[0]) == pytest.approx(20.0)
+    assert math.degrees(unwrapped[2] - unwrapped[1]) == pytest.approx(20.0)
+
+
+def test_axis_flip_logic_makes_unit_order_positive():
+    axis, flipped = aleph.orient_axis_by_unit_order((0.0, 0.0, -1.0), (0.0, 0.0, 0.0), [(0.0, 0.0, 0.0), (0.0, 0.0, 3.4)])
+
+    assert flipped is True
+    assert axis == pytest.approx((0.0, 0.0, 1.0))
+
+
+def test_circular_dispersion_is_bounded_and_resultant_is_interpretable():
+    angles = [0.0, math.pi / 2, math.pi, 3 * math.pi / 2]
+    dispersion = aleph.circular_dispersion_deg(angles)
+    resultant = aleph.circular_mean_resultant_length(angles)
+
+    assert dispersion is not None
+    assert 0.0 <= dispersion <= 180.0
+    assert resultant == pytest.approx(0.0, abs=1e-12)
+
+
 def test_local_twist_and_rise_on_simple_geometry(tmp_path):
     path = tmp_path / "synthetic.pdb"
     synthetic_hexaplex(path, 5)
@@ -87,6 +115,7 @@ def test_local_twist_and_rise_on_simple_geometry(tmp_path):
     assert len(twists) == 4
     assert sum(twists) / len(twists) == pytest.approx(30.0, abs=5.0)
     assert sum(rises) / len(rises) == pytest.approx(3.4, abs=0.5)
+    assert all(rise > 0.0 for rise in rises)
 
 
 def test_fft_summary_handles_short_signal():
@@ -109,6 +138,7 @@ def test_output_schemas_are_written(tmp_path):
             "per_unit_csv": tmp_path / "per_unit.csv",
             "summary_csv": tmp_path / "summary.csv",
             "fft_csv": tmp_path / "fft.csv",
+            "qc_csv": tmp_path / "qc.csv",
             "report": tmp_path / "report.md",
             "plot_dir": tmp_path / "plots",
             "include_optional_twists": False,
@@ -125,6 +155,9 @@ def test_output_schemas_are_written(tmp_path):
     assert args.per_unit_csv.exists()
     assert args.summary_csv.exists()
     assert args.fft_csv.exists()
+    assert args.qc_csv.exists()
     assert args.report.exists()
     with args.per_unit_csv.open(newline="", encoding="utf-8") as handle:
         assert csv.DictReader(handle).fieldnames == aleph.PER_UNIT_COLUMNS
+    with args.qc_csv.open(newline="", encoding="utf-8") as handle:
+        assert csv.DictReader(handle).fieldnames == aleph.QC_COLUMNS

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="430" viewBox="0 0 900 430">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph chain angular mean resultant length</text>
+<line x1="70" y1="45" x2="70" y2="370" stroke="#333"/>
+<line x1="70" y1="370" x2="870" y2="370" stroke="#333"/>
+<text x="450" y="415" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>
+<text x="18" y="208" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,208)">mean resultant length</text>
+<polyline points="70.00,367.61 127.14,370.00 184.29,364.33 241.43,368.62 298.57,346.16 355.71,366.63 412.86,198.52 470.00,339.16 527.14,198.47 584.29,363.93 641.43,346.17 698.57,369.62 755.71,364.32 812.86,369.56 870.00,367.61" fill="none" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="70.00" cy="367.61" r="2.5" fill="#4c78a8"/>
+<circle cx="127.14" cy="370.00" r="2.5" fill="#4c78a8"/>
+<circle cx="184.29" cy="364.33" r="2.5" fill="#4c78a8"/>
+<circle cx="241.43" cy="368.62" r="2.5" fill="#4c78a8"/>
+<circle cx="298.57" cy="346.16" r="2.5" fill="#4c78a8"/>
+<circle cx="355.71" cy="366.63" r="2.5" fill="#4c78a8"/>
+<circle cx="412.86" cy="198.52" r="2.5" fill="#4c78a8"/>
+<circle cx="470.00" cy="339.16" r="2.5" fill="#4c78a8"/>
+<circle cx="527.14" cy="198.47" r="2.5" fill="#4c78a8"/>
+<circle cx="584.29" cy="363.93" r="2.5" fill="#4c78a8"/>
+<circle cx="641.43" cy="346.17" r="2.5" fill="#4c78a8"/>
+<circle cx="698.57" cy="369.62" r="2.5" fill="#4c78a8"/>
+<circle cx="755.71" cy="364.32" r="2.5" fill="#4c78a8"/>
+<circle cx="812.86" cy="369.56" r="2.5" fill="#4c78a8"/>
+<circle cx="870.00" cy="367.61" r="2.5" fill="#4c78a8"/>
+<rect x="700" y="50" width="12" height="12" fill="#4c78a8"/>
+<text x="718" y="61" font-family="Arial" font-size="12">full</text>
+<polyline points="70.00,212.17 127.14,344.88 184.29,45.00 241.43,350.60 298.57,45.06 355.71,347.12" fill="none" stroke="#f58518" stroke-width="2"/>
+<circle cx="70.00" cy="212.17" r="2.5" fill="#f58518"/>
+<circle cx="127.14" cy="344.88" r="2.5" fill="#f58518"/>
+<circle cx="184.29" cy="45.00" r="2.5" fill="#f58518"/>
+<circle cx="241.43" cy="350.60" r="2.5" fill="#f58518"/>
+<circle cx="298.57" cy="45.06" r="2.5" fill="#f58518"/>
+<circle cx="355.71" cy="347.12" r="2.5" fill="#f58518"/>
+<rect x="700" y="70" width="12" height="12" fill="#f58518"/>
+<text x="718" y="81" font-family="Arial" font-size="12">central6</text>
+<polyline points="70.00,214.47 127.14,344.35 184.29,64.23 241.43,351.72 298.57,64.28 355.71,346.58 412.86,214.44" fill="none" stroke="#54a24b" stroke-width="2"/>
+<circle cx="70.00" cy="214.47" r="2.5" fill="#54a24b"/>
+<circle cx="127.14" cy="344.35" r="2.5" fill="#54a24b"/>
+<circle cx="184.29" cy="64.23" r="2.5" fill="#54a24b"/>
+<circle cx="241.43" cy="351.72" r="2.5" fill="#54a24b"/>
+<circle cx="298.57" cy="64.28" r="2.5" fill="#54a24b"/>
+<circle cx="355.71" cy="346.58" r="2.5" fill="#54a24b"/>
+<circle cx="412.86" cy="214.44" r="2.5" fill="#54a24b"/>
+<rect x="700" y="90" width="12" height="12" fill="#54a24b"/>
+<text x="718" y="101" font-family="Arial" font-size="12">central7</text>
+</svg>

@@ -52,8 +52,10 @@ PER_UNIT_COLUMNS = [
     "layer_centroid_z",
     "base_mean_radius_A",
     "base_radial_spread_A",
+    "aleph_phase_raw_deg",
     "aleph_phase_deg",
     "local_twist_deg",
+    "local_abs_twist_deg",
     "local_rise_A",
     "base_plane_normal_x",
     "base_plane_normal_y",
@@ -64,6 +66,13 @@ PER_UNIT_COLUMNS = [
     "scaffold_plane_normal_z",
     "aleph_scaffold_plane_bend_deg",
     "chain_angular_dispersion_deg",
+    "chain_mean_resultant_length",
+    "axis_flipped",
+    "phase_unwrap_ok",
+    "missing_chain_count",
+    "local_twist_warning",
+    "local_rise_warning",
+    "plane_fit_warning",
     "warnings",
 ]
 
@@ -74,6 +83,8 @@ SUMMARY_COLUMNS = [
     "chain_count",
     "mean_local_twist_deg",
     "std_local_twist_deg",
+    "mean_abs_local_twist_deg",
+    "std_abs_local_twist_deg",
     "mean_local_rise_A",
     "std_local_rise_A",
     "mean_base_radial_spread_A",
@@ -81,7 +92,10 @@ SUMMARY_COLUMNS = [
     "mean_base_plane_bend_deg",
     "mean_scaffold_plane_bend_deg",
     "mean_chain_angular_dispersion_deg",
+    "mean_chain_resultant_length",
     "aleph_regular_score",
+    "axis_flipped",
+    "phase_unwrap_ok",
     "warnings",
 ]
 
@@ -93,6 +107,26 @@ FFT_COLUMNS = [
     "dominant_amplitude",
     "normalized_dominant_amplitude",
     "too_short_for_reliable_interpretation",
+    "warnings",
+]
+
+QC_COLUMNS = [
+    "structure_id",
+    "source_pdb",
+    "axis_flipped",
+    "phase_unwrap_ok",
+    "expected_unit_count",
+    "observed_unit_count",
+    "expected_chain_count",
+    "observed_chain_count",
+    "units_with_missing_chains",
+    "missing_chain_count_by_unit",
+    "mean_abs_local_twist_deg",
+    "std_abs_local_twist_deg",
+    "negative_rise_count",
+    "local_twist_warning",
+    "local_rise_warning",
+    "plane_fit_warning",
     "warnings",
 ]
 
@@ -124,6 +158,7 @@ class StructureFingerprint:
     chain_count: int
     per_unit_rows: list[dict[str, str]]
     summary_row: dict[str, str]
+    qc_row: dict[str, str]
     warnings: tuple[str, ...]
 
 
@@ -132,6 +167,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--per-unit-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_per_unit.csv"))
     parser.add_argument("--summary-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_summary.csv"))
     parser.add_argument("--fft-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_fft_summary.csv"))
+    parser.add_argument("--qc-csv", type=Path, default=Path("outputs/metrics/aleph_fingerprint_qc.csv"))
     parser.add_argument("--report", type=Path, default=Path("outputs/reports/aleph_fingerprint_report.md"))
     parser.add_argument("--plot-dir", type=Path, default=Path("outputs/plots/aleph_fingerprint"))
     parser.add_argument("--include-optional-twists", action="store_true", default=True)
@@ -262,15 +298,50 @@ def unwrap_radians(values: list[float | None]) -> list[float | None]:
     return unwrapped
 
 
-def circular_dispersion_deg(angles: list[float]) -> float | None:
+def phase_unwrap_ok(raw_values: list[float | None], unwrapped_values: list[float | None]) -> bool:
+    raw_count = sum(value is not None for value in raw_values)
+    unwrapped_count = sum(value is not None for value in unwrapped_values)
+    if raw_count != unwrapped_count:
+        return False
+    finite = [value for value in unwrapped_values if value is not None and math.isfinite(value)]
+    return len(finite) == unwrapped_count
+
+
+def wrap_degrees(value: float) -> float:
+    wrapped = (value + 180.0) % 360.0 - 180.0
+    if wrapped == -180.0:
+        return 180.0
+    return wrapped
+
+
+def circular_mean_resultant_length(angles: list[float]) -> float | None:
     if not angles:
         return None
     sin_mean = sum(math.sin(value) for value in angles) / len(angles)
     cos_mean = sum(math.cos(value) for value in angles) / len(angles)
-    resultant = min(1.0, max(0.0, math.sqrt(sin_mean * sin_mean + cos_mean * cos_mean)))
+    return min(1.0, max(0.0, math.sqrt(sin_mean * sin_mean + cos_mean * cos_mean)))
+
+
+def circular_dispersion_deg(angles: list[float]) -> float | None:
+    resultant = circular_mean_resultant_length(angles)
+    if resultant is None:
+        return None
     if resultant <= 0:
         return 180.0
-    return math.degrees(math.sqrt(max(0.0, -2.0 * math.log(resultant))))
+    return min(180.0, math.degrees(math.sqrt(max(0.0, -2.0 * math.log(resultant)))))
+
+
+def orient_axis_by_unit_order(
+    axis: tuple[float, float, float],
+    origin: tuple[float, float, float],
+    anchor_points: list[tuple[float, float, float] | None],
+) -> tuple[tuple[float, float, float], bool]:
+    positions = [project_point_to_axis(point, origin, axis)[0] for point in anchor_points if point is not None]
+    deltas = [positions[index + 1] - positions[index] for index in range(len(positions) - 1)]
+    valid = [delta for delta in deltas if abs(delta) > 1e-9]
+    if valid and sum(valid) / len(valid) < 0.0:
+        return (-axis[0], -axis[1], -axis[2]), True
+    return axis, False
 
 
 def plane_normal(points: list[tuple[float, float, float]]) -> tuple[float, float, float] | None:
@@ -340,6 +411,8 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
     warnings.extend(unit_warnings)
     unit_count = max((len(units) for units in units_by_chain.values()), default=0)
     chains = sorted(units_by_chain)
+    expected_chain_count = len(chains)
+    expected_unit_count = unit_count
     base_centroids = []
     for units in units_by_chain.values():
         for unit in units:
@@ -348,6 +421,7 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
             if point is not None:
                 base_centroids.append(point)
     preliminary_layer_centroids = []
+    anchor_points_for_orientation: list[tuple[float, float, float] | None] = []
     for unit_index in range(1, unit_count + 1):
         layer_points = []
         for chain in chains:
@@ -358,10 +432,12 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
             point = centroid(atoms_for_base) or centroid(heavy_atoms(unit.base_residue.atoms))
             if point is not None:
                 layer_points.append(point)
+        anchor_points_for_orientation.append(layer_points[0] if layer_points else None)
         if layer_points:
             preliminary_layer_centroids.append(mean_point(layer_points))
     axis_points = preliminary_layer_centroids if len(preliminary_layer_centroids) >= 3 else base_centroids
     origin, axis = infer_axis(axis_points if len(axis_points) >= 3 else [atom_xyz(atom) for atom in selected_heavy])
+    axis, axis_flipped = orient_axis_by_unit_order(axis, origin, anchor_points_for_orientation)
     basis_u, basis_v = build_perpendicular_basis(axis)
 
     raw_layers = []
@@ -390,6 +466,7 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
             {
                 "unit_index": unit_index,
                 "chain_count": len(chain_units),
+                "missing_chain_count": max(0, expected_chain_count - len(chain_units)),
                 "layer_centroid": layer_centroid,
                 "axial_position": axial_position,
                 "base_mean_radius": mean(radii),
@@ -398,38 +475,64 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
                 "base_plane_normal": plane_normal(base_points),
                 "scaffold_plane_normal": plane_normal(scaffold_points),
                 "chain_angular_dispersion": circular_dispersion_deg(chain_angles),
+                "chain_mean_resultant_length": circular_mean_resultant_length(chain_angles),
                 "warnings": "",
             }
         )
 
-    unwrapped_phase = unwrap_radians([layer["phase"] for layer in raw_layers])
+    raw_phases = [layer["phase"] for layer in raw_layers]
+    unwrapped_phase = unwrap_radians(raw_phases)
+    unwrap_ok = phase_unwrap_ok(raw_phases, unwrapped_phase)
+    missing_chain_count_by_unit = "; ".join(f"{layer['unit_index']}:{layer['missing_chain_count']}" for layer in raw_layers if layer["missing_chain_count"])
+    units_with_missing_chains = sum(1 for layer in raw_layers if layer["missing_chain_count"])
     per_unit_rows: list[dict[str, str]] = []
     twist_values: list[float] = []
+    abs_twist_values: list[float] = []
     rise_values: list[float] = []
     spread_values: list[float] = []
     base_bends: list[float] = []
     scaffold_bends: list[float] = []
     dispersions: list[float] = []
+    resultants: list[float] = []
+    negative_rise_count = 0
+    local_twist_warnings: list[str] = []
+    local_rise_warnings: list[str] = []
+    plane_fit_warnings: list[str] = []
     for index, layer in enumerate(raw_layers):
         next_layer = raw_layers[index + 1] if index + 1 < len(raw_layers) else None
         local_twist = None
+        local_abs_twist = None
         if next_layer is not None and unwrapped_phase[index] is not None and unwrapped_phase[index + 1] is not None:
             local_twist = math.degrees(unwrapped_phase[index + 1] - unwrapped_phase[index])
+            wrapped_twist = wrap_degrees(local_twist)
+            local_abs_twist = abs(wrapped_twist)
             twist_values.append(local_twist)
+            abs_twist_values.append(local_abs_twist)
+            if abs(local_twist) > 180.0:
+                local_twist_warnings.append(f"unit {layer['unit_index']} to {next_layer['unit_index']} has large unwrapped twist {local_twist:.2f} deg")
         local_rise = None
         if next_layer is not None and layer["axial_position"] is not None and next_layer["axial_position"] is not None:
             local_rise = next_layer["axial_position"] - layer["axial_position"]
             rise_values.append(local_rise)
+            if local_rise < -1e-6:
+                negative_rise_count += 1
+                local_rise_warnings.append(f"unit {layer['unit_index']} to {next_layer['unit_index']} has negative rise {local_rise:.2f} A")
         base_bend = normal_angle_deg(layer["base_plane_normal"], next_layer["base_plane_normal"]) if next_layer else None
         if base_bend is not None:
             base_bends.append(base_bend)
+        elif next_layer is not None:
+            plane_fit_warnings.append(f"unit {layer['unit_index']} to {next_layer['unit_index']} missing base plane fit")
         scaffold_bend = normal_angle_deg(layer["scaffold_plane_normal"], next_layer["scaffold_plane_normal"]) if next_layer else None
         if scaffold_bend is not None:
             scaffold_bends.append(scaffold_bend)
+        elif next_layer is not None:
+            plane_fit_warnings.append(f"unit {layer['unit_index']} to {next_layer['unit_index']} missing scaffold plane fit")
         if layer["base_radial_spread"] is not None:
             spread_values.append(layer["base_radial_spread"])
         if layer["chain_angular_dispersion"] is not None:
             dispersions.append(layer["chain_angular_dispersion"])
+        if layer["chain_mean_resultant_length"] is not None:
+            resultants.append(layer["chain_mean_resultant_length"])
         centroid_point = layer["layer_centroid"]
         base_normal = layer["base_plane_normal"]
         scaffold_normal = layer["scaffold_plane_normal"]
@@ -445,8 +548,10 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
                 "layer_centroid_z": format_float(centroid_point[2] if centroid_point else None),
                 "base_mean_radius_A": format_float(layer["base_mean_radius"]),
                 "base_radial_spread_A": format_float(layer["base_radial_spread"]),
+                "aleph_phase_raw_deg": format_float(math.degrees(layer["phase"]) if layer["phase"] is not None else None),
                 "aleph_phase_deg": format_float(math.degrees(unwrapped_phase[index]) if unwrapped_phase[index] is not None else None),
                 "local_twist_deg": format_float(local_twist),
+                "local_abs_twist_deg": format_float(local_abs_twist),
                 "local_rise_A": format_float(local_rise),
                 "base_plane_normal_x": format_float(base_normal[0] if base_normal else None),
                 "base_plane_normal_y": format_float(base_normal[1] if base_normal else None),
@@ -457,13 +562,28 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
                 "scaffold_plane_normal_z": format_float(scaffold_normal[2] if scaffold_normal else None),
                 "aleph_scaffold_plane_bend_deg": format_float(scaffold_bend),
                 "chain_angular_dispersion_deg": format_float(layer["chain_angular_dispersion"]),
+                "chain_mean_resultant_length": format_float(layer["chain_mean_resultant_length"]),
+                "axis_flipped": "true" if axis_flipped else "false",
+                "phase_unwrap_ok": "true" if unwrap_ok else "false",
+                "missing_chain_count": str(layer["missing_chain_count"]),
+                "local_twist_warning": "; ".join(warning for warning in local_twist_warnings if f"unit {layer['unit_index']} " in warning),
+                "local_rise_warning": "; ".join(warning for warning in local_rise_warnings if f"unit {layer['unit_index']} " in warning),
+                "plane_fit_warning": "; ".join(warning for warning in plane_fit_warnings if f"unit {layer['unit_index']} " in warning),
                 "warnings": layer["warnings"],
             }
         )
 
     twist_std = sample_std(twist_values)
+    abs_twist_std = sample_std(abs_twist_values)
     rise_std = sample_std(rise_values)
     spread_std = sample_std(spread_values)
+    local_twist_warning = "; ".join(local_twist_warnings)
+    if twist_values and mean(abs_twist_values) is not None and abs((mean(abs_twist_values) or 0.0) - 30.0) > 10.0:
+        local_twist_warning = f"{local_twist_warning}; mean absolute local twist differs from nominal 30 deg by >10 deg".strip("; ")
+    local_rise_warning = "; ".join(local_rise_warnings)
+    if negative_rise_count:
+        local_rise_warning = f"{local_rise_warning}; {negative_rise_count} negative local rise values after axis orientation".strip("; ")
+    plane_fit_warning = "; ".join(plane_fit_warnings)
     regular_score = None
     if twist_std is not None and rise_std is not None and spread_std is not None:
         regular_score = 1.0 / (1.0 + abs(twist_std) / 30.0 + abs(rise_std) / 3.4 + abs(spread_std))
@@ -474,6 +594,8 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
         "chain_count": str(len(chains)),
         "mean_local_twist_deg": format_float(mean(twist_values)),
         "std_local_twist_deg": format_float(twist_std),
+        "mean_abs_local_twist_deg": format_float(mean(abs_twist_values)),
+        "std_abs_local_twist_deg": format_float(abs_twist_std),
         "mean_local_rise_A": format_float(mean(rise_values)),
         "std_local_rise_A": format_float(rise_std),
         "mean_base_radial_spread_A": format_float(mean(spread_values)),
@@ -481,7 +603,29 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
         "mean_base_plane_bend_deg": format_float(mean(base_bends)),
         "mean_scaffold_plane_bend_deg": format_float(mean(scaffold_bends)),
         "mean_chain_angular_dispersion_deg": format_float(mean(dispersions)),
+        "mean_chain_resultant_length": format_float(mean(resultants)),
         "aleph_regular_score": format_float(regular_score),
+        "axis_flipped": "true" if axis_flipped else "false",
+        "phase_unwrap_ok": "true" if unwrap_ok else "false",
+        "warnings": "; ".join(warnings),
+    }
+    qc_row = {
+        "structure_id": structure_id,
+        "source_pdb": str(path),
+        "axis_flipped": "true" if axis_flipped else "false",
+        "phase_unwrap_ok": "true" if unwrap_ok else "false",
+        "expected_unit_count": str(expected_unit_count),
+        "observed_unit_count": str(len(raw_layers)),
+        "expected_chain_count": str(expected_chain_count),
+        "observed_chain_count": str(len(chains)),
+        "units_with_missing_chains": str(units_with_missing_chains),
+        "missing_chain_count_by_unit": missing_chain_count_by_unit,
+        "mean_abs_local_twist_deg": format_float(mean(abs_twist_values)),
+        "std_abs_local_twist_deg": format_float(abs_twist_std),
+        "negative_rise_count": str(negative_rise_count),
+        "local_twist_warning": local_twist_warning,
+        "local_rise_warning": local_rise_warning,
+        "plane_fit_warning": plane_fit_warning,
         "warnings": "; ".join(warnings),
     }
     return StructureFingerprint(
@@ -493,6 +637,7 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
         chain_count=len(chains),
         per_unit_rows=per_unit_rows,
         summary_row=summary_row,
+        qc_row=qc_row,
         warnings=tuple(warnings),
     )
 
@@ -662,10 +807,12 @@ def svg_fft_plot(rows: list[dict[str, str]], path: Path) -> None:
 
 def write_plots(per_unit_rows: list[dict[str, str]], fft_rows: list[dict[str, str]], plot_dir: Path) -> list[Path]:
     specs = [
-        ("aleph_local_twist_vs_unit.svg", "Aleph local twist vs unit index", "local_twist_deg", "local twist (deg)"),
-        ("aleph_local_rise_vs_unit.svg", "Aleph local rise vs unit index", "local_rise_A", "local rise (A)"),
+        ("aleph_local_twist_vs_unit.svg", "Aleph local twist after phase unwrapping", "local_twist_deg", "local twist (deg)"),
+        ("aleph_local_rise_vs_unit.svg", "Aleph local rise after axis orientation", "local_rise_A", "local rise (A)"),
         ("aleph_radial_spread_vs_unit.svg", "Aleph radial spread vs unit index", "base_radial_spread_A", "base radial spread (A)"),
-        ("aleph_phase_progression_vs_unit.svg", "Aleph base-like angular phase progression", "aleph_phase_deg", "Aleph phase (deg)"),
+        ("aleph_phase_raw_vs_unit.svg", "Aleph raw angular phase progression", "aleph_phase_raw_deg", "raw Aleph phase (deg)"),
+        ("aleph_phase_progression_vs_unit.svg", "Aleph unwrapped angular phase progression", "aleph_phase_deg", "unwrapped Aleph phase (deg)"),
+        ("aleph_chain_resultant_vs_unit.svg", "Aleph chain angular mean resultant length", "chain_mean_resultant_length", "mean resultant length"),
     ]
     paths = []
     for filename, title, column, label in specs:
@@ -683,6 +830,7 @@ def write_plots(per_unit_rows: list[dict[str, str]], fft_rows: list[dict[str, st
 def report_text(
     fingerprints: list[StructureFingerprint],
     fft_rows: list[dict[str, str]],
+    qc_rows: list[dict[str, str]],
     plot_paths: list[Path],
     optional_warning: str,
     args: argparse.Namespace,
@@ -709,21 +857,37 @@ def report_text(
             "",
             "## Aleph Summary",
             "",
-            "| Structure | Units | Mean local twist | Twist std | Mean rise | Rise std | Regular score |",
-            "|---|---:|---:|---:|---:|---:|---:|",
+            "| Structure | Units | Mean signed twist | Mean abs twist | Twist std | Mean rise | Rise std | Regular score |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     for fingerprint in fingerprints:
         row = fingerprint.summary_row
         lines.append(
-            f"| {row['structure_id']} | {row['unit_count']} | {row['mean_local_twist_deg']} | {row['std_local_twist_deg']} | "
+            f"| {row['structure_id']} | {row['unit_count']} | {row['mean_local_twist_deg']} | {row['mean_abs_local_twist_deg']} | {row['std_local_twist_deg']} | "
             f"{row['mean_local_rise_A']} | {row['std_local_rise_A']} | {row['aleph_regular_score']} |"
         )
 
     lines.extend(
         [
             "",
-            "## FFT Summary",
+            "## Geometry QC",
+            "",
+            "| Structure | Axis flipped | Phase unwrap ok | Expected units | Observed units | Missing-chain units | Negative rises | Twist warning | Rise warning | Plane warning |",
+            "|---|---|---|---:|---:|---:|---:|---|---|---|",
+        ]
+    )
+    for row in qc_rows:
+        lines.append(
+            f"| {row['structure_id']} | {row['axis_flipped']} | {row['phase_unwrap_ok']} | {row['expected_unit_count']} | "
+            f"{row['observed_unit_count']} | {row['units_with_missing_chains']} | {row['negative_rise_count']} | "
+            f"{row['local_twist_warning']} | {row['local_rise_warning']} | {row['plane_fit_warning']} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## FFT Diagnostic Summary",
             "",
             "| Structure | Signal | Samples | Dominant index | Normalized amplitude | Warning |",
             "|---|---|---:|---:|---:|---|",
@@ -741,7 +905,7 @@ def report_text(
     lines.extend(["", "## Interpretation", ""])
     if full is not None:
         lines.append(
-            "The full model is the best first Aleph FFT target because it has the longest ordered per-unit signal; shorter central6 and central7 fragments are useful for local comparison but have limited spectral resolution."
+            "The full model remains the best first Aleph diagnostic target because it has the longest ordered per-unit signal; shorter central6 and central7 fragments are useful for local comparison but have limited spectral resolution."
         )
     if central6 is not None and central7 is not None:
         lines.append(
@@ -751,15 +915,17 @@ def report_text(
         "Backbone/scaffold Aleph bend and base-like Aleph bend are reported separately where per-layer plane normals are computable; disagreement between them would indicate different scaffold and base-like geometric signals."
     )
     lines.append(
-        "This first prototype looks promising only if the plots reveal repeat regularity or variant differences that were not already obvious from distance-window attribution."
+        "This QC pass should be read before expanding FFT interpretation: stable axis orientation, phase unwrapping, positive rise convention, and bounded circular dispersion are prerequisites for treating Aleph signals as repeat fingerprints."
     )
     lines.extend(
         [
             "",
                 "## Assumptions And Cautions",
                 "",
-                "- Unit assignment uses base-like CYP/MEP residues as repeat anchors by residue order within each chain.",
+            "- Unit assignment uses base-like CYP/MEP residues as repeat anchors by residue order within each chain.",
             "- The Aleph phase and axial position use the first available chain-specific base-like centroid as an angular/axial anchor for each unit, while the layer centroid is still reported separately. This avoids symmetry cancellation of the six-strand layer centroid.",
+            "- The fitted axis is flipped when needed so the chain-specific anchor axial coordinate generally increases with unit index.",
+            "- Chain angular dispersion is computed with bounded circular statistics and paired with mean resultant length.",
             "- FFT summaries for 6- and 7-unit models are explicitly marked as short-signal diagnostics.",
             "- Aleph is a geometric fingerprint, not a diffraction simulator or structural mechanism.",
             "",
@@ -768,6 +934,7 @@ def report_text(
             f"- Per-unit CSV: `{args.per_unit_csv}`",
             f"- Summary CSV: `{args.summary_csv}`",
             f"- FFT CSV: `{args.fft_csv}`",
+            f"- QC CSV: `{args.qc_csv}`",
             f"- Plot directory: `{args.plot_dir}`",
         ]
     )
@@ -789,6 +956,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
             fingerprints.append(analyze_structure(structure_id, path))
     per_unit_rows = [row for fingerprint in fingerprints for row in fingerprint.per_unit_rows]
     summary_rows = [fingerprint.summary_row for fingerprint in fingerprints]
+    qc_rows = [fingerprint.qc_row for fingerprint in fingerprints]
     fft_rows: list[dict[str, str]] = []
     for fingerprint in fingerprints:
         for signal_name, column in [
@@ -801,13 +969,15 @@ def run(args: argparse.Namespace) -> dict[str, object]:
     write_csv(args.per_unit_csv, per_unit_rows, PER_UNIT_COLUMNS)
     write_csv(args.summary_csv, summary_rows, SUMMARY_COLUMNS)
     write_csv(args.fft_csv, fft_rows, FFT_COLUMNS)
+    write_csv(args.qc_csv, qc_rows, QC_COLUMNS)
     plot_paths = write_plots(per_unit_rows, fft_rows, args.plot_dir)
     args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(report_text(fingerprints, fft_rows, plot_paths, "; ".join(input_warnings), args), encoding="utf-8")
+    args.report.write_text(report_text(fingerprints, fft_rows, qc_rows, plot_paths, "; ".join(input_warnings), args), encoding="utf-8")
     return {
         "per_unit_rows": len(per_unit_rows),
         "summary_rows": len(summary_rows),
         "fft_rows": len(fft_rows),
+        "qc_rows": len(qc_rows),
         "plots": plot_paths,
         "fingerprints": fingerprints,
         "input_warnings": input_warnings,
@@ -819,6 +989,7 @@ def main() -> None:
     print(f"Wrote {result['per_unit_rows']} Aleph per-unit rows")
     print(f"Wrote {result['summary_rows']} Aleph summary rows")
     print(f"Wrote {result['fft_rows']} Aleph FFT rows")
+    print(f"Wrote {result['qc_rows']} Aleph QC rows")
     print(f"Wrote {len(result['plots'])} plots")
     if result["input_warnings"]:
         print("; ".join(result["input_warnings"]))

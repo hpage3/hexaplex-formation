@@ -110,9 +110,11 @@ def test_local_twist_and_rise_on_simple_geometry(tmp_path):
     synthetic_hexaplex(path, 5)
     result = aleph.analyze_structure("synthetic", path)
     twists = [float(row["local_twist_deg"]) for row in result.per_unit_rows if row["local_twist_deg"]]
+    abs_twists = [float(row["absolute_local_twist_deg"]) for row in result.per_unit_rows if row["absolute_local_twist_deg"]]
     rises = [float(row["local_rise_A"]) for row in result.per_unit_rows if row["local_rise_A"]]
 
     assert len(twists) == 4
+    assert abs_twists == [pytest.approx(abs(aleph.wrap_degrees(twist))) for twist in twists]
     assert sum(twists) / len(twists) == pytest.approx(30.0, abs=5.0)
     assert sum(rises) / len(rises) == pytest.approx(3.4, abs=0.5)
     assert all(rise > 0.0 for rise in rises)
@@ -219,6 +221,39 @@ def test_series_points_use_signed_local_twist():
     assert points == [{"x": 1.0, "y": -30.0, "label": "U1->U2", "warning": False}]
 
 
+def test_twist_deviation_points_use_absolute_twist_minus_30():
+    rows = [
+        {
+            "structure_id": "central7",
+            "unit_index": "1",
+            "unit_label": "U1",
+            "transition_label": "U1->U2",
+            "absolute_local_twist_deg": "28.5",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        },
+        {
+            "structure_id": "central7",
+            "unit_index": "2",
+            "unit_label": "U2",
+            "transition_label": "U2->U3",
+            "absolute_local_twist_deg": "31.25",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        },
+    ]
+
+    points = aleph.twist_deviation_points(rows, "central7")
+
+    assert [point["y"] for point in points] == [pytest.approx(-1.5), pytest.approx(1.25)]
+
+
 def test_series_fingerprint_plot_writes_svg(tmp_path):
     rows = [
         {
@@ -228,6 +263,7 @@ def test_series_fingerprint_plot_writes_svg(tmp_path):
             "transition_label": "U1->U2",
             "local_twist_deg": "-30",
             "local_abs_twist_deg": "30",
+            "absolute_local_twist_deg": "30",
             "local_rise_A": "3.4",
             "aleph_base_plane_bend_deg": "10",
             "aleph_scaffold_plane_bend_deg": "12",
@@ -243,8 +279,37 @@ def test_series_fingerprint_plot_writes_svg(tmp_path):
     aleph.svg_series_fingerprint("central7", rows, path)
 
     assert path.exists()
-    assert "Aleph series fingerprint" in path.read_text(encoding="utf-8")
+    assert "signed-twist diagnostic" in path.read_text(encoding="utf-8")
     assert "U1-&gt;U2" in path.read_text(encoding="utf-8") or "U1->U2" in path.read_text(encoding="utf-8")
+
+
+def test_abs_twist_and_deviation_series_plots_write_svg(tmp_path):
+    rows = [
+        {
+            "structure_id": "central7",
+            "unit_index": "1",
+            "unit_label": "U1",
+            "transition_label": "U1->U2",
+            "absolute_local_twist_deg": "30",
+            "local_twist_warning": "",
+            "local_rise_warning": "",
+            "plane_fit_warning": "",
+            "warnings": "",
+            "missing_chain_count": "0",
+        }
+    ]
+    abs_path = tmp_path / "abs.svg"
+    deviation_path = tmp_path / "deviation.svg"
+
+    aleph.svg_abs_twist_series_fingerprint("central7", rows, abs_path)
+    aleph.svg_twist_deviation_from_30(rows, deviation_path)
+
+    assert abs_path.exists()
+    assert "absolute twist" in abs_path.read_text(encoding="utf-8")
+    assert deviation_path.exists()
+    deviation_text = deviation_path.read_text(encoding="utf-8")
+    assert "absolute twist deviation from 30 deg" in deviation_text
+    assert "nominal 30 deg repeat" in deviation_text
 
 
 def test_companion_traces_handle_missing_short_data(tmp_path):
@@ -313,6 +378,14 @@ def test_output_schemas_are_written(tmp_path):
     assert args.fft_csv.exists()
     assert args.qc_csv.exists()
     assert args.report.exists()
+    plot_names = {path.name for path in result["plots"]}
+    assert {
+        "aleph_series_abs_twist_full.svg",
+        "aleph_series_abs_twist_central6.svg",
+        "aleph_series_abs_twist_central7.svg",
+        "aleph_series_abs_twist_comparison.svg",
+        "aleph_series_twist_deviation_from_30.svg",
+    }.issubset(plot_names)
     with args.per_unit_csv.open(newline="", encoding="utf-8") as handle:
         assert csv.DictReader(handle).fieldnames == aleph.PER_UNIT_COLUMNS
     with args.qc_csv.open(newline="", encoding="utf-8") as handle:

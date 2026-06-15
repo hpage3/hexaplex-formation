@@ -29,18 +29,27 @@ Aleph asks whether each model has an ordered repeating geometric signature along
 
 ## Series-style Aleph fingerprint
 
-The Aleph series fingerprint is the primary visual fingerprint in this prototype. It is closer to a true structural fingerprint because it represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.
+The Aleph series fingerprint is the primary visual fingerprint in this prototype. It represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.
 
-The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis labels show unit transitions along the hexaplex, so `U1->U2` is the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. The dashed 30 deg line is a geometric reference, not an experimental target, and markers with QC warnings are highlighted.
+The primary Aleph series baseline is absolute local twist between adjacent units, in degrees. This handedness-normalized magnitude is the better first baseline for repeat size because signed twist is direction-sensitive: axis orientation, phase convention, or opposite handedness can make a clean 30 deg repeat appear near -30 deg. The dashed 30 deg line is a geometric reference, not an experimental target, and markers with QC warnings are highlighted.
+
+The deviation plot shows `absolute_local_twist_deg - 30.0`; its zero line is the nominal 30 deg repeat. Positive values are above the nominal repeat magnitude, and negative values are below it.
 
 Richer unit labels are stored in the per-unit CSV. `unit_label` gives the concise unit name, `transition_label` gives the plotted transition label where a local transition exists, and `residue_label_summary` records the chain/residue labels contributing to each unit.
 
-Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg-like Aleph series fingerprint because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its signed twist trace and mean absolute twist deviate from the nominal 30 deg value. The full model remains a geometry-definition diagnostic case because its current warnings indicate that layer assignment and antiparallel ordering require further inspection.
+Under the current Aleph definitions, central7 currently looks closest to the nominal 30 deg repeat by absolute twist. central6 is below the nominal repeat magnitude. The full model remains diagnostic, probably due to layer assignment and antiparallel ordering that require further inspection.
+
+Signed local twist plots are retained as signed-twist diagnostic plots. They are useful for checking direction and convention, but they should not be treated as the primary repeat-magnitude baseline.
 
 This representation provides a more natural ordered signal for future DFT/FFT exploration than the feature comparison panel. Whether spectral analysis adds value remains an open question.
 
 Series outputs:
 
+- `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_full.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_central6.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_central7.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_comparison.svg`
+- `outputs\plots\aleph_fingerprint\aleph_series_twist_deviation_from_30.svg`
 - `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_full.svg`
 - `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central6.svg`
 - `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central7.svg`
@@ -90,6 +99,7 @@ This QC pass should be read before expanding FFT interpretation: stable axis ori
 - Unit assignment uses base-like CYP/MEP residues as repeat anchors by residue order within each chain.
 - The Aleph phase and axial position use the first available chain-specific base-like centroid as an angular/axial anchor for each unit, while the layer centroid is still reported separately. This avoids symmetry cancellation of the six-strand layer centroid.
 - The fitted axis is flipped when needed so the chain-specific anchor axial coordinate generally increases with unit index.
+- Signed local twist is direction-sensitive; absolute local twist is used as the primary first-pass repeat-magnitude baseline.
 - Chain angular dispersion is computed with bounded circular statistics and paired with mean resultant length.
 - FFT summaries for 6- and 7-unit models are explicitly marked as short-signal diagnostics.
 - Aleph is a geometric fingerprint, not a diffraction simulator or structural mechanism.
@@ -111,6 +121,11 @@ This QC pass should be read before expanding FFT interpretation: stable axis ori
 - Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central6.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_central7.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_series_fingerprint_comparison.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_full.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_central6.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_central7.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_abs_twist_comparison.svg`
+- Plot: `outputs\plots\aleph_fingerprint\aleph_series_twist_deviation_from_30.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_series_companion_traces_full.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_series_companion_traces_central7.svg`
 - Plot: `outputs\plots\aleph_fingerprint\aleph_fingerprint_strip_full.svg`

@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="430" viewBox="0 0 900 430">
 <rect width="100%" height="100%" fill="white"/>
-<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph local twist after phase unwrapping</text>
+<text x="450" y="26" text-anchor="middle" font-family="Arial" font-size="17">Aleph signed-twist diagnostic after phase unwrapping</text>
 <line x1="70" y1="45" x2="70" y2="370" stroke="#333"/>
 <line x1="70" y1="370" x2="870" y2="370" stroke="#333"/>
 <text x="450" y="415" text-anchor="middle" font-family="Arial" font-size="12">Aleph unit index</text>
-<text x="18" y="208" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,208)">local twist (deg)</text>
+<text x="18" y="208" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-90 18,208)">signed local twist (deg)</text>
 <polyline points="70.00,45.00 131.54,56.29 193.08,75.32 254.62,109.09 316.15,165.30 377.69,197.45 439.23,169.89 500.77,161.13 562.31,179.30 623.85,165.20 685.38,118.25 746.92,82.80 808.46,61.60 870.00,48.62" fill="none" stroke="#4c78a8" stroke-width="2"/>
 <circle cx="70.00" cy="45.00" r="2.5" fill="#4c78a8"/>
 <circle cx="131.54" cy="56.29" r="2.5" fill="#4c78a8"/>

@@ -59,6 +59,7 @@ PER_UNIT_COLUMNS = [
     "aleph_phase_deg",
     "local_twist_deg",
     "local_abs_twist_deg",
+    "absolute_local_twist_deg",
     "local_rise_A",
     "base_plane_normal_x",
     "base_plane_normal_y",
@@ -570,6 +571,7 @@ def analyze_structure(structure_id: str, path: Path) -> StructureFingerprint:
                 "aleph_phase_deg": format_float(math.degrees(unwrapped_phase[index]) if unwrapped_phase[index] is not None else None),
                 "local_twist_deg": format_float(local_twist),
                 "local_abs_twist_deg": format_float(local_abs_twist),
+                "absolute_local_twist_deg": format_float(local_abs_twist),
                 "local_rise_A": format_float(local_rise),
                 "base_plane_normal_x": format_float(base_normal[0] if base_normal else None),
                 "base_plane_normal_y": format_float(base_normal[1] if base_normal else None),
@@ -816,6 +818,13 @@ def series_points(rows: list[dict[str, str]], structure_id: str, column: str) ->
     return points
 
 
+def twist_deviation_points(rows: list[dict[str, str]], structure_id: str) -> list[dict[str, object]]:
+    points: list[dict[str, object]] = []
+    for point in series_points(rows, structure_id, "absolute_local_twist_deg"):
+        points.append({**point, "y": float(point["y"]) - 30.0})
+    return points
+
+
 def nice_ticks(min_value: float, max_value: float, reference: float | None = None, count: int = 5) -> list[float]:
     if min_value == max_value:
         min_value -= 1.0
@@ -853,6 +862,7 @@ def svg_series_plot(
     stacked: bool = False,
     subtitle: str = "Aleph series fingerprint: signed local twist by unit transition",
     reference_by_label: dict[str, float] | None = None,
+    reference_label: str = "30 deg reference",
 ) -> None:
     if not points_by_label or not any(points for points in points_by_label.values()):
         return
@@ -923,7 +933,7 @@ def svg_series_plot(
         if panel_reference is not None and min_y <= panel_reference <= max_y:
             ref_y = sy(panel_reference)
             parts.append(f'<line x1="{left}" y1="{ref_y:.2f}" x2="{width - right}" y2="{ref_y:.2f}" stroke="#777" stroke-dasharray="4 4"/>')
-            parts.append(f'<text x="{width - right - 4}" y="{ref_y - 4:.2f}" text-anchor="end" font-family="Arial" font-size="10">30 deg reference</text>')
+            parts.append(f'<text x="{width - right - 4}" y="{ref_y - 4:.2f}" text-anchor="end" font-family="Arial" font-size="10">{reference_label}</text>')
         if stacked:
             drawable = [(label, panel_points, colors[panel_index % len(colors)])]
         else:
@@ -957,11 +967,12 @@ def svg_series_plot(
 def svg_series_fingerprint(structure_id: str, rows: list[dict[str, str]], path: Path) -> None:
     points = series_points(rows, structure_id, "local_twist_deg")
     svg_series_plot(
-        f"{structure_id} Aleph series fingerprint",
+        f"{structure_id} Aleph signed-twist diagnostic",
         OrderedDict([(structure_id, points)]),
         "signed local twist (deg)",
         path,
         reference_y=30.0,
+        subtitle="Aleph signed-twist diagnostic: direction-sensitive local twist by unit transition",
     )
 
 
@@ -972,12 +983,60 @@ def svg_series_comparison(rows: list[dict[str, str]], path: Path) -> None:
         if series_points(rows, structure_id, "local_twist_deg")
     )
     svg_series_plot(
-        "Aleph series fingerprint comparison",
+        "Aleph signed-twist diagnostic comparison",
         points_by_label,
         "signed local twist (deg)",
         path,
         reference_y=30.0,
         stacked=True,
+        subtitle="Aleph signed-twist diagnostic: direction-sensitive local twist by unit transition",
+    )
+
+
+def svg_abs_twist_series_fingerprint(structure_id: str, rows: list[dict[str, str]], path: Path) -> None:
+    points = series_points(rows, structure_id, "absolute_local_twist_deg")
+    svg_series_plot(
+        f"{structure_id} Aleph series fingerprint: absolute twist",
+        OrderedDict([(structure_id, points)]),
+        "absolute local twist (deg)",
+        path,
+        reference_y=30.0,
+        subtitle="Aleph series fingerprint: handedness-normalized local twist magnitude by unit transition",
+    )
+
+
+def svg_abs_twist_series_comparison(rows: list[dict[str, str]], path: Path) -> None:
+    points_by_label = OrderedDict(
+        (structure_id, series_points(rows, structure_id, "absolute_local_twist_deg"))
+        for structure_id in ["full", "central6", "central7"]
+        if series_points(rows, structure_id, "absolute_local_twist_deg")
+    )
+    svg_series_plot(
+        "Aleph series fingerprint comparison: absolute twist",
+        points_by_label,
+        "absolute local twist (deg)",
+        path,
+        reference_y=30.0,
+        stacked=True,
+        subtitle="Aleph series fingerprint: handedness-normalized local twist magnitude by unit transition",
+    )
+
+
+def svg_twist_deviation_from_30(rows: list[dict[str, str]], path: Path) -> None:
+    points_by_label = OrderedDict(
+        (structure_id, twist_deviation_points(rows, structure_id))
+        for structure_id in ["full", "central6", "central7"]
+        if twist_deviation_points(rows, structure_id)
+    )
+    svg_series_plot(
+        "Aleph series fingerprint: absolute twist deviation from 30 deg",
+        points_by_label,
+        "absolute local twist - 30 deg",
+        path,
+        reference_y=0.0,
+        stacked=True,
+        subtitle="Aleph series fingerprint: deviation of handedness-normalized twist magnitude from nominal 30 deg repeat",
+        reference_label="nominal 30 deg repeat",
     )
 
 
@@ -1251,7 +1310,7 @@ def write_plots(
     plot_dir: Path,
 ) -> list[Path]:
     specs = [
-        ("aleph_local_twist_vs_unit.svg", "Aleph local twist after phase unwrapping", "local_twist_deg", "local twist (deg)"),
+        ("aleph_local_twist_vs_unit.svg", "Aleph signed-twist diagnostic after phase unwrapping", "local_twist_deg", "signed local twist (deg)"),
         ("aleph_local_rise_vs_unit.svg", "Aleph local rise after axis orientation", "local_rise_A", "local rise (A)"),
         ("aleph_radial_spread_vs_unit.svg", "Aleph radial spread vs unit index", "base_radial_spread_A", "base radial spread (A)"),
         ("aleph_phase_raw_vs_unit.svg", "Aleph raw angular phase progression", "aleph_phase_raw_deg", "raw Aleph phase (deg)"),
@@ -1273,6 +1332,19 @@ def write_plots(
     svg_series_comparison(per_unit_rows, series_comparison_path)
     if series_comparison_path.exists():
         paths.append(series_comparison_path)
+    for structure_id in ["full", "central6", "central7"]:
+        path = plot_dir / f"aleph_series_abs_twist_{structure_id}.svg"
+        svg_abs_twist_series_fingerprint(structure_id, per_unit_rows, path)
+        if path.exists():
+            paths.append(path)
+    abs_twist_comparison_path = plot_dir / "aleph_series_abs_twist_comparison.svg"
+    svg_abs_twist_series_comparison(per_unit_rows, abs_twist_comparison_path)
+    if abs_twist_comparison_path.exists():
+        paths.append(abs_twist_comparison_path)
+    deviation_path = plot_dir / "aleph_series_twist_deviation_from_30.svg"
+    svg_twist_deviation_from_30(per_unit_rows, deviation_path)
+    if deviation_path.exists():
+        paths.append(deviation_path)
     for structure_id in ["full", "central7"]:
         path = plot_dir / f"aleph_series_companion_traces_{structure_id}.svg"
         svg_companion_traces(structure_id, per_unit_rows, path)
@@ -1360,18 +1432,27 @@ def report_text(
             "",
             "## Series-style Aleph fingerprint",
             "",
-            "The Aleph series fingerprint is the primary visual fingerprint in this prototype. It is closer to a true structural fingerprint because it represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.",
+            "The Aleph series fingerprint is the primary visual fingerprint in this prototype. It represents the hexaplex as an ordered one-dimensional trace rather than a multi-feature dashboard.",
             "",
-            "The primary Aleph series is signed local twist between adjacent units, in degrees. The x-axis labels show unit transitions along the hexaplex, so `U1->U2` is the step from unit 1 to unit 2. The y-axis is signed local twist after phase unwrapping. The dashed 30 deg line is a geometric reference, not an experimental target, and markers with QC warnings are highlighted.",
+            "The primary Aleph series baseline is absolute local twist between adjacent units, in degrees. This handedness-normalized magnitude is the better first baseline for repeat size because signed twist is direction-sensitive: axis orientation, phase convention, or opposite handedness can make a clean 30 deg repeat appear near -30 deg. The dashed 30 deg line is a geometric reference, not an experimental target, and markers with QC warnings are highlighted.",
+            "",
+            "The deviation plot shows `absolute_local_twist_deg - 30.0`; its zero line is the nominal 30 deg repeat. Positive values are above the nominal repeat magnitude, and negative values are below it.",
             "",
             "Richer unit labels are stored in the per-unit CSV. `unit_label` gives the concise unit name, `transition_label` gives the plotted transition label where a local transition exists, and `residue_label_summary` records the chain/residue labels contributing to each unit.",
             "",
-            "Under the current Aleph definitions, central7 currently looks like the cleanest 30 deg-like Aleph series fingerprint because its mean absolute local twist is near 30 deg, its rise is positive, and it has no QC warnings. central6 is shorter and has positive rise, but its signed twist trace and mean absolute twist deviate from the nominal 30 deg value. The full model remains a geometry-definition diagnostic case because its current warnings indicate that layer assignment and antiparallel ordering require further inspection.",
+            "Under the current Aleph definitions, central7 currently looks closest to the nominal 30 deg repeat by absolute twist. central6 is below the nominal repeat magnitude. The full model remains diagnostic, probably due to layer assignment and antiparallel ordering that require further inspection.",
+            "",
+            "Signed local twist plots are retained as signed-twist diagnostic plots. They are useful for checking direction and convention, but they should not be treated as the primary repeat-magnitude baseline.",
             "",
             "This representation provides a more natural ordered signal for future DFT/FFT exploration than the feature comparison panel. Whether spectral analysis adds value remains an open question.",
             "",
             "Series outputs:",
             "",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_abs_twist_full.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_abs_twist_central6.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_abs_twist_central7.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_abs_twist_comparison.svg`",
+            "- `outputs\\plots\\aleph_fingerprint\\aleph_series_twist_deviation_from_30.svg`",
             "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_full.svg`",
             "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_central6.svg`",
             "- `outputs\\plots\\aleph_fingerprint\\aleph_series_fingerprint_central7.svg`",
@@ -1438,6 +1519,7 @@ def report_text(
             "- Unit assignment uses base-like CYP/MEP residues as repeat anchors by residue order within each chain.",
             "- The Aleph phase and axial position use the first available chain-specific base-like centroid as an angular/axial anchor for each unit, while the layer centroid is still reported separately. This avoids symmetry cancellation of the six-strand layer centroid.",
             "- The fitted axis is flipped when needed so the chain-specific anchor axial coordinate generally increases with unit index.",
+            "- Signed local twist is direction-sensitive; absolute local twist is used as the primary first-pass repeat-magnitude baseline.",
             "- Chain angular dispersion is computed with bounded circular statistics and paired with mean resultant length.",
             "- FFT summaries for 6- and 7-unit models are explicitly marked as short-signal diagnostics.",
             "- Aleph is a geometric fingerprint, not a diffraction simulator or structural mechanism.",

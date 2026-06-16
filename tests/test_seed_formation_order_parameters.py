@@ -148,6 +148,23 @@ def test_loose_ensemble_has_larger_radius_of_gyration_than_formed_reference(tmp_
     assert seed.radius_of_gyration(loose) > reference.radius_of_gyration
 
 
+def test_radially_separated_preserves_intrachain_geometry_and_expands_radius(tmp_path):
+    path = tmp_path / "mini_hexaplex_central4_units.pdb"
+    write_pdb_atoms(synthetic_seed(4), path)
+    reference, _ = seed.load_seed_reference(path, 4, 4.5)
+    rng = seed.random.Random(16)
+    chain_id = "A"
+    before_atoms = reference.chain_atoms[chain_id]
+    before_distance = seed.distance(before_atoms[0], before_atoms[-1])
+
+    separated = seed.generate_radially_separated(reference, 0, rng)
+    separated_chain = tuple(atom for atom in separated if atom.chain_id == chain_id)
+
+    assert seed.distance(separated_chain[0], separated_chain[-1]) == pytest.approx(before_distance)
+    assert seed.radius_of_gyration(separated) > seed.radius_of_gyration(seed.generate_loose_initial(reference, 0, seed.random.Random(16)))
+    assert seed.radius_of_gyration(separated) > reference.radius_of_gyration
+
+
 def test_angular_randomized_loose_preserves_intrachain_distances_and_reduces_phase_score(tmp_path):
     path = tmp_path / "mini_hexaplex_central4_units.pdb"
     write_pdb_atoms(synthetic_seed(4), path)
@@ -201,6 +218,43 @@ def test_output_csv_is_written_with_expected_columns(tmp_path):
     assert {row["ensemble_type"] for row in written} == {"formed_perturbed", "angular_randomized_loose_initial"}
     assert (tmp_path / "report.md").exists()
     assert (tmp_path / "means.csv").exists()
+
+
+def test_default_all_mode_writes_radially_separated_rows(tmp_path):
+    structures_dir = tmp_path / "structures"
+    structures_dir.mkdir()
+    write_pdb_atoms(synthetic_seed(4), structures_dir / "mini_hexaplex_central4_units.pdb")
+    out_csv = tmp_path / "metrics" / "seed.csv"
+    args = type(
+        "Args",
+        (),
+        {
+            "structures_dir": structures_dir,
+            "unit_counts": "4",
+            "samples_per_ensemble": 1,
+            "loose_mode": "all",
+            "random_seed": 1,
+            "contact_cutoff": 4.5,
+            "ensemble_dir": tmp_path / "ensembles",
+            "plot_dir": tmp_path / "plots",
+            "out_csv": out_csv,
+            "endpoint_means_csv": tmp_path / "means.csv",
+            "out_report": tmp_path / "report.md",
+            "save_examples": 0,
+        },
+    )()
+
+    rows = seed.run(args)
+
+    assert {row["ensemble_type"] for row in rows} == {
+        "formed_perturbed",
+        "loose_initial",
+        "angular_randomized_loose_initial",
+        "radially_separated",
+    }
+    with out_csv.open("r", newline="", encoding="utf-8") as handle:
+        written = list(csv.DictReader(handle))
+    assert {row["ensemble_type"] for row in written} == {row["ensemble_type"] for row in rows}
 
 
 def test_invalid_or_missing_pdb_path_fails_clearly(tmp_path):

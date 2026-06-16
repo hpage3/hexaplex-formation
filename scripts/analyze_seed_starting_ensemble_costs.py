@@ -283,7 +283,11 @@ def svg_cost_plot(summary_rows: list[dict[str, str]], path: Path) -> None:
     plot_h = 250
     bar_w = 44
     gap = 34
-    colors = {"loose_initial": "#4c78a8", "angular_randomized_loose_initial": "#f58518"}
+    colors = {
+        "loose_initial": "#4c78a8",
+        "angular_randomized_loose_initial": "#f58518",
+        "radially_separated": "#54a24b",
+    }
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
         '<rect width="100%" height="100%" fill="white"/>',
@@ -313,6 +317,29 @@ def markdown_table(rows: list[dict[str, str]], columns: list[str]) -> list[str]:
     return lines
 
 
+def interpret_radial_class(summary_rows: list[dict[str, str]]) -> list[str]:
+    lines: list[str] = []
+    units = sorted({row["unit_count"] for row in summary_rows})
+    by_key = {(row["unit_count"], row["start_class"]): row for row in summary_rows}
+    for unit in units:
+        radial = by_key.get((unit, "radially_separated"))
+        loose = by_key.get((unit, "loose_initial"))
+        if radial is None:
+            continue
+        radial_cost = safe_float(radial.get("overall_cost"))
+        loose_cost = safe_float(loose.get("overall_cost")) if loose else None
+        if radial_cost is not None and loose_cost is not None:
+            direction = "higher" if radial_cost > loose_cost else "lower"
+            comparison = f"{direction} than `loose_initial` ({format_float(loose_cost, 3)})"
+        else:
+            comparison = "not directly comparable to `loose_initial` in this run"
+        lines.append(
+            f"- Unit {unit} `radially_separated`: overall cost {radial.get('overall_cost', '')}, "
+            f"{comparison}; dominant group `{radial.get('dominant_cost_group', '')}`."
+        )
+    return lines
+
+
 def write_report(
     path: Path,
     args: argparse.Namespace,
@@ -332,9 +359,11 @@ def write_report(
         "",
         "## Purpose",
         "",
-        "This audit compares existing synthetic loose-start endpoint classes against formed-perturbed endpoints in existing order-parameter space. It is intended to identify which cost groups dominate the distance from each loose-start class to the formed endpoint distribution.",
+        "This audit compares synthetic loose-start endpoint classes against formed-perturbed endpoints in existing order-parameter space. It is intended to identify which cost groups dominate the distance from each loose-start class to the formed endpoint distribution.",
         "",
         "This analysis is hypothesis-generating. It is not an atomistic Schrodinger bridge, not molecular dynamics, and not evidence of a physical nucleation pathway.",
+        "",
+        "The `radially_separated` class is a dry-down/concentration-compaction proxy: it keeps rough angular phase and small axial offsets while moving chains farther apart radially. It does not model solvent evaporation, crystallization, molecular dynamics, or a full atomistic Schrodinger bridge.",
         "",
         "## Inputs Used",
         "",
@@ -371,12 +400,18 @@ def write_report(
             f"- Unit {row['unit_count']} `{row['start_class']}`: overall cost {row['overall_cost']}; "
             f"dominant group `{row['dominant_cost_group']}`."
         )
+    radial_lines = interpret_radial_class(summary_rows)
+    if radial_lines:
+        lines.extend(["", "## Radial-Separation Readout", ""])
+        lines.extend(radial_lines)
+        lines.append("")
+        lines.append("This readout asks whether a radial compaction proxy changes the cost relative to the older loose baseline. It should be interpreted as a geometric endpoint comparison, not as a simulation of the lab dry-down process.")
     lines.extend(
         [
             "",
             "## Conservative Interpretation",
             "",
-            "The cost values are order-parameter distance proxies. They indicate how far existing synthetic loose-start classes are from formed-perturbed endpoints in selected summary coordinates. They do not establish a physical mechanism or a validated assembly route.",
+            "The cost values are order-parameter distance proxies. They indicate how far synthetic loose-start classes are from formed-perturbed endpoints in selected summary coordinates. They do not establish a physical mechanism or a validated assembly route.",
             "",
             "A lower cost class is closer to the formed-perturbed endpoint distribution in this feature set. A dominant cost group suggests which type of coordinate difference is largest: geometry, contact recovery, or register/phase.",
             "",
@@ -384,7 +419,7 @@ def write_report(
             "",
             "## Recommended Next Step",
             "",
-            "After this audit is validated, add `axially_misregistered` as the next single start class and rerun the same cost-decomposition report before adding any other start classes.",
+            "Keep the start-class set limited to `loose_initial`, `angular_randomized_loose_initial`, and `radially_separated` until the radial-compaction readout is reviewed. Additional start classes should be added only one at a time with the same cost-decomposition checks.",
         ]
     )
     if plot_paths:

@@ -114,7 +114,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--structures-dir", type=Path, default=Path("outputs/mini_hexaplex/structures"))
     parser.add_argument("--unit-counts", default=",".join(str(value) for value in DEFAULT_UNIT_COUNTS))
     parser.add_argument("--samples-per-ensemble", type=int, default=25)
-    parser.add_argument("--loose-mode", choices=["preserved_angular", "angular_randomized"], default="preserved_angular")
+    parser.add_argument("--loose-mode", choices=["preserved_angular", "angular_randomized", "radially_separated", "all"], default="all")
     parser.add_argument("--random-seed", type=int, default=20260608)
     parser.add_argument("--contact-cutoff", type=float, default=CONTACT_CUTOFF_A)
     parser.add_argument("--ensemble-dir", type=Path, default=Path("outputs/seed_formation/ensembles"))
@@ -392,6 +392,46 @@ def generate_angular_randomized_loose_initial(reference: SeedReference, sample_i
         translation = vector_sub(target_centroid, rotated_centroid)
         tumble = random_rotation_matrix(rng, max_angle_deg=45.0)
         atoms.extend(transform_chain(tuple(rotated_chain), tumble, translation, center=rotated_centroid))
+    return atoms
+
+
+def generate_radially_separated(reference: SeedReference, sample_index: int, rng: random.Random) -> list[PDBAtom]:
+    """Dry-down-motivated loose class that mostly isolates radial compaction cost."""
+
+    atoms: list[PDBAtom] = []
+    axis = reference.axis
+    basis_u, basis_v = build_perpendicular_basis(axis)
+    for chain_index, (chain_id, chain_atoms) in enumerate(reference.chain_atoms.items()):
+        centroid = reference.chain_centroids[chain_id]
+        _, projected = project_point_to_axis(centroid, reference.axis_origin, axis)
+        radial = vector_sub(centroid, projected)
+        if norm(radial) < 1e-6:
+            angle = chain_index * 2.0 * math.pi / 6.0
+            radial_dir = (
+                math.cos(angle) * basis_u[0] + math.sin(angle) * basis_v[0],
+                math.cos(angle) * basis_u[1] + math.sin(angle) * basis_v[1],
+                math.cos(angle) * basis_u[2] + math.sin(angle) * basis_v[2],
+            )
+        else:
+            radial_dir = normalize_vector(radial)
+        radial_separation = rng.uniform(18.0, 32.0)
+        axial_separation = rng.uniform(-1.2, 1.2)
+        tangential_jitter = rng.uniform(-1.0, 1.0)
+        tangent = (
+            -radial_dir[1] * axis[2] + radial_dir[2] * axis[1],
+            -radial_dir[2] * axis[0] + radial_dir[0] * axis[2],
+            -radial_dir[0] * axis[1] + radial_dir[1] * axis[0],
+        )
+        if norm(tangent) < 1e-6:
+            tangent = basis_v
+        tangent = normalize_vector(tangent)
+        translation = (
+            radial_dir[0] * radial_separation + axis[0] * axial_separation + tangent[0] * tangential_jitter,
+            radial_dir[1] * radial_separation + axis[1] * axial_separation + tangent[1] * tangential_jitter,
+            radial_dir[2] * radial_separation + axis[2] * axial_separation + tangent[2] * tangential_jitter,
+        )
+        rotation = random_rotation_matrix(rng, max_angle_deg=12.0)
+        atoms.extend(transform_chain(chain_atoms, rotation, translation))
     return atoms
 
 
@@ -828,6 +868,53 @@ def existing_rows_for_preserved_loose(path: Path, unit_counts: list[int]) -> lis
         ]
 
 
+def loose_modes_to_generate(loose_mode: str) -> list[str]:
+    if loose_mode == "all":
+        return ["preserved_angular", "angular_randomized", "radially_separated"]
+    return [loose_mode]
+
+
+def generate_loose_atoms_for_mode(
+    reference: SeedReference,
+    sample_index: int,
+    rng: random.Random,
+    mode: str,
+) -> tuple[str, str, list[PDBAtom]]:
+    if mode == "angular_randomized":
+        return (
+            "angular_randomized_loose_initial",
+            f"central{reference.unit_count}_angular_randomized_loose_initial_{sample_index:04d}",
+            generate_angular_randomized_loose_initial(reference, sample_index, rng),
+        )
+    if mode == "radially_separated":
+        return (
+            "radially_separated",
+            f"central{reference.unit_count}_radially_separated_{sample_index:04d}",
+            generate_radially_separated(reference, sample_index, rng),
+        )
+    return (
+        "loose_initial",
+        f"central{reference.unit_count}_loose_initial_{sample_index:04d}",
+        generate_loose_initial(reference, sample_index, rng),
+    )
+
+
+def reagent_class_summary(reference: SeedReference) -> str:
+    classes: OrderedDict[str, list[str]] = OrderedDict()
+    for chain_id, chain_atoms in reference.chain_atoms.items():
+        base_residue = next((atom.residue_name for atom in chain_atoms if atom.residue_name in BASE_RESIDUES), "unknown")
+        classes.setdefault(base_residue, []).append(chain_id)
+    if set(classes) >= BASE_RESIDUES and all(len(classes.get(residue, [])) == 3 for residue in BASE_RESIDUES):
+        return "; ".join(f"{residue}: chains {','.join(chains)}" for residue, chains in classes.items())
+    return "reagent-to-chain mapping is not explicitly encoded beyond observed residue identities; composition-aware costs require a future mapping step"
+
+
+def ensemble_types_in_order(rows: list[dict[str, str]]) -> list[str]:
+    preferred = ["formed_perturbed", "loose_initial", "angular_randomized_loose_initial", "radially_separated"]
+    observed = {row["ensemble_type"] for row in rows}
+    return [name for name in preferred if name in observed] + sorted(observed.difference(preferred))
+
+
 def write_report(
     rows: list[dict[str, str]],
     plot_paths: list[Path],
@@ -835,12 +922,21 @@ def write_report(
     contact_cutoff: float,
     samples_per_ensemble: int,
     loose_mode: str,
+    reagent_summary: str,
 ) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     units = sorted({int(row["unit_count"]) for row in rows})
     score_means = mean_by_unit_and_ensemble(rows, "seed_formation_score")
     contact_means = mean_by_unit_and_ensemble(rows, "contact_fraction_vs_target")
     rmsd_means = mean_by_unit_and_ensemble(rows, "RMSD_to_formed_seed_A")
+    ensemble_types = ensemble_types_in_order(rows)
+    summary_columns = ["unit_count"]
+    for ensemble_type in ensemble_types:
+        summary_columns.append(f"{ensemble_type} score")
+    for ensemble_type in ensemble_types:
+        summary_columns.append(f"{ensemble_type} contacts")
+    for ensemble_type in ensemble_types:
+        summary_columns.append(f"{ensemble_type} RMSD A")
     lines = [
         "# Seed-Formation Order Parameters",
         "",
@@ -850,7 +946,7 @@ def write_report(
         "",
         "This is distinct from diffraction analysis. The metrics here are real-space structural descriptors for synthetic rigid-body ensembles, not reciprocal-space scattering features or assignments of diffraction peaks.",
         "",
-        "The workflow is a preparatory layer for later Schrödinger bridge or stochastic pathway modeling: it defines target and initial ensembles plus measurable coordinates that can become bridge constraints or diagnostics. It does not implement a bridge.",
+        "The workflow is a preparatory layer for later Schrodinger bridge or stochastic pathway modeling: it defines target and initial ensembles plus measurable coordinates that can become bridge constraints or diagnostics. It does not implement a bridge.",
         "",
         "## Formed Seed Target",
         "",
@@ -858,9 +954,13 @@ def write_report(
         "",
         "## Ensemble Generation",
         "",
-        f"For each unit count, `{samples_per_ensemble}` `formed_perturbed` samples were generated by applying small independent rigid-body rotations and translations to each chain. The requested loose mode was `{loose_mode}`. `preserved_angular` writes `loose_initial`; `angular_randomized` writes `angular_randomized_loose_initial` with chain-label angular phases randomized around the formed seed axis before loose radial/axial separation. Intrachain geometry is preserved by construction.",
+        f"For each unit count, `{samples_per_ensemble}` `formed_perturbed` samples were generated by applying small independent rigid-body rotations and translations to each chain. The requested loose mode was `{loose_mode}`. `preserved_angular` writes `loose_initial`; `angular_randomized` writes `angular_randomized_loose_initial` with chain-label angular phases randomized around the formed seed axis before loose radial/axial separation; `radially_separated` writes a dry-down-motivated class that preserves rough angular phase while increasing radial separation and limiting axial offsets. Intrachain geometry is preserved by construction.",
+        "",
+        "The lab preparation context motivates treating dry-down as a potentially relevant concentration/compaction phase. The `radially_separated` class is only a synthetic geometric proxy for that idea; it does not model solvent evaporation, crystallization, molecular dynamics, or a full atomistic Schrodinger bridge.",
         "",
         "Severe overlaps are reduced operationally by separating chains radially and axially, but no energy model or full steric optimizer is used.",
+        "",
+        f"Observed residue-identity composition in the first requested target: {reagent_summary}.",
         "",
         "## Order Parameters",
         "",
@@ -876,25 +976,15 @@ def write_report(
         "",
         "## Summary",
         "",
-        "| unit_count | formed score | loose score | formed contacts | loose contacts | formed RMSD A | loose RMSD A |",
-        "|---:|---:|---:|---:|---:|---:|---:|",
+        "| " + " | ".join(summary_columns) + " |",
+        "|" + "|".join("---:" for _ in summary_columns) + "|",
     ]
     for unit in units:
-        lines.append(
-            "| "
-            + " | ".join(
-                [
-                    str(unit),
-                    format_float(score_means.get((unit, "formed_perturbed")), 4),
-                    format_float(score_means.get((unit, "loose_initial")), 4),
-                    format_float(contact_means.get((unit, "formed_perturbed")), 4),
-                    format_float(contact_means.get((unit, "loose_initial")), 4),
-                    format_float(rmsd_means.get((unit, "formed_perturbed")), 3),
-                    format_float(rmsd_means.get((unit, "loose_initial")), 3),
-                ]
-            )
-            + " |"
-        )
+        values = [str(unit)]
+        values.extend(format_float(score_means.get((unit, ensemble_type)), 4) for ensemble_type in ensemble_types)
+        values.extend(format_float(contact_means.get((unit, ensemble_type)), 4) for ensemble_type in ensemble_types)
+        values.extend(format_float(rmsd_means.get((unit, ensemble_type)), 3) for ensemble_type in ensemble_types)
+        lines.append("| " + " | ".join(values) + " |")
     lines.extend(["", "## Summary Plots", ""])
     for path in plot_paths:
         relative = path.relative_to(REPO_ROOT) if path.is_absolute() and path.is_relative_to(REPO_ROOT) else path
@@ -904,7 +994,7 @@ def write_report(
             "",
             "## Conservative Interpretation",
             "",
-            "The formed-perturbed ensemble is expected to remain compact, contact-rich, and low-RMSD. The loose-initial ensemble is expected to be expanded, contact-poor, and high-RMSD. A clear separation between those distributions means the order parameters can distinguish formed-like seeds from dispersed rigid-chain arrangements; it does not show that loose strands spontaneously assemble.",
+            "The formed-perturbed ensemble is expected to remain compact, contact-rich, and low-RMSD. The loose-start ensembles are expected to be expanded, contact-poor, and high-RMSD. The `radially_separated` class is intended to isolate radial compaction more than angular scrambling. A clear separation between those distributions means the order parameters can distinguish formed-like seeds from dispersed rigid-chain arrangements; it does not show that loose strands spontaneously assemble.",
             "",
             "Metrics that are especially relevant for later bridge modeling are contact recovery, RMSD to formed seed, compactness/radius of gyration, axial register, and angular phase order because they describe complementary aspects of closure, shape, register, and six-strand phasing.",
             "",
@@ -916,7 +1006,7 @@ def write_report(
             "- No energy model yet.",
             "- Ensemble generation is synthetic.",
             "- Order parameters are exploratory.",
-            "- This does not prove spontaneous stability or formation.",
+            "- This is not evidence of spontaneous stability or formation.",
             "",
         ]
     )
@@ -929,35 +1019,32 @@ def run(args: argparse.Namespace) -> list[dict[str, str]]:
     unit_counts = parse_unit_counts(args.unit_counts)
     rng = random.Random(args.random_seed)
     rows: list[dict[str, str]] = []
+    reagent_summary = "not evaluated"
     args.ensemble_dir.mkdir(parents=True, exist_ok=True)
     for unit_count in unit_counts:
         path = args.structures_dir / f"mini_hexaplex_central{unit_count}_units.pdb"
         reference, reference_warnings = load_seed_reference(path, unit_count, args.contact_cutoff)
+        if reagent_summary == "not evaluated":
+            reagent_summary = reagent_class_summary(reference)
         for sample_index in range(args.samples_per_ensemble):
             sample_id = f"central{unit_count}_formed_perturbed_{sample_index:04d}"
             atoms = generate_formed_perturbed(reference, sample_index, rng)
             rows.append(analyze_sample(reference, atoms, sample_id, "formed_perturbed", args.contact_cutoff, reference_warnings))
             if sample_index < args.save_examples:
                 write_pdb_atoms(atoms, args.ensemble_dir / f"{sample_id}.pdb")
-        for sample_index in range(args.samples_per_ensemble):
-            if args.loose_mode == "angular_randomized":
-                ensemble_type = "angular_randomized_loose_initial"
-                sample_id = f"central{unit_count}_angular_randomized_loose_initial_{sample_index:04d}"
-                atoms = generate_angular_randomized_loose_initial(reference, sample_index, rng)
-            else:
-                ensemble_type = "loose_initial"
-                sample_id = f"central{unit_count}_loose_initial_{sample_index:04d}"
-                atoms = generate_loose_initial(reference, sample_index, rng)
-            rows.append(analyze_sample(reference, atoms, sample_id, ensemble_type, args.contact_cutoff, reference_warnings))
-            if sample_index < args.save_examples:
-                write_pdb_atoms(atoms, args.ensemble_dir / f"{sample_id}.pdb")
+        for mode in loose_modes_to_generate(args.loose_mode):
+            for sample_index in range(args.samples_per_ensemble):
+                ensemble_type, sample_id, atoms = generate_loose_atoms_for_mode(reference, sample_index, rng, mode)
+                rows.append(analyze_sample(reference, atoms, sample_id, ensemble_type, args.contact_cutoff, reference_warnings))
+                if sample_index < args.save_examples:
+                    write_pdb_atoms(atoms, args.ensemble_dir / f"{sample_id}.pdb")
     output_rows = rows
     if args.loose_mode == "angular_randomized":
         output_rows = existing_rows_for_preserved_loose(args.out_csv, unit_counts) + rows
     write_csv(args.out_csv, output_rows, SUMMARY_COLUMNS)
     write_endpoint_metric_means(args.endpoint_means_csv, output_rows)
     plot_paths = write_plots(output_rows, args.plot_dir)
-    write_report(output_rows, plot_paths, args.out_report, args.contact_cutoff, args.samples_per_ensemble, args.loose_mode)
+    write_report(output_rows, plot_paths, args.out_report, args.contact_cutoff, args.samples_per_ensemble, args.loose_mode, reagent_summary)
     return output_rows
 
 

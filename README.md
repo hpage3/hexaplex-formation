@@ -224,7 +224,7 @@ The generated ensembles treat each chain fragment as a rigid body. They are synt
 
 ## Seed Starting-Ensemble Cost Audit
 
-The seed starting-ensemble cost audit compares existing loose-start endpoint classes against `formed_perturbed` endpoints in the current order-parameter space. It decomposes the standardized distance to the formed endpoint distribution into geometric, contact-recovery, and register/phase cost groups.
+The seed starting-ensemble cost audit compares synthetic loose-start endpoint classes against `formed_perturbed` endpoints in the current order-parameter space. It decomposes the standardized distance to the formed endpoint distribution into geometric, contact-recovery, and register/phase cost groups. The current start classes are `loose_initial`, `angular_randomized_loose_initial`, and `radially_separated`; the radial class is a dry-down/concentration-compaction proxy, not a solvent-evaporation simulation.
 
 Run the audit with:
 
@@ -234,7 +234,7 @@ Run the audit with:
 
 Outputs are written to `outputs/metrics/seed_starting_ensemble_cost_components.csv`, `outputs/metrics/seed_starting_ensemble_cost_summary.csv`, `outputs/plots/seed_starting_ensemble_costs/`, and `outputs/reports/seed_starting_ensemble_cost_report.md`.
 
-This audit is an exploratory order-parameter cost proxy. It is not an atomistic Schrodinger bridge, not molecular dynamics, and not evidence of a physical nucleation pathway. Its immediate use is to identify which existing loose-start class is closest to the formed endpoint distribution and whether geometry, contact recovery, or register/phase terms dominate that distance.
+This audit is an exploratory order-parameter cost proxy. It is not an atomistic Schrodinger bridge, not molecular dynamics, and not evidence of a physical nucleation pathway. Its immediate use is to identify which loose-start class is closest to the formed endpoint distribution and whether geometry, contact recovery, or register/phase terms dominate that distance.
 
 ## Seed Contact Networks
 

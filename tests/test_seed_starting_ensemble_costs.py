@@ -66,16 +66,34 @@ def test_cost_audit_runs_on_small_synthetic_input(tmp_path):
             rows.append(synthetic_row(unit, "formed_perturbed", index, index * 0.01))
             rows.append(synthetic_row(unit, "loose_initial", index, 0.25 + index * 0.01))
             rows.append(synthetic_row(unit, "angular_randomized_loose_initial", index, 0.35 + index * 0.01))
+            rows.append(synthetic_row(unit, "radially_separated", index, 0.30 + index * 0.01))
     input_csv = tmp_path / "seed.csv"
     write_csv(input_csv, rows)
 
     result = costs.run(run_args(tmp_path, input_csv))
 
     assert result["component_rows"] > 0
-    assert result["summary_rows"] == 4
+    assert result["summary_rows"] == 6
     assert (tmp_path / "components.csv").exists()
     assert (tmp_path / "summary.csv").exists()
     assert (tmp_path / "report.md").exists()
+
+
+def test_cost_audit_includes_radially_separated_class(tmp_path):
+    rows = []
+    for index in range(2):
+        rows.append(synthetic_row(6, "formed_perturbed", index, index * 0.01))
+        rows.append(synthetic_row(6, "loose_initial", index, 0.2 + index * 0.01))
+        rows.append(synthetic_row(6, "radially_separated", index, 0.3 + index * 0.01))
+    input_csv = tmp_path / "seed.csv"
+    write_csv(input_csv, rows)
+
+    costs.run(run_args(tmp_path, input_csv))
+
+    with (tmp_path / "summary.csv").open(newline="", encoding="utf-8") as handle:
+        summary_rows = list(csv.DictReader(handle))
+    assert {row["start_class"] for row in summary_rows} == {"loose_initial", "radially_separated"}
+    assert any(row["dominant_cost_group"] for row in summary_rows if row["start_class"] == "radially_separated")
 
 
 def test_missing_optional_feature_columns_are_skipped(tmp_path):
@@ -175,3 +193,20 @@ def test_report_contains_conservative_disclaimer_language(tmp_path):
     assert "not an atomistic Schrodinger bridge" in report
     assert "not molecular dynamics" in report
     assert "not evidence of a physical nucleation pathway" in report
+
+
+def test_report_contains_radial_drydown_limitation_language(tmp_path):
+    rows = []
+    for index in range(2):
+        rows.append(synthetic_row(6, "formed_perturbed", index, index * 0.01))
+        rows.append(synthetic_row(6, "loose_initial", index, 0.2 + index * 0.01))
+        rows.append(synthetic_row(6, "radially_separated", index, 0.3 + index * 0.01))
+    input_csv = tmp_path / "seed.csv"
+    write_csv(input_csv, rows)
+
+    costs.run(run_args(tmp_path, input_csv))
+
+    report = (tmp_path / "report.md").read_text(encoding="utf-8")
+    assert "dry-down/concentration-compaction proxy" in report
+    assert "does not model solvent evaporation" in report
+    assert "not as a simulation of the lab dry-down process" in report

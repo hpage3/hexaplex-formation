@@ -1,0 +1,9 @@
+unit_count,start_class,n_features_total,n_geometric_features,n_contact_features,n_register_phase_features,geometric_cost,contact_recovery_cost,register_phase_cost,overall_cost,dominant_cost_group
+4,angular_randomized_loose_initial,12,6,3,3,100.951432,12.881345,111.903847,90.926871,register_phase
+4,loose_initial,11,6,3,2,82.770151,12.171476,10.652749,61.627019,geometric
+5,angular_randomized_loose_initial,12,6,3,3,100.657588,13.499956,14.694160,71.871530,geometric
+5,loose_initial,11,6,3,2,85.814724,13.067191,10.166259,63.891927,geometric
+6,angular_randomized_loose_initial,12,6,3,3,102.142571,13.338226,55.382855,77.639195,geometric
+6,loose_initial,11,6,3,2,94.012577,12.756948,9.969406,69.881188,geometric
+7,angular_randomized_loose_initial,12,6,3,3,106.974284,14.327610,17.460214,76.480609,geometric
+7,loose_initial,11,6,3,2,97.128347,14.216781,9.917234,72.241104,geometric

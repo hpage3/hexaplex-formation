@@ -222,6 +222,20 @@ Outputs are written to `outputs/seed_formation/ensembles/`, `outputs/seed_format
 
 The generated ensembles treat each chain fragment as a rigid body. They are synthetic preparation for later Schrödinger bridge or formation-pathway modeling, not molecular dynamics and not evidence of spontaneous assembly by themselves.
 
+## Seed Starting-Ensemble Cost Audit
+
+The seed starting-ensemble cost audit compares existing loose-start endpoint classes against `formed_perturbed` endpoints in the current order-parameter space. It decomposes the standardized distance to the formed endpoint distribution into geometric, contact-recovery, and register/phase cost groups.
+
+Run the audit with:
+
+```bash
+.venv/bin/python scripts/analyze_seed_starting_ensemble_costs.py
+```
+
+Outputs are written to `outputs/metrics/seed_starting_ensemble_cost_components.csv`, `outputs/metrics/seed_starting_ensemble_cost_summary.csv`, `outputs/plots/seed_starting_ensemble_costs/`, and `outputs/reports/seed_starting_ensemble_cost_report.md`.
+
+This audit is an exploratory order-parameter cost proxy. It is not an atomistic Schrodinger bridge, not molecular dynamics, and not evidence of a physical nucleation pathway. Its immediate use is to identify which existing loose-start class is closest to the formed endpoint distribution and whether geometry, contact recovery, or register/phase terms dominate that distance.
+
 ## Seed Contact Networks
 
 The seed contact-network workflow analyzes the formed mini-hexaplex targets directly. It asks whether the 4-, 5-, 6-, 7-, and 8-unit seeds already contain a connected six-chain interchain contact graph, and whether longer seeds add contact redundancy, CYP/MEP contact count, unit-level connectivity, or axial contact span.

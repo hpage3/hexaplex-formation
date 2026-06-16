@@ -33,6 +33,14 @@ The sibling project `../fiber-diffraction` contains diffraction simulation tools
 
 This project may consume exported PDBs, CSVs, JSON metadata, and figures from that work, but this repository should remain logically independent.
 
+## Basic diffraction handoff for Nick
+
+A clean public copy of the basic candidate-coordinate diffraction workflow is at:
+
+`C:\Users\Public\Documents\hexaplex-diffraction-handoff`
+
+That folder is intended to run from another local Windows login without relying on Howard's user profile, OneDrive path, GitHub Desktop setup, or exploratory research files.
+
 ## Setup
 
 Create or use the repo-local virtual environment, then install the local package and development test requirements:

@@ -287,6 +287,7 @@ def svg_cost_plot(summary_rows: list[dict[str, str]], path: Path) -> None:
         "loose_initial": "#4c78a8",
         "angular_randomized_loose_initial": "#f58518",
         "radially_separated": "#54a24b",
+        "axially_misregistered": "#b279a2",
     }
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
@@ -340,6 +341,37 @@ def interpret_radial_class(summary_rows: list[dict[str, str]]) -> list[str]:
     return lines
 
 
+def compare_start_class(
+    summary_rows: list[dict[str, str]],
+    target_class: str,
+    reference_classes: list[str],
+    unit_filter: set[str] | None = None,
+) -> list[str]:
+    lines: list[str] = []
+    units = sorted({row["unit_count"] for row in summary_rows if unit_filter is None or row["unit_count"] in unit_filter})
+    by_key = {(row["unit_count"], row["start_class"]): row for row in summary_rows}
+    for unit in units:
+        target = by_key.get((unit, target_class))
+        if target is None:
+            continue
+        target_cost = safe_float(target.get("overall_cost"))
+        comparisons: list[str] = []
+        for reference_class in reference_classes:
+            reference = by_key.get((unit, reference_class))
+            reference_cost = safe_float(reference.get("overall_cost")) if reference else None
+            if target_cost is None or reference_cost is None:
+                comparisons.append(f"not directly comparable to `{reference_class}`")
+                continue
+            direction = "higher" if target_cost > reference_cost else "lower"
+            comparisons.append(f"{direction} than `{reference_class}` ({format_float(reference_cost, 3)})")
+        lines.append(
+            f"- Unit {unit} `{target_class}`: overall cost {target.get('overall_cost', '')}, "
+            + "; ".join(comparisons)
+            + f"; dominant group `{target.get('dominant_cost_group', '')}`."
+        )
+    return lines
+
+
 def write_report(
     path: Path,
     args: argparse.Namespace,
@@ -364,6 +396,8 @@ def write_report(
         "This analysis is hypothesis-generating. It is not an atomistic Schrodinger bridge, not molecular dynamics, and not evidence of a physical nucleation pathway.",
         "",
         "The `radially_separated` class is a dry-down/concentration-compaction proxy: it keeps rough angular phase and small axial offsets while moving chains farther apart radially. It does not model solvent evaporation, crystallization, molecular dynamics, or a full atomistic Schrodinger bridge.",
+        "",
+        "The `axially_misregistered` class is a synthetic register-perturbation proxy. It starts from the loose baseline and applies symmetric chain-specific offsets along the fitted stack axis, asking whether axial register disruption gives a distinct cost signature from radial separation.",
         "",
         "## Inputs Used",
         "",
@@ -406,6 +440,17 @@ def write_report(
         lines.extend(radial_lines)
         lines.append("")
         lines.append("This readout asks whether a radial compaction proxy changes the cost relative to the older loose baseline. It should be interpreted as a geometric endpoint comparison, not as a simulation of the lab dry-down process.")
+    axial_lines = compare_start_class(
+        summary_rows,
+        "axially_misregistered",
+        ["loose_initial", "radially_separated", "angular_randomized_loose_initial"],
+        {"6", "7"},
+    )
+    if axial_lines:
+        lines.extend(["", "## Axial-Misregistration Readout", ""])
+        lines.extend(axial_lines)
+        lines.append("")
+        lines.append("This readout asks whether stack-axis offsets create a distinct register or phase cost signature. It should be interpreted as a synthetic endpoint comparison, not as a physical trajectory.")
     lines.extend(
         [
             "",
@@ -419,7 +464,7 @@ def write_report(
             "",
             "## Recommended Next Step",
             "",
-            "Keep the start-class set limited to `loose_initial`, `angular_randomized_loose_initial`, and `radially_separated` until the radial-compaction readout is reviewed. Additional start classes should be added only one at a time with the same cost-decomposition checks.",
+            "Keep the start-class set limited to `loose_initial`, `angular_randomized_loose_initial`, `radially_separated`, and `axially_misregistered` until the axial-register readout is reviewed. Additional start classes should be added only one at a time with the same cost-decomposition checks.",
         ]
     )
     if plot_paths:

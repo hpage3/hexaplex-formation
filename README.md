@@ -224,7 +224,7 @@ The generated ensembles treat each chain fragment as a rigid body. They are synt
 
 ## Seed Starting-Ensemble Cost Audit
 
-The seed starting-ensemble cost audit compares synthetic loose-start endpoint classes against `formed_perturbed` endpoints in the current order-parameter space. It decomposes the standardized distance to the formed endpoint distribution into geometric, contact-recovery, and register/phase cost groups. The current start classes are `loose_initial`, `angular_randomized_loose_initial`, and `radially_separated`; the radial class is a dry-down/concentration-compaction proxy, not a solvent-evaporation simulation.
+The seed starting-ensemble cost audit compares synthetic loose-start endpoint classes against `formed_perturbed` endpoints in the current order-parameter space. It decomposes the standardized distance to the formed endpoint distribution into geometric, contact-recovery, and register/phase cost groups. The current start classes are `loose_initial`, `angular_randomized_loose_initial`, `radially_separated`, and `axially_misregistered`; the radial class is a dry-down/concentration-compaction proxy, and the axial class is a synthetic register-perturbation proxy.
 
 Run the audit with:
 

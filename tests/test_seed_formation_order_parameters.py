@@ -165,6 +165,28 @@ def test_radially_separated_preserves_intrachain_geometry_and_expands_radius(tmp
     assert seed.radius_of_gyration(separated) > reference.radius_of_gyration
 
 
+def test_axially_misregistered_preserves_intrachain_geometry_and_reduces_register(tmp_path):
+    path = tmp_path / "mini_hexaplex_central4_units.pdb"
+    write_pdb_atoms(synthetic_seed(4), path)
+    reference, _ = seed.load_seed_reference(path, 4, 4.5)
+    chain_id = "A"
+    before_atoms = reference.chain_atoms[chain_id]
+    before_distance = seed.distance(before_atoms[0], before_atoms[-1])
+
+    loose = seed.generate_loose_initial(reference, 0, seed.random.Random(18))
+    misregistered = seed.generate_axially_misregistered(reference, 0, seed.random.Random(18))
+    misregistered_chain = tuple(atom for atom in misregistered if atom.chain_id == chain_id)
+    _, _, loose_centroids = seed.chain_centroid_metrics(seed.group_by_chain(loose))
+    _, _, misregistered_centroids = seed.chain_centroid_metrics(seed.group_by_chain(misregistered))
+    loose_register = seed.axial_register_score(reference, loose_centroids)
+    misregistered_register = seed.axial_register_score(reference, misregistered_centroids)
+
+    assert seed.distance(misregistered_chain[0], misregistered_chain[-1]) == pytest.approx(before_distance)
+    assert loose_register is not None
+    assert misregistered_register is not None
+    assert misregistered_register < loose_register
+
+
 def test_angular_randomized_loose_preserves_intrachain_distances_and_reduces_phase_score(tmp_path):
     path = tmp_path / "mini_hexaplex_central4_units.pdb"
     write_pdb_atoms(synthetic_seed(4), path)
@@ -220,7 +242,7 @@ def test_output_csv_is_written_with_expected_columns(tmp_path):
     assert (tmp_path / "means.csv").exists()
 
 
-def test_default_all_mode_writes_radially_separated_rows(tmp_path):
+def test_default_all_mode_writes_radially_separated_and_axial_rows(tmp_path):
     structures_dir = tmp_path / "structures"
     structures_dir.mkdir()
     write_pdb_atoms(synthetic_seed(4), structures_dir / "mini_hexaplex_central4_units.pdb")
@@ -251,6 +273,7 @@ def test_default_all_mode_writes_radially_separated_rows(tmp_path):
         "loose_initial",
         "angular_randomized_loose_initial",
         "radially_separated",
+        "axially_misregistered",
     }
     with out_csv.open("r", newline="", encoding="utf-8") as handle:
         written = list(csv.DictReader(handle))

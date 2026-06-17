@@ -35,6 +35,7 @@ DEFAULT_UNMATCHED_CSV = Path("outputs/metrics/hxc590_s1_predicted_unmatched_peak
 DEFAULT_TOLERANCE_CSV = Path("outputs/metrics/hxc590_s1_tolerance_survival_summary.csv")
 DEFAULT_REPORT = Path("outputs/reports/hxc590_s1_falsification_report.md")
 DEFAULT_PLOT_DIR = Path("outputs/plots/hxc590_s1_falsification")
+DEFAULT_TWIST_RISE_SENSITIVITY_CSV = Path("outputs/metrics/hxc590_s1_twist_rise_sensitivity.csv")
 
 TOLERANCE_SCALES = {"narrow": 0.5, "current": 1.0, "broad": 1.5}
 CENTRAL_CANDIDATE_ID = "central8_units_30deg"
@@ -216,7 +217,7 @@ def build_candidate_manifest() -> list[ManifestCandidate]:
                 "plausible_alternative",
                 Path(f"outputs/length_twist_diffraction/structures/full_length_twist_{twist}.pdb"),
                 Path(f"outputs/mini_hexaplex/radial_profiles/full_length_twist_{twist}_radial.csv"),
-                "Manifest marks this twist family as pending locally; coordinate/profile files are not present.",
+                "No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe.",
             )
         )
 
@@ -229,7 +230,7 @@ def build_candidate_manifest() -> list[ManifestCandidate]:
                 "plausible_alternative",
                 Path(f"outputs/rise_variants/structures/hexaflex_rise_{rise}.pdb"),
                 Path(f"outputs/rise_variants/radial_profiles/hexaflex_rise_{rise}_radial.csv"),
-                "No existing rise-variant generation/profile workflow was found; generation would require model-generation support.",
+                "No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo.",
             )
         )
     return manifest
@@ -433,6 +434,13 @@ def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> 
         writer.writerows(rows)
 
 
+def read_optional_csv(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
 def write_manifest(path: Path, manifest: list[ManifestCandidate]) -> None:
     rows = [
         {
@@ -558,6 +566,13 @@ def write_report(
     unmatched_focus = [
         row for row in unmatched_rows if row["matched_experimental_window"] == "no"
     ][:18]
+    twist_rise_rows = read_optional_csv(DEFAULT_TWIST_RISE_SENSITIVITY_CSV)
+    non30_twists = [
+        row
+        for row in twist_rise_rows
+        if row.get("candidate_family") == "full_length_twist_variant" and row.get("parameter_value") != "30 deg"
+    ]
+    rise_rows = [row for row in twist_rise_rows if row.get("candidate_family") == "rise_variant"]
     interpretation = (
         "If many alternatives survive under current or broad tolerances, the current powder peak list is compatible with "
         "the proposed conformation but does not distinguish it uniquely."
@@ -575,6 +590,8 @@ def write_report(
         "## Purpose",
         "",
         "This analysis is a falsification-style screening analysis, not a definitive phase assignment.",
+        "",
+        "This remains a falsification-style screen, not a definitive phase assignment.",
         "",
         "A candidate is more persuasive if it reproduces the diagnostic windows while plausible alternatives fail or match materially worse.",
         "",
@@ -646,11 +663,45 @@ def write_report(
     lines.extend(
         [
             "",
+            "## Twist/rise sensitivity status",
+            "",
+            "Missing full-length non-30-degree twist variants were not generated in this pass. The repo contains pNAB twist scaffolding, but no current-model baseline pNAB YAML and matching runtime inputs were found, and the local Python environment cannot currently import pNAB.",
+            "",
+            "Rise variants were not generated in this pass. No safe existing rise-generation workflow or audited stack-axis transform was found for the current candidate model.",
+            "",
+            "Synthetic twist/rise variants are controls for diffraction sensitivity, not chemically optimized structures.",
+            "",
+            "If nearby twist or rise variants survive under current tolerances, the current powder peak list supports the conformation family but does not uniquely determine those parameters.",
+            "",
+            "Because nearby twist and rise variants are unavailable here, this screen can compare the current conformation family against available length and negative-control alternatives, but it cannot uniquely determine twist or rise parameters.",
+            "",
+            "Non-30-degree twist rows:",
+            "",
+        ]
+    )
+    if non30_twists:
+        lines.extend(row_table(non30_twists, ["candidate_id", "parameter_value", "status", "reason"]))
+    else:
+        lines.append("- No twist/rise sensitivity audit CSV was found.")
+    lines.extend(["", "Rise rows:", ""])
+    if rise_rows:
+        lines.extend(row_table(rise_rows, ["candidate_id", "parameter_value", "status", "reason"]))
+    else:
+        lines.append("- No twist/rise sensitivity audit CSV was found.")
+    lines.extend(
+        [
+            "",
             "## Interpretation",
             "",
             interpretation,
             "",
             f"Best current-tolerance candidate: `{best['candidate_id']}`. central8_units_30deg is {'best' if best['candidate_id'] == CENTRAL_CANDIDATE_ID else 'not best'} under the current scoring.",
+            "",
+            "The `central8_units_30deg` candidate remains the best-scoring available candidate under current tolerances. This ranking applies only to candidates with existing radial profiles.",
+            "",
+            "Nearby non-30-degree twists and requested rise variants neither survive nor fail in this pass because their coordinate/profile files are unavailable.",
+            "",
+            "The current powder peak list helps screen the available conformation family against available alternatives, but it does not distinguish the exact twist or rise without generated nearby controls.",
             "",
             "## What would be needed for stronger falsification",
             "",
@@ -672,6 +723,7 @@ def write_report(
             "- `outputs/metrics/hxc590_s1_falsification_scores.csv`",
             "- `outputs/metrics/hxc590_s1_predicted_unmatched_peaks.csv`",
             "- `outputs/metrics/hxc590_s1_tolerance_survival_summary.csv`",
+            "- `outputs/metrics/hxc590_s1_twist_rise_sensitivity.csv` when the twist/rise audit has been run",
             f"- `{plot_dir / 'candidate_discrimination_scores.svg'}`",
             f"- `{plot_dir / 'diagnostic_window_survival.svg'}`",
             f"- `{plot_dir / 'tolerance_survival_counts.svg'}`",

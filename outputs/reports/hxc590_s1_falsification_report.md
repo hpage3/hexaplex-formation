@@ -4,6 +4,8 @@
 
 This analysis is a falsification-style screening analysis, not a definitive phase assignment.
 
+This remains a falsification-style screen, not a definitive phase assignment.
+
 A candidate is more persuasive if it reproduces the diagnostic windows while plausible alternatives fail or match materially worse.
 
 ## Experimental input and limitations
@@ -36,18 +38,18 @@ Uniform rings are expected for an unoriented powder sample, whereas oriented fib
 | candidate_id | family | reason |
 |---|---|---|
 | negative_alanine_beta_sheet | wrong_geometry_control | No existing radial profile was found; not generating a new control profile in this pass. |
-| full_length_twist_24 | full_length_twist_variant | Manifest marks this twist family as pending locally; coordinate/profile files are not present. |
-| full_length_twist_26 | full_length_twist_variant | Manifest marks this twist family as pending locally; coordinate/profile files are not present. |
-| full_length_twist_28 | full_length_twist_variant | Manifest marks this twist family as pending locally; coordinate/profile files are not present. |
-| full_length_twist_32 | full_length_twist_variant | Manifest marks this twist family as pending locally; coordinate/profile files are not present. |
-| full_length_twist_34 | full_length_twist_variant | Manifest marks this twist family as pending locally; coordinate/profile files are not present. |
-| full_length_twist_36 | full_length_twist_variant | Manifest marks this twist family as pending locally; coordinate/profile files are not present. |
-| rise_3p20_synthetic_control | rise_variant | No existing rise-variant generation/profile workflow was found; generation would require model-generation support. |
-| rise_3p30_synthetic_control | rise_variant | No existing rise-variant generation/profile workflow was found; generation would require model-generation support. |
-| rise_3p35_synthetic_control | rise_variant | No existing rise-variant generation/profile workflow was found; generation would require model-generation support. |
-| rise_3p40_synthetic_control | rise_variant | No existing rise-variant generation/profile workflow was found; generation would require model-generation support. |
-| rise_3p50_synthetic_control | rise_variant | No existing rise-variant generation/profile workflow was found; generation would require model-generation support. |
-| rise_3p60_synthetic_control | rise_variant | No existing rise-variant generation/profile workflow was found; generation would require model-generation support. |
+| full_length_twist_24 | full_length_twist_variant | No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe. |
+| full_length_twist_26 | full_length_twist_variant | No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe. |
+| full_length_twist_28 | full_length_twist_variant | No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe. |
+| full_length_twist_32 | full_length_twist_variant | No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe. |
+| full_length_twist_34 | full_length_twist_variant | No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe. |
+| full_length_twist_36 | full_length_twist_variant | No coordinate/profile files were found for this twist. Existing pNAB helper support requires the current-model baseline YAML and pNAB runtime before generation is safe. |
+| rise_3p20_synthetic_control | rise_variant | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p30_synthetic_control | rise_variant | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p35_synthetic_control | rise_variant | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p40_synthetic_control | rise_variant | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p50_synthetic_control | rise_variant | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p60_synthetic_control | rise_variant | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
 
 ## Scoring method
 
@@ -129,11 +131,51 @@ Current-tolerance failures:
 | current | 12 | 2 | central8_units_30deg | yes | yes |
 | broad | 12 | 4 | central8_units_30deg | yes | yes |
 
+## Twist/rise sensitivity status
+
+Missing full-length non-30-degree twist variants were not generated in this pass. The repo contains pNAB twist scaffolding, but no current-model baseline pNAB YAML and matching runtime inputs were found, and the local Python environment cannot currently import pNAB.
+
+Rise variants were not generated in this pass. No safe existing rise-generation workflow or audited stack-axis transform was found for the current candidate model.
+
+Synthetic twist/rise variants are controls for diffraction sensitivity, not chemically optimized structures.
+
+If nearby twist or rise variants survive under current tolerances, the current powder peak list supports the conformation family but does not uniquely determine those parameters.
+
+Because nearby twist and rise variants are unavailable here, this screen can compare the current conformation family against available length and negative-control alternatives, but it cannot uniquely determine twist or rise parameters.
+
+Non-30-degree twist rows:
+
+| candidate_id | parameter_value | status | reason |
+|---|---|---|---|
+| full_length_twist_24 | 24 deg | unavailable | No coordinate/profile files were found for this twist. The repo contains a pNAB twist helper, but no current-model baseline YAML with HelicalParameters.h_twist and CYP content was found. Also, python cannot import pnab. |
+| full_length_twist_26 | 26 deg | unavailable | No coordinate/profile files were found for this twist. The repo contains a pNAB twist helper, but no current-model baseline YAML with HelicalParameters.h_twist and CYP content was found. Also, python cannot import pnab. |
+| full_length_twist_28 | 28 deg | unavailable | No coordinate/profile files were found for this twist. The repo contains a pNAB twist helper, but no current-model baseline YAML with HelicalParameters.h_twist and CYP content was found. Also, python cannot import pnab. |
+| full_length_twist_32 | 32 deg | unavailable | No coordinate/profile files were found for this twist. The repo contains a pNAB twist helper, but no current-model baseline YAML with HelicalParameters.h_twist and CYP content was found. Also, python cannot import pnab. |
+| full_length_twist_34 | 34 deg | unavailable | No coordinate/profile files were found for this twist. The repo contains a pNAB twist helper, but no current-model baseline YAML with HelicalParameters.h_twist and CYP content was found. Also, python cannot import pnab. |
+| full_length_twist_36 | 36 deg | unavailable | No coordinate/profile files were found for this twist. The repo contains a pNAB twist helper, but no current-model baseline YAML with HelicalParameters.h_twist and CYP content was found. Also, python cannot import pnab. |
+
+Rise rows:
+
+| candidate_id | parameter_value | status | reason |
+|---|---|---|---|
+| rise_3p20_synthetic_control | 3.20 A | unavailable | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p30_synthetic_control | 3.30 A | unavailable | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p35_synthetic_control | 3.35 A | unavailable | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p40_synthetic_control | 3.40 A | unavailable | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p50_synthetic_control | 3.50 A | unavailable | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+| rise_3p60_synthetic_control | 3.60 A | unavailable | No coordinate/profile files were found for this rise. No safe existing rise-generation workflow or audited stack-axis transform was found in this repo. |
+
 ## Interpretation
 
 Under the current tolerance setting, central8_units_30deg is the best-scoring available candidate in this screen. The result is more persuasive when considered against failed or weaker alternatives, but it remains a screening result rather than a phase assignment.
 
 Best current-tolerance candidate: `central8_units_30deg`. central8_units_30deg is best under the current scoring.
+
+The `central8_units_30deg` candidate remains the best-scoring available candidate under current tolerances. This ranking applies only to candidates with existing radial profiles.
+
+Nearby non-30-degree twists and requested rise variants neither survive nor fail in this pass because their coordinate/profile files are unavailable.
+
+The current powder peak list helps screen the available conformation family against available alternatives, but it does not distinguish the exact twist or rise without generated nearby controls.
 
 ## What would be needed for stronger falsification
 
@@ -155,6 +197,7 @@ The available alternative set is incomplete: missing full-length twist variants 
 - `outputs/metrics/hxc590_s1_falsification_scores.csv`
 - `outputs/metrics/hxc590_s1_predicted_unmatched_peaks.csv`
 - `outputs/metrics/hxc590_s1_tolerance_survival_summary.csv`
+- `outputs/metrics/hxc590_s1_twist_rise_sensitivity.csv` when the twist/rise audit has been run
 - `outputs\plots\hxc590_s1_falsification\candidate_discrimination_scores.svg`
 - `outputs\plots\hxc590_s1_falsification\diagnostic_window_survival.svg`
 - `outputs\plots\hxc590_s1_falsification\tolerance_survival_counts.svg`

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="420" viewBox="0 0 1080 420">
+<rect width="100%" height="100%" fill="white"/>
+<text x="540" y="28" text-anchor="middle" font-family="Arial" font-size="17">Diagnostic-window recovery</text>
+<line x1="70" y1="72" x2="70" y2="310" stroke="#333"/>
+<line x1="70" y1="310" x2="1060" y2="310" stroke="#333"/>
+<rect x="92" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="106" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 106,324)">central8 units 30deg</text>
+<rect x="160" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="174" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 174,324)">central12 units 30deg</text>
+<rect x="228" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="242" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 242,324)">base length scale 0p85</text>
+<rect x="296" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="310" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 310,324)">central6 units 30deg</text>
+<rect x="364" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="378" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 378,324)">central7 units 30deg</text>
+<rect x="432" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="446" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 446,324)">full length twist 30</text>
+<rect x="500" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="514" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 514,324)">base length scale 0p90</text>
+<rect x="568" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="582" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 582,324)">base length scale 0p95</text>
+<rect x="636" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="650" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 650,324)">base length scale 1p00</text>
+<rect x="704" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="718" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 718,324)">base length scale 1p05</text>
+<rect x="772" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="786" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 786,324)">base length scale 1p10</text>
+<rect x="840" y="90.00" width="28" height="220.00" fill="#59a14f"/>
+<text x="854" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 854,324)">base length scale 1p15</text>
+<rect x="908" y="145.00" width="28" height="165.00" fill="#59a14f"/>
+<text x="922" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 922,324)">negative hexads only</text>
+<rect x="976" y="145.00" width="28" height="165.00" fill="#59a14f"/>
+<text x="990" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 990,324)">negative scaffold only</text>
+</svg>

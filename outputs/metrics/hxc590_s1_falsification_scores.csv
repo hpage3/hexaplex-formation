@@ -1,0 +1,43 @@
+tolerance_setting,candidate_id,candidate_label,candidate_family,candidate_role,match_count,diagnostic_match_count,strict_survives,screen_survives,mean_abs_d_error_angstrom,mean_fractional_d_error,observed_recovery_score,predicted_unmatched_peak_count,predicted_unmatched_peak_fraction,discrimination_score,matched_targets,missed_diagnostic_targets
+narrow,central6_units_30deg,"6-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,central6_units_30deg,"6-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,central6_units_30deg,"6-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,8,4,yes,yes,0.089513,0.014550,9.985450,5,0.416667,8.527117,7.90;7.30;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,central7_units_30deg,"7-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,central7_units_30deg,"7-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,central7_units_30deg,"7-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,8,4,yes,yes,0.089513,0.014550,9.985450,5,0.416667,8.527117,7.90;7.30;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,central8_units_30deg,"8-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,6,4,no,yes,0.026429,0.005065,7.994935,4,0.333333,6.828268,7.90;7.30;4.33;3.90;3.71;3.35,
+current,central8_units_30deg,"8-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,8,4,yes,yes,0.052881,0.009366,9.990634,4,0.333333,8.823967,7.90;7.30;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,central8_units_30deg,"8-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,8,4,yes,yes,0.052881,0.009366,9.990634,4,0.333333,8.823967,7.90;7.30;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,central12_units_30deg,12-unit central 30-degree model,existing_hxc590_scored,candidate,6,4,no,yes,0.028280,0.005540,7.994460,4,0.333333,6.827794,7.90;7.30;4.33;3.90;3.71;3.35,
+current,central12_units_30deg,12-unit central 30-degree model,existing_hxc590_scored,candidate,8,4,yes,yes,0.054269,0.009722,9.990278,4,0.333333,8.823611,7.90;7.30;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,central12_units_30deg,12-unit central 30-degree model,existing_hxc590_scored,candidate,8,4,yes,yes,0.054269,0.009722,9.990278,4,0.333333,8.823611,7.90;7.30;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,full_length_twist_30,Full-length anti-parallel 30-degree model,full_length_twist_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,full_length_twist_30,Full-length anti-parallel 30-degree model,full_length_twist_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,full_length_twist_30,Full-length anti-parallel 30-degree model,full_length_twist_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_0p85,Base-length variant scale 0.85,base_length_variant,candidate,4,4,no,no,0.019684,0.005208,5.994792,4,0.333333,4.828126,4.33;3.90;3.71;3.35,
+current,base_length_scale_0p85,Base-length variant scale 0.85,base_length_variant,candidate,7,4,no,yes,0.067834,0.011719,8.988281,4,0.333333,7.821615,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_0p85,Base-length variant scale 0.85,base_length_variant,candidate,7,4,no,yes,0.067834,0.011719,8.988281,4,0.333333,7.821615,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_0p90,Base-length variant scale 0.90,base_length_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,base_length_scale_0p90,Base-length variant scale 0.90,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_0p90,Base-length variant scale 0.90,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_0p95,Base-length variant scale 0.95,base_length_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,base_length_scale_0p95,Base-length variant scale 0.95,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_0p95,Base-length variant scale 0.95,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_1p00,Base-length variant scale 1.00,base_length_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,base_length_scale_1p00,Base-length variant scale 1.00,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_1p00,Base-length variant scale 1.00,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_1p05,Base-length variant scale 1.05,base_length_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,base_length_scale_1p05,Base-length variant scale 1.05,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_1p05,Base-length variant scale 1.05,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_1p10,Base-length variant scale 1.10,base_length_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,base_length_scale_1p10,Base-length variant scale 1.10,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_1p10,Base-length variant scale 1.10,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,base_length_scale_1p15,Base-length variant scale 1.15,base_length_variant,candidate,5,4,no,no,0.016716,0.004289,6.995711,5,0.416667,5.537378,7.90;4.33;3.90;3.71;3.35,
+current,base_length_scale_1p15,Base-length variant scale 1.15,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+broad,base_length_scale_1p15,Base-length variant scale 1.15,base_length_variant,candidate,7,4,no,yes,0.049721,0.009426,8.990574,5,0.416667,7.532241,7.90;6.50;5.50;4.33;3.90;3.71;3.35,
+narrow,negative_hexads_only,Hexads-only partial-structure negative control,wrong_geometry_control,negative_control,4,3,no,no,0.026566,0.006032,5.493968,2,0.285714,4.851111,6.50;4.33;3.71;3.35,3.90
+current,negative_hexads_only,Hexads-only partial-structure negative control,wrong_geometry_control,negative_control,5,3,no,no,0.047204,0.009544,6.490456,2,0.285714,5.847599,6.50;5.50;4.33;3.71;3.35,3.90
+broad,negative_hexads_only,Hexads-only partial-structure negative control,wrong_geometry_control,negative_control,5,3,no,no,0.047204,0.009544,6.490456,2,0.285714,5.847599,6.50;5.50;4.33;3.71;3.35,3.90
+narrow,negative_scaffold_only,Scaffold-only partial-structure negative control,wrong_geometry_control,negative_control,3,3,no,no,0.021327,0.005579,4.494421,2,0.400000,3.794421,4.33;3.90;3.35,3.71
+current,negative_scaffold_only,Scaffold-only partial-structure negative control,wrong_geometry_control,negative_control,3,3,no,no,0.021327,0.005579,4.494421,2,0.400000,3.794421,4.33;3.90;3.35,3.71
+broad,negative_scaffold_only,Scaffold-only partial-structure negative control,wrong_geometry_control,negative_control,5,3,no,no,0.132796,0.019099,6.480901,2,0.400000,5.780901,7.90;7.30;4.33;3.90;3.35,3.71

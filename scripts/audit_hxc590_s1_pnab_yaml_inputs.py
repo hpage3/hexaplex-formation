@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit pNAB hexad YAML inputs for HXC590 S1 twist/rise generation."""
+"""Audit external pNAB hexad YAML provenance for the HXC590 S1 workflow."""
 
 from __future__ import annotations
 
@@ -150,30 +150,20 @@ def pnab_import_status() -> tuple[bool, str]:
     return True, str(spec.origin or "pnab importable")
 
 
-def local_install_status(pnab_root: Path) -> str:
-    if not pnab_root.exists():
-        return "pNAB repo path not found"
-    if (pnab_root / "setup.py").exists() or (pnab_root / "pyproject.toml").exists():
-        return "editable pip install appears possible"
-    if (pnab_root / "install.bat").exists():
-        return "no setup.py or pyproject.toml; install.bat documents a CMake/NMake build in a conda pNAB environment with OpenBabel"
-    return "no setup.py, pyproject.toml, or install.bat found"
-
-
 def smoke_rows(yaml_rows: list[dict[str, str]]) -> list[dict[str, str]]:
     can_import, import_message = pnab_import_status()
     rows = []
     for row in yaml_rows:
         start = time.perf_counter()
-        command = f"{sys.executable} -c \"import pnab; pnab.pNAB(<reduced-step copy of {Path(row['path']).name}>)\""
+        command = "not run; external provenance-only audit"
         if not can_import:
-            status = "not_run_import_failed"
-            message = import_message
+            status = "not_run_external_tool_not_available"
+            message = f"{import_message}; pNAB is not required by this branch and was not installed or integrated."
             output_files = ""
             candidates = ""
         else:
-            status = "not_run_requires_bounded_copy_review"
-            message = "pNAB import is available, but this audit did not launch a reduced-step run automatically."
+            status = "not_run_out_of_scope"
+            message = "pNAB import is available, but running pNAB is outside this branch-local provenance audit."
             output_files = ""
             candidates = ""
         rows.append(
@@ -207,7 +197,6 @@ def markdown_table(rows: list[dict[str, str]], columns: list[str]) -> list[str]:
 
 def write_report(path: Path, pnab_root: Path, yaml_rows: list[dict[str, str]], smoke: list[dict[str, str]]) -> None:
     can_import, import_message = pnab_import_status()
-    install_note = local_install_status(pnab_root)
     by_name = {Path(row["path"]).name: row for row in yaml_rows}
     has_antiparallel = "Hexad_Antiparallel.yaml" in by_name
     has_hexad = "Hexad.yaml" in by_name
@@ -217,21 +206,23 @@ def write_report(path: Path, pnab_root: Path, yaml_rows: list[dict[str, str]], s
         "",
         "## Purpose",
         "",
-        "This audit determines whether local pNAB inputs can support reproducible twist/rise candidate generation for the HXC590 S1 falsification workflow.",
+        "This audit checks external pNAB YAML provenance for the HXC590 S1 falsification workflow.",
         "",
-        "A generic pNAB example YAML is not automatically the HXC590 model-generation input.",
+        "pNAB exists as a separate local utility repository. The HXC590 branch does not depend on pNAB, and this audit does not vendor, wrap, install, or integrate pNAB.",
         "",
-        "A generated 30 degree pilot must reproduce the existing 30 degree baseline before using the same workflow to generate nearby twist variants.",
+        "The pNAB YAML files were inspected only for provenance. A generic pNAB example YAML is not automatically an HXC590 model-generation input.",
         "",
-        "## pNAB location and runtime",
+        "Future pNAB work, if any, should happen outside this branch and only hand off validated candidate PDBs/profiles after a separate provenance and baseline-reproduction check.",
+        "",
+        "## External pNAB location and runtime note",
         "",
         f"- Explicit pNAB repo path: `{pnab_root}`",
         f"- `Hexad_Antiparallel.yaml` present: {'yes' if has_antiparallel else 'no'}",
         f"- `Hexad.yaml` present: {'yes' if has_hexad else 'no'}",
-        f"- Active HXC590 environment pNAB import: {'yes' if can_import else 'no'} ({import_message})",
-        f"- Local install path status: {install_note}",
+        f"- pNAB import check from this Python process: {'yes' if can_import else 'no'} ({import_message})",
+        "- Import status is recorded only to document the local boundary; pNAB should not be installed into this branch's virtualenv as part of this audit.",
         "",
-        "The safe editable install command was checked separately with `python -m pip install -e <local-pNAB-path>`; this local checkout is not an editable Python project because it has neither `setup.py` nor `pyproject.toml`.",
+        "No pNAB install scripts, wrappers, vendoring, or environment changes are added here.",
         "",
         "## YAML classification",
         "",
@@ -257,28 +248,30 @@ def write_report(path: Path, pnab_root: Path, yaml_rows: list[dict[str, str]], s
             "",
             "## Smoke-test status",
             "",
+            "No pNAB smoke test was run. Running pNAB is outside this branch-local provenance audit unless a separate external pNAB workflow first establishes provenance and reproduces the existing 30 degree baseline.",
+            "",
         ]
     )
     lines.extend(markdown_table(smoke, ["input_yaml", "status", "runtime_seconds", "number_of_candidates", "message"]))
     lines.extend(
         [
             "",
-            "## HXC590 generation decision",
+            "## HXC590 provenance decision",
             "",
             f"1. `Hexad_Antiparallel.yaml` is {'present' if has_antiparallel else 'not present'} locally.",
             f"2. Location: `{by_name.get('Hexad_Antiparallel.yaml', {}).get('path', '')}`",
             "3. The located `Hexad_Antiparallel.yaml` is classified as a possible antiparallel hexad YAML from the public pNAB examples, not as the actual HXC590 baseline input.",
-            f"4. pNAB can import/run in the active environment: {'yes' if can_import else 'no'}.",
+            f"4. pNAB import status was recorded as: {'available' if can_import else 'not available'}. This branch does not require pNAB.",
             "5. The referenced backbone/base PDB files for the located hexad YAMLs are present relative to the YAML files.",
-            "6. No generic pNAB candidate PDB was generated because pNAB is not importable in the active HXC590 virtualenv.",
-            "7. It is not safe to use the generic `Hexad_Antiparallel.yaml` to generate HXC590 full-length twist variants without provenance linking it to the current HXC590/hexaplex baseline.",
-            "8. Missing inputs/provenance: the actual HXC590 pNAB baseline YAML or equivalent builder parameters, component mapping for the current CYP/MEP/GLU model, and a pNAB runtime environment that can reproduce the existing 30 degree baseline.",
+            "6. No pNAB candidate PDB was generated because this branch is not the place to run or integrate pNAB.",
+            "7. The generic `Hexad_Antiparallel.yaml` should not be used to generate HXC590 full-length twist variants in this branch.",
+            "8. Missing provenance: a separate, provenance-clear HXC590 pNAB baseline YAML or equivalent external-builder record, component mapping for the current CYP/MEP/GLU model, and an external baseline-reproduction check.",
             "",
             f"Project-specific HXC590 baseline YAMLs found: {len(provenance_clear)}.",
             "",
-            "No 30 degree pilot was generated, so no reproduction check against the existing full-length 30 degree baseline was performed.",
+            "No 30 degree pilot was generated in this branch, so no reproduction check against the existing full-length 30 degree baseline was performed.",
             "",
-            "Full twist/rise generation is not safe yet.",
+            "Because no provenance-clear HXC590 pNAB input was found, no pNAB-generated twist variants should be added to this branch.",
             "",
             "## Outputs",
             "",

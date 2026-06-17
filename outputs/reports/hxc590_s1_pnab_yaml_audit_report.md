@@ -2,21 +2,23 @@
 
 ## Purpose
 
-This audit determines whether local pNAB inputs can support reproducible twist/rise candidate generation for the HXC590 S1 falsification workflow.
+This audit checks external pNAB YAML provenance for the HXC590 S1 falsification workflow.
 
-A generic pNAB example YAML is not automatically the HXC590 model-generation input.
+pNAB exists as a separate local utility repository. The HXC590 branch does not depend on pNAB, and this audit does not vendor, wrap, install, or integrate pNAB.
 
-A generated 30 degree pilot must reproduce the existing 30 degree baseline before using the same workflow to generate nearby twist variants.
+The pNAB YAML files were inspected only for provenance. A generic pNAB example YAML is not automatically an HXC590 model-generation input.
 
-## pNAB location and runtime
+Future pNAB work, if any, should happen outside this branch and only hand off validated candidate PDBs/profiles after a separate provenance and baseline-reproduction check.
+
+## External pNAB location and runtime note
 
 - Explicit pNAB repo path: `C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\pnab`
 - `Hexad_Antiparallel.yaml` present: yes
 - `Hexad.yaml` present: yes
-- Active HXC590 environment pNAB import: no (python cannot import pnab)
-- Local install path status: no setup.py or pyproject.toml; install.bat documents a CMake/NMake build in a conda pNAB environment with OpenBabel
+- pNAB import check from this Python process: no (python cannot import pnab)
+- Import status is recorded only to document the local boundary; pNAB should not be installed into this branch's virtualenv as part of this audit.
 
-The safe editable install command was checked separately with `python -m pip install -e <local-pNAB-path>`; this local checkout is not an editable Python project because it has neither `setup.py` nor `pyproject.toml`.
+No pNAB install scripts, wrappers, vendoring, or environment changes are added here.
 
 ## YAML classification
 
@@ -27,27 +29,29 @@ The safe editable install command was checked separately with `python -m pip ins
 
 ## Smoke-test status
 
+No pNAB smoke test was run. Running pNAB is outside this branch-local provenance audit unless a separate external pNAB workflow first establishes provenance and reproduces the existing 30 degree baseline.
+
 | input_yaml | status | runtime_seconds | number_of_candidates | message |
 |---|---|---|---|---|
-| C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\pnab\pnab\data\Hexad.yaml | not_run_import_failed | 0.000006 |  | python cannot import pnab |
-| C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\pnab\pnab\data\Hexad_Antiparallel.yaml | not_run_import_failed | 0.000005 |  | python cannot import pnab |
+| C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\pnab\pnab\data\Hexad.yaml | not_run_external_tool_not_available | 0.000001 |  | python cannot import pnab; pNAB is not required by this branch and was not installed or integrated. |
+| C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\pnab\pnab\data\Hexad_Antiparallel.yaml | not_run_external_tool_not_available | 0.000000 |  | python cannot import pnab; pNAB is not required by this branch and was not installed or integrated. |
 
-## HXC590 generation decision
+## HXC590 provenance decision
 
 1. `Hexad_Antiparallel.yaml` is present locally.
 2. Location: `C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\pnab\pnab\data\Hexad_Antiparallel.yaml`
 3. The located `Hexad_Antiparallel.yaml` is classified as a possible antiparallel hexad YAML from the public pNAB examples, not as the actual HXC590 baseline input.
-4. pNAB can import/run in the active environment: no.
+4. pNAB import status was recorded as: not available. This branch does not require pNAB.
 5. The referenced backbone/base PDB files for the located hexad YAMLs are present relative to the YAML files.
-6. No generic pNAB candidate PDB was generated because pNAB is not importable in the active HXC590 virtualenv.
-7. It is not safe to use the generic `Hexad_Antiparallel.yaml` to generate HXC590 full-length twist variants without provenance linking it to the current HXC590/hexaplex baseline.
-8. Missing inputs/provenance: the actual HXC590 pNAB baseline YAML or equivalent builder parameters, component mapping for the current CYP/MEP/GLU model, and a pNAB runtime environment that can reproduce the existing 30 degree baseline.
+6. No pNAB candidate PDB was generated because this branch is not the place to run or integrate pNAB.
+7. The generic `Hexad_Antiparallel.yaml` should not be used to generate HXC590 full-length twist variants in this branch.
+8. Missing provenance: a separate, provenance-clear HXC590 pNAB baseline YAML or equivalent external-builder record, component mapping for the current CYP/MEP/GLU model, and an external baseline-reproduction check.
 
 Project-specific HXC590 baseline YAMLs found: 0.
 
-No 30 degree pilot was generated, so no reproduction check against the existing full-length 30 degree baseline was performed.
+No 30 degree pilot was generated in this branch, so no reproduction check against the existing full-length 30 degree baseline was performed.
 
-Full twist/rise generation is not safe yet.
+Because no provenance-clear HXC590 pNAB input was found, no pNAB-generated twist variants should be added to this branch.
 
 ## Outputs
 

@@ -89,8 +89,9 @@ def test_smoke_failure_is_captured_without_crashing(monkeypatch, tmp_path):
 
     smoke = audit.smoke_rows(rows)
 
-    assert smoke[0]["status"] == "not_run_import_failed"
+    assert smoke[0]["status"] == "not_run_external_tool_not_available"
     assert "cannot import pnab" in smoke[0]["message"]
+    assert "not installed or integrated" in smoke[0]["message"]
 
 
 def test_report_contains_conservative_provenance_language(monkeypatch, tmp_path):
@@ -114,6 +115,6 @@ def test_report_contains_conservative_provenance_language(monkeypatch, tmp_path)
     audit.write_report(report, tmp_path, yaml_rows, smoke)
 
     text = report.read_text(encoding="utf-8")
-    assert "A generic pNAB example YAML is not automatically the HXC590 model-generation input" in text
-    assert "A generated 30 degree pilot must reproduce the existing 30 degree baseline" in text
-    assert "Full twist/rise generation is not safe yet" in text
+    assert "pNAB exists as a separate local utility repository" in text
+    assert "does not vendor, wrap, install, or integrate pNAB" in text
+    assert "no pNAB-generated twist variants should be added to this branch" in text

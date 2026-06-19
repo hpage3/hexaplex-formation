@@ -1,0 +1,7 @@
+feature_label,previous_distance_a,corrected_distance_a,shift_a,interpretation_note
+broad_7p3_feature,7.300,7.325,0.025,The corrected high-d feature shifts only modestly relative to the previous broad 7.30 A target.
+5p5_feature,5.500,5.577,0.077,The corrected mid-d feature remains close to the previous 5.50 A supporting target.
+4p3_to_4p4_feature,4.330,4.401,0.071,The strong corrected feature is modestly higher in d-spacing than the previous 4.33 A target.
+3p9_side_of_3p7_3p9_region,3.900,3.795,-0.105,The corrected 3.75-3.85 A feature sits between the previous 3.90 A and 3.71 A targets.
+3p71_side_of_3p7_3p9_region,3.710,3.795,0.085,The corrected 3.75-3.85 A feature sits between the previous 3.90 A and 3.71 A targets.
+base_stacking_feature,3.350,3.381,0.031,"The corrected base-stacking feature moves closer to the expected ~3.4 A region; this strengthens compatibility but does not uniquely determine phase, exact twist, or exact rise."

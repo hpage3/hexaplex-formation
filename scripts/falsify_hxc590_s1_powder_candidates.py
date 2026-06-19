@@ -270,11 +270,13 @@ def summarize_matches(matches: list[dict[str, object]], targets: list[PeakTarget
     mean_frac = sum(frac_errors) / len(frac_errors) if frac_errors else None
     match_count = len(matched)
     diagnostic_count = len(diagnostic_matched)
+    diagnostic_total = sum(1 for target in targets if target.diagnostic_window)
+    required_total_matches = min(len(targets), 6)
     return {
         "match_count": match_count,
         "diagnostic_match_count": diagnostic_count,
-        "strict_survives": diagnostic_count == 4 and match_count == 8,
-        "screen_survives": diagnostic_count == 4 and match_count >= 6,
+        "strict_survives": diagnostic_count == diagnostic_total and match_count == len(targets),
+        "screen_survives": diagnostic_count == diagnostic_total and match_count >= required_total_matches,
         "mean_abs_error": mean_abs,
         "mean_fractional_error": mean_frac,
         "observed_recovery_score": match_count + 0.5 * diagnostic_count - (mean_frac or 1.0),
@@ -406,8 +408,9 @@ def build_tolerance_rows(score_rows: list[dict[str, str]]) -> list[dict[str, str
         )
         survivors = [row for row in sorted_group if row["screen_survives"] == "yes"]
         strict_survivors = [row for row in sorted_group if row["strict_survives"] == "yes"]
-        best_score = float(sorted_group[0]["discrimination_score"]) if sorted_group else float("nan")
-        best_rows = [row for row in sorted_group if float(row["discrimination_score"]) == best_score]
+        best_pool = survivors
+        best_score = float(best_pool[0]["discrimination_score"]) if best_pool else float("nan")
+        best_rows = [row for row in best_pool if float(row["discrimination_score"]) == best_score]
         central8 = next((row for row in sorted_group if row["candidate_id"] == CENTRAL_CANDIDATE_ID), None)
         rows.append(
             {
@@ -417,7 +420,7 @@ def build_tolerance_rows(score_rows: list[dict[str, str]]) -> list[dict[str, str
                 "surviving_candidate_names": ";".join(row["candidate_id"] for row in survivors),
                 "strict_surviving_candidate_count": str(len(strict_survivors)),
                 "strict_surviving_candidate_names": ";".join(row["candidate_id"] for row in strict_survivors),
-                "best_candidate": sorted_group[0]["candidate_id"] if sorted_group else "",
+                "best_candidate": best_pool[0]["candidate_id"] if best_pool else "",
                 "central8_units_30deg_survives": "yes" if central8 and central8["screen_survives"] == "yes" else "no",
                 "central8_units_30deg_strict_survives": "yes" if central8 and central8["strict_survives"] == "yes" else "no",
                 "central8_units_30deg_uniquely_best": "yes" if len(best_rows) == 1 and best_rows[0]["candidate_id"] == CENTRAL_CANDIDATE_ID else "no",
@@ -534,7 +537,12 @@ def write_report(
     unmatched_rows: list[dict[str, str]],
     tolerance_rows: list[dict[str, str]],
     plot_dir: Path,
+    experimental_peaks: Path | None = None,
+    targets: list[PeakTarget] | None = None,
 ) -> None:
+    corrected = experimental_peaks is not None and "corrected" in experimental_peaks.name.lower()
+    total_target_count = len(targets) if targets else 8
+    diagnostic_target_count = sum(1 for target in targets if target.diagnostic_window) if targets else 4
     available_rows = [
         {
             "candidate_id": entry.candidate_id,
@@ -597,7 +605,11 @@ def write_report(
         "",
         "## Experimental input and limitations",
         "",
-        "The input peak list is John Bacsa's approximate HXC590 S1 powder list for TM_TC without salt. The experimental background is broad, peak positions are approximate, and relative intensities were not treated as reliable constraints.",
+        (
+            "The input peak list is John Bacsa / Nick's corrected HXC590 S1 powder target list for TM_TC without salt. The corrected distance scale shifts target positions modestly and places the base-stacking feature close to the expected 3.4 A region. Relative intensities were preserved in the corrected target table but were not treated as reliable constraints."
+            if corrected
+            else "The input peak list is John Bacsa's approximate HXC590 S1 powder list for TM_TC without salt. The experimental background is broad, peak positions are approximate, and relative intensities were not treated as reliable constraints."
+        ),
         "",
         "Uniform rings are expected for an unoriented powder sample, whereas oriented fibers give arcs. The ring-versus-arc difference is not by itself evidence for a different molecular phase.",
         "",
@@ -612,11 +624,11 @@ def write_report(
             "",
             "## Scoring method",
             "",
-            "Observed-peak recovery uses the same local-profile-maximum d-window method as the HXC590 S1 peak comparison. The diagnostic windows are 3.35 A, 4.33 A, 3.90 A, and 3.71 A.",
+            f"Observed-peak recovery uses the same local-profile-maximum d-window method as the HXC590 S1 peak comparison. This screen uses {total_target_count} target windows, including {diagnostic_target_count} diagnostic windows.",
             "",
             "Predicted unmatched peaks were counted from the top local maxima within the experimental d-range. A predicted peak is unmatched when it does not fall inside any current experimental d-window. Unmatched predicted peaks are treated as screening diagnostics only, because weak or broad experimental features may be obscured by background.",
             "",
-            "Survival means matching all 4 diagnostic windows and at least 6 of 8 total peak windows. Strict survival means matching all 4 diagnostic windows and all 8 total windows.",
+            f"Survival means matching all {diagnostic_target_count} diagnostic windows and at least {min(total_target_count, 6)} of {total_target_count} total peak windows. Strict survival means matching all {diagnostic_target_count} diagnostic windows and all {total_target_count} total windows.",
             "",
             "## Observed-peak recovery",
             "",
@@ -637,7 +649,7 @@ def write_report(
         )
     )
     lines.extend(["", "## Diagnostic-window recovery", ""])
-    lines.append(f"`{CENTRAL_CANDIDATE_ID}` recovered {central8['diagnostic_match_count']} of 4 diagnostic windows under current tolerances.")
+    lines.append(f"`{CENTRAL_CANDIDATE_ID}` recovered {central8['diagnostic_match_count']} of {diagnostic_target_count} diagnostic windows under current tolerances.")
     lines.append("")
     lines.append("Current-tolerance survivors:")
     lines.extend(f"- `{row['candidate_id']}`" for row in survivors)
@@ -697,7 +709,11 @@ def write_report(
             "",
             f"Best current-tolerance candidate: `{best['candidate_id']}`. central8_units_30deg is {'best' if best['candidate_id'] == CENTRAL_CANDIDATE_ID else 'not best'} under the current scoring.",
             "",
-            "The `central8_units_30deg` candidate remains the best-scoring available candidate under current tolerances. This ranking applies only to candidates with existing radial profiles.",
+            (
+                "The `central8_units_30deg` candidate remains the best-scoring available candidate under current tolerances. This ranking applies only to candidates with existing radial profiles."
+                if best["candidate_id"] == CENTRAL_CANDIDATE_ID
+                else f"The corrected current-tolerance screen ranks `{best['candidate_id']}` ahead of `central8_units_30deg` within the available screened profiles. This is a corrected-target rank change, not a unique refined phase assignment."
+            ),
             "",
             "Nearby non-30-degree twists and requested rise variants neither survive nor fail in this pass because their coordinate/profile files are unavailable.",
             "",
@@ -719,10 +735,26 @@ def write_report(
             "",
             "## Outputs",
             "",
-            "- `outputs/metrics/hxc590_s1_falsification_candidate_manifest.csv`",
-            "- `outputs/metrics/hxc590_s1_falsification_scores.csv`",
-            "- `outputs/metrics/hxc590_s1_predicted_unmatched_peaks.csv`",
-            "- `outputs/metrics/hxc590_s1_tolerance_survival_summary.csv`",
+            (
+                "- `outputs/metrics/hxc590_s1_corrected_falsification_candidate_manifest.csv`"
+                if corrected
+                else "- `outputs/metrics/hxc590_s1_falsification_candidate_manifest.csv`"
+            ),
+            (
+                "- `outputs/metrics/hxc590_s1_corrected_falsification_scores.csv`"
+                if corrected
+                else "- `outputs/metrics/hxc590_s1_falsification_scores.csv`"
+            ),
+            (
+                "- `outputs/metrics/hxc590_s1_corrected_predicted_unmatched_peaks.csv`"
+                if corrected
+                else "- `outputs/metrics/hxc590_s1_predicted_unmatched_peaks.csv`"
+            ),
+            (
+                "- `outputs/metrics/hxc590_s1_corrected_tolerance_survival_summary.csv`"
+                if corrected
+                else "- `outputs/metrics/hxc590_s1_tolerance_survival_summary.csv`"
+            ),
             "- `outputs/metrics/hxc590_s1_twist_rise_sensitivity.csv` when the twist/rise audit has been run",
             f"- `{plot_dir / 'candidate_discrimination_scores.svg'}`",
             f"- `{plot_dir / 'diagnostic_window_survival.svg'}`",
@@ -743,7 +775,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
     write_csv(args.unmatched_csv, unmatched_rows, UNMATCHED_COLUMNS)
     write_csv(args.tolerance_csv, tolerance_rows, TOLERANCE_COLUMNS)
     write_plots(args.plot_dir, score_rows, tolerance_rows)
-    write_report(args.report, manifest, score_rows, unmatched_rows, tolerance_rows, args.plot_dir)
+    write_report(args.report, manifest, score_rows, unmatched_rows, tolerance_rows, args.plot_dir, args.experimental_peaks, targets)
     current_rows = sorted(
         [row for row in score_rows if row["tolerance_setting"] == "current"],
         key=lambda row: float(row["discrimination_score"]),

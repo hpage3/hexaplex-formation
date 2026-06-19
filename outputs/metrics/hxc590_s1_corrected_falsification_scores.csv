@@ -1,0 +1,43 @@
+tolerance_setting,candidate_id,candidate_label,candidate_family,candidate_role,match_count,diagnostic_match_count,strict_survives,screen_survives,mean_abs_d_error_angstrom,mean_fractional_d_error,observed_recovery_score,predicted_unmatched_peak_count,predicted_unmatched_peak_fraction,discrimination_score,matched_targets,missed_diagnostic_targets
+narrow,central6_units_30deg,"6-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,1,0,no,no,0.060662,0.010877,0.989123,9,0.750000,-1.635877,5.58,4.40;3.79;3.38
+current,central6_units_30deg,"6-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,3,2,no,no,0.067850,0.015654,3.984346,9,0.750000,1.359346,5.58;4.40;3.38,3.79
+broad,central6_units_30deg,"6-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,4,3,no,no,0.071677,0.017219,5.482781,9,0.750000,2.857781,5.58;4.40;3.79;3.38,
+narrow,central7_units_30deg,"7-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,1,0,no,no,0.060662,0.010877,0.989123,9,0.750000,-1.635877,5.58,4.40;3.79;3.38
+current,central7_units_30deg,"7-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,3,2,no,no,0.067850,0.015654,3.984346,9,0.750000,1.359346,5.58;4.40;3.38,3.79
+broad,central7_units_30deg,"7-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,4,3,no,no,0.071677,0.017219,5.482781,9,0.750000,2.857781,5.58;4.40;3.79;3.38,
+narrow,central8_units_30deg,"8-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,2,0,no,no,0.060882,0.009609,1.990391,8,0.666667,-0.342943,7.33;5.58,4.40;3.79;3.38
+current,central8_units_30deg,"8-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,4,2,no,no,0.066163,0.013826,4.986174,8,0.666667,2.652840,7.33;5.58;4.40;3.38,3.79
+broad,central8_units_30deg,"8-unit formed endpoint, central 30-degree model",existing_hxc590_scored,candidate,5,3,yes,yes,0.073131,0.016384,6.483616,8,0.666667,4.150283,7.33;5.58;4.40;3.79;3.38,
+narrow,central12_units_30deg,12-unit central 30-degree model,existing_hxc590_scored,candidate,2,0,no,no,0.060882,0.009609,1.990391,7,0.583333,-0.051276,7.33;5.58,4.40;3.79;3.38
+current,central12_units_30deg,12-unit central 30-degree model,existing_hxc590_scored,candidate,5,3,yes,yes,0.061268,0.013258,6.486742,7,0.583333,4.445075,7.33;5.58;4.40;3.79;3.38,
+broad,central12_units_30deg,12-unit central 30-degree model,existing_hxc590_scored,candidate,5,3,yes,yes,0.061268,0.013258,6.486742,7,0.583333,4.445075,7.33;5.58;4.40;3.79;3.38,
+narrow,full_length_twist_30,Full-length anti-parallel 30-degree model,full_length_twist_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,8,0.727273,-1.374514,5.58,4.40;3.79;3.38
+current,full_length_twist_30,Full-length anti-parallel 30-degree model,full_length_twist_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,8,0.727273,1.620709,5.58;4.40;3.38,3.79
+broad,full_length_twist_30,Full-length anti-parallel 30-degree model,full_length_twist_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,8,0.727273,3.119145,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_0p85,Base-length variant scale 0.85,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,7,0.636364,-1.079059,5.58,4.40;3.79;3.38
+current,base_length_scale_0p85,Base-length variant scale 0.85,base_length_variant,candidate,4,3,no,no,0.061309,0.014487,5.485513,7,0.636364,3.417331,5.58;4.40;3.79;3.38,
+broad,base_length_scale_0p85,Base-length variant scale 0.85,base_length_variant,candidate,4,3,no,no,0.061309,0.014487,5.485513,7,0.636364,3.417331,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_0p90,Base-length variant scale 0.90,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,8,0.727273,-1.374514,5.58,4.40;3.79;3.38
+current,base_length_scale_0p90,Base-length variant scale 0.90,base_length_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,8,0.727273,1.620709,5.58;4.40;3.38,3.79
+broad,base_length_scale_0p90,Base-length variant scale 0.90,base_length_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,8,0.727273,3.119145,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_0p95,Base-length variant scale 0.95,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,8,0.727273,-1.374514,5.58,4.40;3.79;3.38
+current,base_length_scale_0p95,Base-length variant scale 0.95,base_length_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,8,0.727273,1.620709,5.58;4.40;3.38,3.79
+broad,base_length_scale_0p95,Base-length variant scale 0.95,base_length_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,8,0.727273,3.119145,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_1p00,Base-length variant scale 1.00,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,8,0.727273,-1.374514,5.58,4.40;3.79;3.38
+current,base_length_scale_1p00,Base-length variant scale 1.00,base_length_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,8,0.727273,1.620709,5.58;4.40;3.38,3.79
+broad,base_length_scale_1p00,Base-length variant scale 1.00,base_length_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,8,0.727273,3.119145,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_1p05,Base-length variant scale 1.05,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,9,0.750000,-1.635877,5.58,4.40;3.79;3.38
+current,base_length_scale_1p05,Base-length variant scale 1.05,base_length_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,9,0.750000,1.359346,5.58;4.40;3.38,3.79
+broad,base_length_scale_1p05,Base-length variant scale 1.05,base_length_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,9,0.750000,2.857781,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_1p10,Base-length variant scale 1.10,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,9,0.750000,-1.635877,5.58,4.40;3.79;3.38
+current,base_length_scale_1p10,Base-length variant scale 1.10,base_length_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,9,0.750000,1.359346,5.58;4.40;3.38,3.79
+broad,base_length_scale_1p10,Base-length variant scale 1.10,base_length_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,9,0.750000,2.857781,5.58;4.40;3.79;3.38,
+narrow,base_length_scale_1p15,Base-length variant scale 1.15,base_length_variant,candidate,1,0,no,no,0.060662,0.010877,0.989123,9,0.750000,-1.635877,5.58,4.40;3.79;3.38
+current,base_length_scale_1p15,Base-length variant scale 1.15,base_length_variant,candidate,3,2,no,no,0.067850,0.015654,3.984346,9,0.750000,1.359346,5.58;4.40;3.38,3.79
+broad,base_length_scale_1p15,Base-length variant scale 1.15,base_length_variant,candidate,4,3,no,no,0.071677,0.017219,5.482781,9,0.750000,2.857781,5.58;4.40;3.79;3.38,
+narrow,negative_hexads_only,Hexads-only partial-structure negative control,wrong_geometry_control,negative_control,1,1,no,no,0.002943,0.000870,1.499130,4,0.571429,0.213415,3.38,4.40;3.79
+current,negative_hexads_only,Hexads-only partial-structure negative control,wrong_geometry_control,negative_control,3,3,no,no,0.041907,0.010255,4.489745,4,0.571429,3.204031,4.40;3.79;3.38,
+broad,negative_hexads_only,Hexads-only partial-structure negative control,wrong_geometry_control,negative_control,4,3,no,no,0.083119,0.016959,5.483041,4,0.571429,4.197326,5.58;4.40;3.79;3.38,
+narrow,negative_scaffold_only,Scaffold-only partial-structure negative control,wrong_geometry_control,negative_control,2,2,no,no,0.020310,0.004716,2.995284,2,0.400000,2.295284,4.40;3.38,3.79
+current,negative_scaffold_only,Scaffold-only partial-structure negative control,wrong_geometry_control,negative_control,3,2,no,no,0.095241,0.014298,3.985702,2,0.400000,3.285702,7.33;4.40;3.38,3.79
+broad,negative_scaffold_only,Scaffold-only partial-structure negative control,wrong_geometry_control,negative_control,4,3,no,no,0.098331,0.017811,5.482189,2,0.400000,4.782189,7.33;4.40;3.79;3.38,

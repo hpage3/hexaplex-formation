@@ -1,0 +1,4 @@
+tolerance_setting,window_scale,surviving_candidate_count,surviving_candidate_names,strict_surviving_candidate_count,strict_surviving_candidate_names,best_candidate,central8_units_30deg_survives,central8_units_30deg_strict_survives,central8_units_30deg_uniquely_best
+narrow,0.50,0,,0,,,no,no,no
+current,1.00,1,central12_units_30deg,1,central12_units_30deg,central12_units_30deg,no,no,no
+broad,1.50,2,central12_units_30deg;central8_units_30deg,2,central12_units_30deg;central8_units_30deg,central12_units_30deg,yes,yes,no

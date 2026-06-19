@@ -148,29 +148,40 @@ def target_id_for_d(d_angstrom: float) -> str:
     return f"d_{str(f'{d_angstrom:.2f}').replace('.', 'p')}"
 
 
+def truthy_text(value: str) -> bool:
+    return value.strip().lower() in {"yes", "true", "1", "diagnostic", "primary"}
+
+
 def read_experimental_targets(path: Path) -> list[PeakTarget]:
     if not path.exists():
         raise FileNotFoundError(f"Experimental peak file not found: {path}")
     targets: list[PeakTarget] = []
     with path.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
-            d_value = float(row["d_angstrom"])
-            q_value = float(row["q_inv_angstrom"])
+            d_value = float(row.get("d_angstrom") or row.get("distance_a") or row["distance_angstrom"])
+            q_text = row.get("q_inv_angstrom") or row.get("q_a_inv") or row.get("q_Ainv")
+            q_value = float(q_text) if q_text else q_from_d(d_value)
             expected_q = q_from_d(d_value)
             if abs(q_value - expected_q) > 5e-6:
                 raise ValueError(f"q conversion mismatch for d={d_value}: got {q_value}, expected {expected_q:.6f}")
+            width_text = row.get("d_window_half_width_angstrom") or row.get("window_half_width_a")
             rounded_d = round(d_value, 2)
-            if rounded_d not in WINDOW_HALF_WIDTHS_A:
+            if width_text:
+                window_half_width = float(width_text)
+            elif rounded_d in WINDOW_HALF_WIDTHS_A:
+                window_half_width = WINDOW_HALF_WIDTHS_A[rounded_d]
+            else:
                 raise ValueError(f"No d-window tolerance configured for {d_value}")
+            confidence = row.get("confidence") or ("medium_high" if truthy_text(row.get("diagnostic_role", "")) else "lower")
             targets.append(
                 PeakTarget(
-                    sample_id=row["sample_id"],
-                    target_id=target_id_for_d(d_value),
+                    sample_id=row.get("sample_id") or SAMPLE_ID,
+                    target_id=row.get("target_id") or row.get("peak_label") or target_id_for_d(d_value),
                     d_angstrom=d_value,
                     q_inv_angstrom=q_value,
-                    window_half_width=WINDOW_HALF_WIDTHS_A[rounded_d],
-                    confidence=row["confidence"],
-                    note=row.get("note", ""),
+                    window_half_width=window_half_width,
+                    confidence=confidence,
+                    note=row.get("note") or row.get("notes", ""),
                 )
             )
     return sorted(targets, key=lambda target: target.d_angstrom, reverse=True)
@@ -482,23 +493,43 @@ def write_report(
     summary_rows: list[dict[str, str]],
     plot_dir: Path,
 ) -> None:
+    corrected = any("corrected" in target.note.lower() or "corrected" in target.sample_id.lower() for target in targets)
     diagnostic_rows = [
         row
         for row in score_rows
         if row["candidate_id"] == summary_rows[0]["candidate_id"] and row["diagnostic_window"] == "yes"
     ]
+    diagnostic_summary = [
+        f"{row['target_d_angstrom']} A = {row['matched']}"
+        for row in diagnostic_rows
+    ]
+    purpose_text = (
+        "This report compares John Bacsa / Nick's corrected HXC590 S1 powder distance scale against existing simulated radial profiles for hexaflex / stacked-hexad candidate coordinate models. It is a peak-window diagnostic-spacing comparison, not a full Rietveld refinement or phase-refinement workflow."
+        if corrected
+        else "This report compares John Bacsa's approximate HXC590 S1 powder peak list against existing simulated radial profiles for hexaflex / stacked-hexad candidate coordinate models. It is a peak-window diagnostic-spacing comparison, not a full Rietveld refinement or phase-refinement workflow."
+    )
+    experimental_context = (
+        "John Bacsa provided a corrected distance scale for the HXC590 S1 powder data. The correction shifts the target peak positions modestly and places the base-stacking feature close to the expected 3.4 A region. Relative intensities are preserved in the target table but are treated as approximate rather than reliable scoring constraints."
+        if corrected
+        else "John reported that merged raw frames show uniform powder rings rather than oriented fiber arcs, with large broad background under peaks. Peak positions are approximate and relative intensities are treated as approximate rather than reliable constraints."
+    )
+    interpretation_text = (
+        "The corrected HXC590 S1 powder targets strengthen compatibility with a related stacked-hexad/hexaflex-like model family if the corrected diagnostic windows, including the near-3.4 A stacking feature, are reproduced by the simulated model profile."
+        if corrected
+        else "The HXC590 S1 powder peak list is consistent with a related stacked-hexad/hexaflex phase if the diagnostic 3.35 A, 4.33 A, and 3.7-3.9 A windows are reproduced by the simulated model profile."
+    )
     lines = [
         "# HXC590 S1 Powder Peak Comparison",
         "",
         "## Purpose",
         "",
-        "This report compares John Bacsa's approximate HXC590 S1 powder peak list against existing simulated radial profiles for hexaflex / stacked-hexad candidate coordinate models. It is a peak-window diagnostic-spacing comparison, not a full Rietveld refinement or phase-refinement workflow.",
+        purpose_text,
         "",
         "## Experimental Context",
         "",
         "Sample: `TM_TC without salt`, `HXC590 S1 powder`.",
         "",
-        "John reported that merged raw frames show uniform powder rings rather than oriented fiber arcs, with large broad background under peaks. Peak positions are approximate and relative intensities are treated as approximate rather than reliable constraints.",
+        experimental_context,
         "",
         "Uniform rings are expected for an unoriented powder sample, whereas oriented fibers give arcs. Therefore, the ring-versus-arc difference is not by itself evidence for a different molecular phase.",
         "",
@@ -542,6 +573,22 @@ def write_report(
         ]
     )
     lines.extend(markdown_table(summary_rows, SUMMARY_COLUMNS, limit=8))
+    if corrected:
+        central8_row = next((row for row in summary_rows if row["candidate_id"] == "central8_units_30deg"), None)
+        central8_note = (
+            f" with {central8_row['match_count']} of 5 total windows and {central8_row['diagnostic_match_count']} diagnostic windows matched."
+            if central8_row
+            else "."
+        )
+        lines.extend(
+            [
+                "",
+                "Compared with the earlier approximate-target run, the corrected five-target comparison changes the top-ranked available candidate from `central8_units_30deg` to "
+                f"`{summary_rows[0]['candidate_id']}` under the existing scoring logic. This is a rank change within the available screened profiles, not a unique refined phase assignment.",
+                "",
+                f"The corrected near-3.4 A stacking target is included as a diagnostic window. `central8_units_30deg` remains scored in the corrected comparison{central8_note}",
+            ]
+        )
     lines.extend(["", "## Diagnostic Peak-Window Match Table", ""])
     lines.extend(
         markdown_table(
@@ -564,11 +611,11 @@ def write_report(
             "",
             "## Conservative Same-Phase Interpretation",
             "",
-            "The HXC590 S1 powder peak list is consistent with a related stacked-hexad/hexaflex phase if the diagnostic 3.35 A, 4.33 A, and 3.7-3.9 A windows are reproduced by the simulated model profile.",
+            interpretation_text,
             "",
-            f"For the current top-ranked candidate, `{best['candidate_id']}`, the diagnostic windows are reproduced as follows: 3.35 A = {'yes' if matched_by_target.get('3.35') else 'no'}, 4.33 A = {'yes' if matched_by_target.get('4.33') else 'no'}, 3.90 A = {'yes' if matched_by_target.get('3.90') else 'no'}, and 3.71 A = {'yes' if matched_by_target.get('3.71') else 'no'}.",
+            f"For the current top-ranked candidate, `{best['candidate_id']}`, the diagnostic windows are reproduced as follows: {', '.join(diagnostic_summary)}.",
             "",
-            "A cautious answer to John's same-phase question is that the available powder peak list is compatible with a related stacked-hexad/hexaflex phase when these diagnostic spacing regions are matched, but the current comparison is not sufficient by itself to assign the phase.",
+            "A cautious answer to John's same-phase question is that the available powder peak list is compatible with a related stacked-hexad/hexaflex-like model family when these diagnostic spacing regions are matched, but the current comparison is not sufficient by itself to assign the phase.",
             "",
             "## Limitations",
             "",

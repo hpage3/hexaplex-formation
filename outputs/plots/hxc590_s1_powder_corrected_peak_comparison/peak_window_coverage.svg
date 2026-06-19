@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420">
+<rect width="100%" height="100%" fill="white"/>
+<text x="490" y="28" text-anchor="middle" font-family="Arial" font-size="17">HXC590 S1 powder peak-window coverage</text>
+<line x1="70" y1="70" x2="70" y2="310" stroke="#333"/>
+<line x1="70" y1="310" x2="960" y2="310" stroke="#333"/>
+<rect x="94" y="172.50" width="28" height="137.50" fill="#8fb3ff"/>
+<rect x="102" y="145.00" width="12" height="165.00" fill="#f28e2b"/>
+<text x="106" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 106,324)">central12 units 30deg</text>
+<rect x="140" y="200.00" width="28" height="110.00" fill="#8fb3ff"/>
+<rect x="148" y="145.00" width="12" height="165.00" fill="#f28e2b"/>
+<text x="152" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 152,324)">base length scale 0p85</text>
+<rect x="186" y="200.00" width="28" height="110.00" fill="#8fb3ff"/>
+<rect x="194" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="198" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 198,324)">central8 units 30deg</text>
+<rect x="232" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="240" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="244" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 244,324)">base length scale 0p90</text>
+<rect x="278" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="286" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="290" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 290,324)">base length scale 0p95</text>
+<rect x="324" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="332" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="336" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 336,324)">base length scale 1p00</text>
+<rect x="370" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="378" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="382" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 382,324)">base length scale 1p05</text>
+<rect x="416" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="424" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="428" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 428,324)">base length scale 1p10</text>
+<rect x="462" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="470" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="474" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 474,324)">base length scale 1p15</text>
+<rect x="508" y="227.50" width="28" height="82.50" fill="#8fb3ff"/>
+<rect x="516" y="200.00" width="12" height="110.00" fill="#f28e2b"/>
+<text x="520" y="324" text-anchor="end" font-family="Arial" font-size="8" transform="rotate(-42 520,324)">central6 units 30deg</text>
+<rect x="740" y="52" width="14" height="14" fill="#8fb3ff"/>
+<text x="760" y="64" font-family="Arial" font-size="12">all peak windows, out of 8</text>
+<rect x="740" y="74" width="14" height="14" fill="#f28e2b"/>
+<text x="760" y="86" font-family="Arial" font-size="12">diagnostic windows, out of 4</text>
+</svg>

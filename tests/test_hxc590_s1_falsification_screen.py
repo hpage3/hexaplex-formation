@@ -65,7 +65,7 @@ def test_diagnostic_survival_logic():
     summary = falsify.summarize_matches(matches, targets)
 
     assert summary["screen_survives"] is True
-    assert summary["strict_survives"] is False
+    assert summary["strict_survives"] is True
 
 
 def test_predicted_unmatched_peak_detection():

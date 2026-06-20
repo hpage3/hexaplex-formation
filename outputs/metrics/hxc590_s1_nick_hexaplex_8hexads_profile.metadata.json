@@ -1,0 +1,12 @@
+{
+  "atom_count": 2064,
+  "candidate_label": "nick_hexaplex_8hexads",
+  "caution": "Simplified comparative radial profile for scoring windows; not a full powder refinement or unique phase assignment.",
+  "copied_xyz": "inputs\\candidates\\nick_hexaplex_8hexads.xyz",
+  "distance_bin_width": 0.05,
+  "method": "Debye-style histogram profile from Nick-provided XYZ",
+  "q_max": 3.2,
+  "q_min": 0.2,
+  "q_step": 0.01,
+  "source_xyz": "C:\\Users\\hpage3\\research\\nick-diffraction-reference\\working\\2026-06-19\\Hexaplex_8Hexads.xyz"
+}

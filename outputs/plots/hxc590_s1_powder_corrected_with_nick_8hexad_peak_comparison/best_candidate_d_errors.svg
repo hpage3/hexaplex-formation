@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360">
+<rect width="100%" height="100%" fill="white"/>
+<text x="380" y="28" text-anchor="middle" font-family="Arial" font-size="16">Best candidate d-spacing errors</text>
+<line x1="80" y1="60" x2="80" y2="280" stroke="#333"/>
+<line x1="80" y1="280" x2="730" y2="280" stroke="#333"/>
+<line x1="80" y1="280" x2="730" y2="280" stroke="#777" stroke-dasharray="4 3"/>
+<rect x="115" y="236.01" width="30" height="43.99" fill="#59a14f"/>
+<text x="130" y="296" text-anchor="middle" font-family="Arial" font-size="10">7.33</text>
+<rect x="190" y="236.32" width="30" height="43.68" fill="#59a14f"/>
+<text x="205" y="296" text-anchor="middle" font-family="Arial" font-size="10">5.58</text>
+<rect x="265" y="215.13" width="30" height="64.87" fill="#59a14f"/>
+<text x="280" y="296" text-anchor="middle" font-family="Arial" font-size="10">4.40</text>
+<rect x="340" y="249.99" width="30" height="30.01" fill="#59a14f"/>
+<text x="355" y="296" text-anchor="middle" font-family="Arial" font-size="10">3.79</text>
+<rect x="415" y="241.99" width="30" height="38.01" fill="#59a14f"/>
+<text x="430" y="296" text-anchor="middle" font-family="Arial" font-size="10">3.38</text>
+<text x="22" y="168" font-family="Arial" font-size="11" transform="rotate(-90 22,168)">absolute d error (A)</text>
+</svg>

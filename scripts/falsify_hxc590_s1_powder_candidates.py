@@ -119,6 +119,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tolerance-csv", type=Path, default=DEFAULT_TOLERANCE_CSV)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--plot-dir", type=Path, default=DEFAULT_PLOT_DIR)
+    parser.add_argument("--include-nick-8hexad", action="store_true", help="Include Nick's provided Hexaplex_8Hexads.xyz 8-hexad candidate.")
     return parser.parse_args()
 
 
@@ -158,15 +159,17 @@ def unavailable_candidate(
     )
 
 
-def build_candidate_manifest() -> list[ManifestCandidate]:
+def build_candidate_manifest(include_nick_8hexad: bool = False) -> list[ManifestCandidate]:
     manifest: list[ManifestCandidate] = []
-    for model in default_candidate_models():
+    for model in default_candidate_models(include_nick_8hexad=include_nick_8hexad):
         family = "existing_hxc590_scored"
         role = "candidate"
         if model.category == "base_length_variant":
             family = "base_length_variant"
         elif model.candidate_id == "full_length_twist_30":
             family = "full_length_twist_variant"
+        elif model.candidate_id == "nick_hexaplex_8hexads":
+            family = "nick_provided_8hexad"
         manifest.append(available_candidate(model, family, role))
 
     negative_controls = [
@@ -569,6 +572,7 @@ def write_report(
     )
     best = current_rows[0]
     central8 = next(row for row in current_rows if row["candidate_id"] == CENTRAL_CANDIDATE_ID)
+    nick = next((row for row in current_rows if row["candidate_id"] == "nick_hexaplex_8hexads"), None)
     survivors = [row for row in current_rows if row["screen_survives"] == "yes"]
     failed = [row for row in current_rows if row["screen_survives"] != "yes"]
     unmatched_focus = [
@@ -617,6 +621,29 @@ def write_report(
         "",
     ]
     lines.extend(row_table(available_rows, ["candidate_id", "family", "role", "profile_path"]))
+    if nick:
+        nick_survivals = {
+            row["tolerance_setting"]: row
+            for row in score_rows
+            if row["candidate_id"] == "nick_hexaplex_8hexads"
+        }
+        lines.extend(
+            [
+                "",
+                "## Nick 8-Hexad Candidate",
+                "",
+                "The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` candidate. It is treated as an 8-hexad candidate, not a 16-mer.",
+                "",
+                "Tolerance survival for Nick's 8-hexad candidate:",
+                "",
+            ]
+        )
+        lines.extend(
+            row_table(
+                list(nick_survivals.values()),
+                ["tolerance_setting", "match_count", "diagnostic_match_count", "screen_survives", "strict_survives", "discrimination_score"],
+            )
+        )
     lines.extend(["", "## Candidate families unavailable", ""])
     lines.extend(row_table(unavailable_rows, ["candidate_id", "family", "reason"], limit=20))
     lines.extend(
@@ -768,7 +795,7 @@ def write_report(
 
 def run(args: argparse.Namespace) -> dict[str, object]:
     targets = read_experimental_targets(args.experimental_peaks)
-    manifest = build_candidate_manifest()
+    manifest = build_candidate_manifest(include_nick_8hexad=args.include_nick_8hexad)
     write_manifest(args.manifest_csv, manifest)
     score_rows, unmatched_rows, tolerance_rows = score_available_candidates(manifest, targets)
     write_csv(args.scores_csv, score_rows, SCORE_COLUMNS)

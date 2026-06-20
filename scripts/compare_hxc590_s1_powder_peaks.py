@@ -129,6 +129,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scores-csv", type=Path, default=DEFAULT_SCORES_CSV)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--plot-dir", type=Path, default=DEFAULT_PLOT_DIR)
+    parser.add_argument("--include-nick-8hexad", action="store_true", help="Include Nick's provided Hexaplex_8Hexads.xyz 8-hexad candidate.")
     return parser.parse_args()
 
 
@@ -211,7 +212,7 @@ def write_targets_csv(path: Path, targets: list[PeakTarget]) -> None:
             )
 
 
-def default_candidate_models() -> list[CandidateModel]:
+def default_candidate_models(include_nick_8hexad: bool = False) -> list[CandidateModel]:
     candidates = [
         CandidateModel(
             "central6_units_30deg",
@@ -257,6 +258,16 @@ def default_candidate_models() -> list[CandidateModel]:
                 Path(f"outputs/base_length_sweep/structures/hexaplex_base_length_scale_{scale}.pdb"),
                 Path(f"outputs/base_length_sweep/radial_profiles/hexaplex_base_length_scale_{scale}_radial.csv"),
                 "base_length_variant",
+            )
+        )
+    if include_nick_8hexad:
+        candidates.append(
+            CandidateModel(
+                "nick_hexaplex_8hexads",
+                "Nick-provided Hexaplex_8Hexads.xyz 8-hexad candidate (not a 16-mer)",
+                Path("inputs/candidates/nick_hexaplex_8hexads.xyz"),
+                Path("outputs/metrics/hxc590_s1_nick_hexaplex_8hexads_profile.csv"),
+                "nick_provided_8hexad",
             )
         )
     return [candidate for candidate in candidates if candidate.profile_path.exists()]
@@ -557,6 +568,28 @@ def write_report(
         for candidate in candidates
     ]
     lines.extend(markdown_table(candidate_rows, ["candidate_id", "category", "profile_path"]))
+    if any(candidate.candidate_id == "nick_hexaplex_8hexads" for candidate in candidates):
+        nick_row = next((row for row in summary_rows if row["candidate_id"] == "nick_hexaplex_8hexads"), None)
+        central12_row = next((row for row in summary_rows if row["candidate_id"] == "central12_units_30deg"), None)
+        central8_row = next((row for row in summary_rows if row["candidate_id"] == "central8_units_30deg"), None)
+        lines.extend(
+            [
+                "",
+                "## Nick 8-Hexad Candidate",
+                "",
+                "The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` candidate. It is treated as an 8-hexad candidate, not a 16-mer.",
+            ]
+        )
+        if nick_row:
+            lines.append(
+                f"It scores with {nick_row['match_count']} of {len(targets)} corrected windows and {nick_row['diagnostic_match_count']} diagnostic windows matched."
+            )
+        if central12_row and nick_row:
+            relation = "above" if float(nick_row["rank_score"]) > float(central12_row["rank_score"]) else "below"
+            lines.append(f"By the existing rank score, Nick's 8-hexad candidate is {relation} `central12_units_30deg` in this corrected screen.")
+        if central8_row and nick_row:
+            relation = "above" if float(nick_row["rank_score"]) > float(central8_row["rank_score"]) else "below"
+            lines.append(f"By the existing rank score, Nick's 8-hexad candidate is {relation} `central8_units_30deg` in this corrected screen.")
     lines.extend(["", "Unavailable twist variants:", ""])
     lines.extend(f"- {note}" for note in unavailable_candidate_notes())
     lines.extend(
@@ -639,7 +672,7 @@ def write_report(
 
 def run(args: argparse.Namespace) -> dict[str, object]:
     targets = read_experimental_targets(args.experimental_peaks)
-    candidates = default_candidate_models()
+    candidates = default_candidate_models(include_nick_8hexad=args.include_nick_8hexad)
     if not candidates:
         raise ValueError("No candidate profiles found")
     write_targets_csv(args.targets_csv, targets)

@@ -41,22 +41,23 @@ The q conversion used `q = 2*pi/d`. Window matching was performed in d-space, wi
 | base_length_scale_1p10 | base_length_variant | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_1p10_radial.csv |
 | base_length_scale_1p15 | base_length_variant | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_1p15_radial.csv |
 | nick_hexaplex_8hexads | nick_provided_8hexad | outputs\metrics\hxc590_s1_nick_hexaplex_8hexads_profile.csv |
-| nick_16mer_antiparallel_30deg_ideal | nick_confirmed_16mer_simulation_input | outputs\metrics\hxc590_s1_nick_16mer_antiparallel_30deg_profile.csv |
+| ideal_antiparallel_30deg_hexaplex | ideal_antiparallel_30deg_hexaplex | outputs\metrics\hxc590_s1_ideal_antiparallel_30deg_hexaplex_profile.csv |
 
 ## Nick 8-Hexad Candidate
 
-The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` candidate. It is treated as an 8-hexad candidate, not a 16-mer.
+The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` 8-hexad candidate.
 It scores with 3 of 5 corrected windows and 2 diagnostic windows matched.
 By the existing rank score, Nick's 8-hexad candidate is below `central12_units_30deg` in this corrected screen.
 By the existing rank score, Nick's 8-hexad candidate is below `central8_units_30deg` in this corrected screen.
 
-## Nick 16-Mer Simulation Input
+## Ideal Antiparallel 30-Degree Hexaplex Model
 
-The `nick_16mer_antiparallel_30deg_ideal` row is Nick's confirmed `Hexaplex_AntiParallel_30deg_Ideal.pdb` 16-mer simulation input.
+The `ideal_antiparallel_30deg_hexaplex` row is `Hexaplex_AntiParallel_30deg_Ideal.pdb`, labeled by ideal antiparallel 30-degree model geometry for this screen.
+Nick clarified that this is the file he meant when referring to the 16-mer simulation benchmark; the scoring outputs use model-provenance naming instead of that informal shorthand.
 It scores with 3 of 5 corrected windows and 2 diagnostic windows matched.
-By the existing rank score, Nick's 16-mer simulation input is below `central12_units_30deg` in this corrected screen.
-By the existing rank score, Nick's 16-mer simulation input is below `central8_units_30deg` in this corrected screen.
-By the existing rank score, Nick's 16-mer simulation input is below `nick_hexaplex_8hexads` in this corrected screen.
+By the existing rank score, the ideal antiparallel 30-degree hexaplex model is below `central12_units_30deg` in this corrected screen.
+By the existing rank score, the ideal antiparallel 30-degree hexaplex model is below `central8_units_30deg` in this corrected screen.
+By the existing rank score, the ideal antiparallel 30-degree hexaplex model is below `nick_hexaplex_8hexads` in this corrected screen.
 
 Unavailable twist variants:
 
@@ -76,7 +77,7 @@ Ranking uses peak-window coverage, diagnostic-window coverage, and spacing error
 | central12_units_30deg | 12-unit central 30-degree model | outputs\mini_hexaplex\structures\mini_hexaplex_central12_units.pdb | outputs\mini_hexaplex\radial_profiles\central12_units_radial.csv | 5 | 3 | 0.061268 | 0.013258 | 6.486742 |
 | base_length_scale_0p85 | Base-length variant scale 0.85 | outputs\base_length_sweep\structures\hexaplex_base_length_scale_0p85.pdb | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_0p85_radial.csv | 4 | 3 | 0.061309 | 0.014487 | 5.485513 |
 | central8_units_30deg | 8-unit formed endpoint, central 30-degree model | outputs\mini_hexaplex\structures\mini_hexaplex_central8_units.pdb | outputs\mini_hexaplex\radial_profiles\central8_units_radial.csv | 4 | 2 | 0.066163 | 0.013826 | 4.986174 |
-| nick_hexaplex_8hexads | Nick-provided Hexaplex_8Hexads.xyz 8-hexad candidate (not a 16-mer) | inputs\candidates\nick_hexaplex_8hexads.xyz | outputs\metrics\hxc590_s1_nick_hexaplex_8hexads_profile.csv | 3 | 2 | 0.064363 | 0.012536 | 3.987464 |
+| nick_hexaplex_8hexads | Nick-provided Hexaplex_8Hexads.xyz 8-hexad candidate | inputs\candidates\nick_hexaplex_8hexads.xyz | outputs\metrics\hxc590_s1_nick_hexaplex_8hexads_profile.csv | 3 | 2 | 0.064363 | 0.012536 | 3.987464 |
 | base_length_scale_0p90 | Base-length variant scale 0.90 | outputs\base_length_sweep\structures\hexaplex_base_length_scale_0p90.pdb | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_0p90_radial.csv | 3 | 2 | 0.067850 | 0.015654 | 3.984346 |
 | base_length_scale_0p95 | Base-length variant scale 0.95 | outputs\base_length_sweep\structures\hexaplex_base_length_scale_0p95.pdb | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_0p95_radial.csv | 3 | 2 | 0.067850 | 0.015654 | 3.984346 |
 | base_length_scale_1p00 | Base-length variant scale 1.00 | outputs\base_length_sweep\structures\hexaplex_base_length_scale_1p00.pdb | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_1p00_radial.csv | 3 | 2 | 0.067850 | 0.015654 | 3.984346 |
@@ -114,5 +115,5 @@ Improved comparison would benefit from calibrated q values, detector radii or pi
 
 - `outputs/metrics/hxc590_s1_powder_peak_targets.csv`
 - `outputs/metrics/hxc590_s1_powder_peak_match_scores.csv`
-- `outputs\plots\hxc590_s1_powder_corrected_with_nick_16mer_peak_comparison\peak_window_coverage.svg`
-- `outputs\plots\hxc590_s1_powder_corrected_with_nick_16mer_peak_comparison\best_candidate_d_errors.svg`
+- `outputs\plots\hxc590_s1_powder_corrected_with_ideal_hexaplex_peak_comparison\peak_window_coverage.svg`
+- `outputs\plots\hxc590_s1_powder_corrected_with_ideal_hexaplex_peak_comparison\best_candidate_d_errors.svg`

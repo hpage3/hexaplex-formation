@@ -85,7 +85,6 @@ def test_optional_candidate_manifests_include_nick_candidate():
     nick_entry = next(entry for entry in manifest if entry.candidate_id == "nick_hexaplex_8hexads")
     assert nick_entry.candidate_family == "nick_provided_8hexad"
     assert "8-hexad candidate" in nick_entry.candidate_label
-    assert "not a 16-mer" in nick_entry.candidate_label
 
 
 def test_corrected_with_nick_falsification_rows_show_no_current_survival():

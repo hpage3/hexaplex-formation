@@ -130,7 +130,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--plot-dir", type=Path, default=DEFAULT_PLOT_DIR)
     parser.add_argument("--include-nick-8hexad", action="store_true", help="Include Nick's provided Hexaplex_8Hexads.xyz 8-hexad candidate.")
-    parser.add_argument("--include-nick-16mer", action="store_true", help="Include Nick's confirmed Hexaplex_AntiParallel_30deg_Ideal.pdb 16-mer simulation input.")
+    parser.add_argument("--include-ideal-hexaplex", action="store_true", help="Include the ideal antiparallel 30-degree Hexaplex_AntiParallel_30deg_Ideal.pdb model.")
     return parser.parse_args()
 
 
@@ -213,7 +213,7 @@ def write_targets_csv(path: Path, targets: list[PeakTarget]) -> None:
             )
 
 
-def default_candidate_models(include_nick_8hexad: bool = False, include_nick_16mer: bool = False) -> list[CandidateModel]:
+def default_candidate_models(include_nick_8hexad: bool = False, include_ideal_hexaplex: bool = False) -> list[CandidateModel]:
     candidates = [
         CandidateModel(
             "central6_units_30deg",
@@ -265,20 +265,20 @@ def default_candidate_models(include_nick_8hexad: bool = False, include_nick_16m
         candidates.append(
             CandidateModel(
                 "nick_hexaplex_8hexads",
-                "Nick-provided Hexaplex_8Hexads.xyz 8-hexad candidate (not a 16-mer)",
+                "Nick-provided Hexaplex_8Hexads.xyz 8-hexad candidate",
                 Path("inputs/candidates/nick_hexaplex_8hexads.xyz"),
                 Path("outputs/metrics/hxc590_s1_nick_hexaplex_8hexads_profile.csv"),
                 "nick_provided_8hexad",
             )
         )
-    if include_nick_16mer:
+    if include_ideal_hexaplex:
         candidates.append(
             CandidateModel(
-                "nick_16mer_antiparallel_30deg_ideal",
-                "Nick-confirmed Hexaplex_AntiParallel_30deg_Ideal.pdb 16-mer simulation input",
-                Path("inputs/candidates/nick_16mer_hexaplex_antiparallel_30deg_ideal.pdb"),
-                Path("outputs/metrics/hxc590_s1_nick_16mer_antiparallel_30deg_profile.csv"),
-                "nick_confirmed_16mer_simulation_input",
+                "ideal_antiparallel_30deg_hexaplex",
+                "Ideal antiparallel 30-degree hexaplex model (Hexaplex_AntiParallel_30deg_Ideal.pdb)",
+                Path("inputs/candidates/ideal_antiparallel_30deg_hexaplex.pdb"),
+                Path("outputs/metrics/hxc590_s1_ideal_antiparallel_30deg_hexaplex_profile.csv"),
+                "ideal_antiparallel_30deg_hexaplex",
             )
         )
     return [candidate for candidate in candidates if candidate.profile_path.exists()]
@@ -588,7 +588,7 @@ def write_report(
                 "",
                 "## Nick 8-Hexad Candidate",
                 "",
-                "The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` candidate. It is treated as an 8-hexad candidate, not a 16-mer.",
+                "The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` 8-hexad candidate.",
             ]
         )
         if nick_row:
@@ -601,31 +601,32 @@ def write_report(
         if central8_row and nick_row:
             relation = "above" if float(nick_row["rank_score"]) > float(central8_row["rank_score"]) else "below"
             lines.append(f"By the existing rank score, Nick's 8-hexad candidate is {relation} `central8_units_30deg` in this corrected screen.")
-    if any(candidate.candidate_id == "nick_16mer_antiparallel_30deg_ideal" for candidate in candidates):
-        nick16_row = next((row for row in summary_rows if row["candidate_id"] == "nick_16mer_antiparallel_30deg_ideal"), None)
+    if any(candidate.candidate_id == "ideal_antiparallel_30deg_hexaplex" for candidate in candidates):
+        ideal_row = next((row for row in summary_rows if row["candidate_id"] == "ideal_antiparallel_30deg_hexaplex"), None)
         central12_row = next((row for row in summary_rows if row["candidate_id"] == "central12_units_30deg"), None)
         central8_row = next((row for row in summary_rows if row["candidate_id"] == "central8_units_30deg"), None)
         nick8_row = next((row for row in summary_rows if row["candidate_id"] == "nick_hexaplex_8hexads"), None)
         lines.extend(
             [
                 "",
-                "## Nick 16-Mer Simulation Input",
+                "## Ideal Antiparallel 30-Degree Hexaplex Model",
                 "",
-                "The `nick_16mer_antiparallel_30deg_ideal` row is Nick's confirmed `Hexaplex_AntiParallel_30deg_Ideal.pdb` 16-mer simulation input.",
+                "The `ideal_antiparallel_30deg_hexaplex` row is `Hexaplex_AntiParallel_30deg_Ideal.pdb`, labeled by ideal antiparallel 30-degree model geometry for this screen.",
+                "Nick clarified that this is the file he meant when referring to the 16-mer simulation benchmark; the scoring outputs use model-provenance naming instead of that informal shorthand.",
             ]
         )
-        if nick16_row:
+        if ideal_row:
             lines.append(
-                f"It scores with {nick16_row['match_count']} of {len(targets)} corrected windows and {nick16_row['diagnostic_match_count']} diagnostic windows matched."
+                f"It scores with {ideal_row['match_count']} of {len(targets)} corrected windows and {ideal_row['diagnostic_match_count']} diagnostic windows matched."
             )
         for label, row in [
             ("central12_units_30deg", central12_row),
             ("central8_units_30deg", central8_row),
             ("nick_hexaplex_8hexads", nick8_row),
         ]:
-            if row and nick16_row:
-                relation = "above" if float(nick16_row["rank_score"]) > float(row["rank_score"]) else "below"
-                lines.append(f"By the existing rank score, Nick's 16-mer simulation input is {relation} `{label}` in this corrected screen.")
+            if row and ideal_row:
+                relation = "above" if float(ideal_row["rank_score"]) > float(row["rank_score"]) else "below"
+                lines.append(f"By the existing rank score, the ideal antiparallel 30-degree hexaplex model is {relation} `{label}` in this corrected screen.")
     lines.extend(["", "Unavailable twist variants:", ""])
     lines.extend(f"- {note}" for note in unavailable_candidate_notes())
     lines.extend(
@@ -710,7 +711,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
     targets = read_experimental_targets(args.experimental_peaks)
     candidates = default_candidate_models(
         include_nick_8hexad=args.include_nick_8hexad,
-        include_nick_16mer=args.include_nick_16mer,
+        include_ideal_hexaplex=args.include_ideal_hexaplex,
     )
     if not candidates:
         raise ValueError("No candidate profiles found")

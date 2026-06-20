@@ -5,21 +5,21 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-INVENTORY_CSV = REPO_ROOT / "outputs/metrics/hxc590_s1_nick_16mer_candidate_inventory.csv"
-PROFILE_CSV = REPO_ROOT / "outputs/metrics/hxc590_s1_nick_16mer_antiparallel_30deg_profile.csv"
+INVENTORY_CSV = REPO_ROOT / "outputs/metrics/hxc590_s1_ideal_antiparallel_30deg_hexaplex_inventory.csv"
+PROFILE_CSV = REPO_ROOT / "outputs/metrics/hxc590_s1_ideal_antiparallel_30deg_hexaplex_profile.csv"
 COMPARISON_SCORES = (
-    REPO_ROOT / "outputs/metrics/hxc590_s1_powder_corrected_with_nick_16mer_peak_match_scores.csv"
+    REPO_ROOT / "outputs/metrics/hxc590_s1_powder_corrected_with_ideal_hexaplex_peak_match_scores.csv"
 )
 FALSIFICATION_SCORES = (
-    REPO_ROOT / "outputs/metrics/hxc590_s1_corrected_with_nick_16mer_falsification_scores.csv"
+    REPO_ROOT / "outputs/metrics/hxc590_s1_corrected_with_ideal_hexaplex_falsification_scores.csv"
 )
 TOLERANCE_SUMMARY = (
-    REPO_ROOT / "outputs/metrics/hxc590_s1_corrected_with_nick_16mer_tolerance_survival_summary.csv"
+    REPO_ROOT / "outputs/metrics/hxc590_s1_corrected_with_ideal_hexaplex_tolerance_survival_summary.csv"
 )
-WITH_NICK_16MER_REPORTS = [
-    REPO_ROOT / "outputs/reports/hxc590_s1_nick_16mer_candidate_inventory_report.md",
-    REPO_ROOT / "outputs/reports/hxc590_s1_powder_corrected_with_nick_16mer_peak_comparison_report.md",
-    REPO_ROOT / "outputs/reports/hxc590_s1_corrected_with_nick_16mer_falsification_report.md",
+WITH_IDEAL_HEXAPLEX_REPORTS = [
+    REPO_ROOT / "outputs/reports/hxc590_s1_ideal_antiparallel_30deg_hexaplex_inventory_report.md",
+    REPO_ROOT / "outputs/reports/hxc590_s1_powder_corrected_with_ideal_hexaplex_peak_comparison_report.md",
+    REPO_ROOT / "outputs/reports/hxc590_s1_corrected_with_ideal_hexaplex_falsification_report.md",
 ]
 FORBIDDEN_OVERCLAIMING_PHRASES = [
     "proves",
@@ -41,8 +41,8 @@ def _load_script_module(name: str, relative_path: str):
 
 
 inventory = _load_script_module(
-    "inventory_hxc590_s1_nick_16mer_candidate",
-    "scripts/inventory_hxc590_s1_nick_16mer_candidate.py",
+    "inventory_hxc590_s1_ideal_antiparallel_30deg_hexaplex",
+    "scripts/inventory_hxc590_s1_ideal_antiparallel_30deg_hexaplex.py",
 )
 compare = _load_script_module("compare_hxc590_s1_powder_peaks", "scripts/compare_hxc590_s1_powder_peaks.py")
 falsify = _load_script_module("falsify_hxc590_s1_powder_candidates", "scripts/falsify_hxc590_s1_powder_candidates.py")
@@ -53,10 +53,10 @@ def read_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def test_inventory_records_nick_confirmed_16mer_input_and_duplicate_status():
+def test_inventory_records_ideal_hexaplex_model_and_duplicate_status():
     row = read_rows(INVENTORY_CSV)[0]
 
-    assert row["candidate_label"] == "nick_16mer_antiparallel_30deg_ideal"
+    assert row["candidate_label"] == "ideal_antiparallel_30deg_hexaplex"
     assert row["sha256"] == "9a880544a551b3d16f9024e7897a23af0286820ed69df9e3cb805c94113b6aca"
     assert row["total_pdb_atom_count"] == "7146"
     assert row["deduped_atom_count"] == "3573"
@@ -65,11 +65,12 @@ def test_inventory_records_nick_confirmed_16mer_input_and_duplicate_status():
     assert row["hydrogens_present"] == "yes"
     assert row["duplicate_atom_coordinate_line_count"] == "3573"
     assert row["duplicate_atom_coordinate_lines_detected"] == "yes"
-    assert "Hexaplex_AntiParallel_30deg_Ideal.pdb is the 16-mer simulation input" in row["provenance_note"]
+    assert "ideal antiparallel 30-degree hexaplex model" in row["provenance_note"]
+    assert "16-mer simulation benchmark shorthand" in row["provenance_note"]
 
 
 def test_pdb_parser_preserves_raw_copied_coordinates_and_detects_duplicates():
-    atoms = inventory.load_pdb_atoms(REPO_ROOT / "inputs/candidates/nick_16mer_hexaplex_antiparallel_30deg_ideal.pdb")
+    atoms = inventory.load_pdb_atoms(REPO_ROOT / "inputs/candidates/ideal_antiparallel_30deg_hexaplex.pdb")
     unique_identities = {inventory.atom_identity_key(atom) for atom in atoms}
 
     assert len(atoms) == 7146
@@ -79,39 +80,39 @@ def test_pdb_parser_preserves_raw_copied_coordinates_and_detects_duplicates():
     assert atoms[0].element == "N"
 
 
-def test_reused_profile_and_corrected_scores_include_nick_16mer_candidate():
+def test_reused_profile_and_corrected_scores_include_ideal_hexaplex_candidate():
     profile_rows = read_rows(PROFILE_CSV)
     comparison_rows = read_rows(COMPARISON_SCORES)
-    nick_rows = [row for row in comparison_rows if row["candidate_id"] == "nick_16mer_antiparallel_30deg_ideal"]
+    ideal_rows = [row for row in comparison_rows if row["candidate_id"] == "ideal_antiparallel_30deg_hexaplex"]
 
     assert {"q_Ainv", "d_A", "mean_intensity"}.issubset(profile_rows[0])
     assert len(profile_rows) > 100
-    assert len(nick_rows) == 5
-    assert {row["matched"] for row in nick_rows} == {"yes", "no"}
-    stacking = next(row for row in nick_rows if row["target_id"] == "d_3p39_stacking")
+    assert len(ideal_rows) == 5
+    assert {row["matched"] for row in ideal_rows} == {"yes", "no"}
+    stacking = next(row for row in ideal_rows if row["target_id"] == "d_3p39_stacking")
     assert stacking["matched"] == "yes"
     assert float(stacking["matched_d_angstrom"]) == 3.328208
     assert stacking["candidate_match_count"] == "3"
     assert stacking["candidate_diagnostic_match_count"] == "2"
 
 
-def test_optional_candidate_lists_include_nick_8hexad_and_nick_16mer_candidates():
-    candidates = compare.default_candidate_models(include_nick_8hexad=True, include_nick_16mer=True)
-    manifest = falsify.build_candidate_manifest(include_nick_8hexad=True, include_nick_16mer=True)
+def test_optional_candidate_lists_include_nick_8hexad_and_ideal_hexaplex_candidates():
+    candidates = compare.default_candidate_models(include_nick_8hexad=True, include_ideal_hexaplex=True)
+    manifest = falsify.build_candidate_manifest(include_nick_8hexad=True, include_ideal_hexaplex=True)
 
     assert any(candidate.candidate_id == "nick_hexaplex_8hexads" for candidate in candidates)
-    assert any(candidate.candidate_id == "nick_16mer_antiparallel_30deg_ideal" for candidate in candidates)
-    nick16_entry = next(entry for entry in manifest if entry.candidate_id == "nick_16mer_antiparallel_30deg_ideal")
-    assert nick16_entry.candidate_family == "nick_confirmed_16mer_simulation_input"
-    assert "16-mer simulation input" in nick16_entry.candidate_label
+    assert any(candidate.candidate_id == "ideal_antiparallel_30deg_hexaplex" for candidate in candidates)
+    ideal_entry = next(entry for entry in manifest if entry.candidate_id == "ideal_antiparallel_30deg_hexaplex")
+    assert ideal_entry.candidate_family == "ideal_antiparallel_30deg_hexaplex"
+    assert "Ideal antiparallel 30-degree hexaplex model" in ideal_entry.candidate_label
 
 
-def test_corrected_with_nick_16mer_falsification_rows_do_not_survive_current_screen():
+def test_corrected_with_ideal_hexaplex_falsification_rows_do_not_survive_current_screen():
     rows = read_rows(FALSIFICATION_SCORES)
     current = next(
         row
         for row in rows
-        if row["candidate_id"] == "nick_16mer_antiparallel_30deg_ideal"
+        if row["candidate_id"] == "ideal_antiparallel_30deg_hexaplex"
         and row["tolerance_setting"] == "current"
     )
 
@@ -123,7 +124,7 @@ def test_corrected_with_nick_16mer_falsification_rows_do_not_survive_current_scr
     assert current["strict_survives"] == "no"
 
 
-def test_survivor_counts_remain_unchanged_with_nick_16mer_candidate_added():
+def test_survivor_counts_remain_unchanged_with_ideal_hexaplex_candidate_added():
     rows = read_rows(TOLERANCE_SUMMARY)
     by_setting = {row["tolerance_setting"]: row for row in rows}
 
@@ -134,9 +135,9 @@ def test_survivor_counts_remain_unchanged_with_nick_16mer_candidate_added():
     assert by_setting["broad"]["surviving_candidate_names"] == "central12_units_30deg;central8_units_30deg"
 
 
-def test_with_nick_16mer_reports_avoid_overclaiming_and_constrain_16mer_language():
-    for report in WITH_NICK_16MER_REPORTS:
+def test_with_ideal_hexaplex_reports_avoid_overclaiming_and_constrain_16mer_language():
+    for report in WITH_IDEAL_HEXAPLEX_REPORTS:
         text = report.read_text(encoding="utf-8")
         lowered = text.lower()
         assert not any(term in lowered for term in FORBIDDEN_OVERCLAIMING_PHRASES)
-        assert "16-mer" not in lowered or "16-mer simulation input" in lowered
+        assert "16-mer" not in lowered or "16-mer simulation benchmark" in lowered

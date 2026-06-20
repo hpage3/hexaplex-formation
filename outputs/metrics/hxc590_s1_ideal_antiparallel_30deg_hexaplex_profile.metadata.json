@@ -1,7 +1,7 @@
 {
-  "candidate_label": "nick_16mer_antiparallel_30deg_ideal",
-  "caution": "Nick clarified this PDB is the 16-mer simulation input. This profile is used for a compatibility screen, not a unique refined phase assignment.",
-  "copied_pdb": "inputs\\candidates\\nick_16mer_hexaplex_antiparallel_30deg_ideal.pdb",
+  "candidate_label": "ideal_antiparallel_30deg_hexaplex",
+  "caution": "Nick clarified that his 16-mer simulation benchmark shorthand refers to Hexaplex_AntiParallel_30deg_Ideal.pdb. The scoring repo labels this file by ideal antiparallel 30-degree hexaplex model provenance instead.",
+  "copied_pdb": "inputs\\candidates\\ideal_antiparallel_30deg_hexaplex.pdb",
   "copied_pdb_sha256": "9a880544a551b3d16f9024e7897a23af0286820ed69df9e3cb805c94113b6aca",
   "deduped_reference": "outputs\\intermediates\\ai_candidate_inputs\\full_hexaplex_anti_parallel_30deg_ideal_deduped_6chain.pdb",
   "profile_source_note": "Reused existing full-length baseline radial profile for the same original PDB after the repo's established deduped/full-length profile workflow.",

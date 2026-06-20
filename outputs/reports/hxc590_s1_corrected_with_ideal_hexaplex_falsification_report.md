@@ -31,13 +31,13 @@ Uniform rings are expected for an unoriented powder sample, whereas oriented fib
 | base_length_scale_1p10 | base_length_variant | candidate | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_1p10_radial.csv |
 | base_length_scale_1p15 | base_length_variant | candidate | outputs\base_length_sweep\radial_profiles\hexaplex_base_length_scale_1p15_radial.csv |
 | nick_hexaplex_8hexads | nick_provided_8hexad | candidate | outputs\metrics\hxc590_s1_nick_hexaplex_8hexads_profile.csv |
-| nick_16mer_antiparallel_30deg_ideal | nick_confirmed_16mer_simulation_input | candidate | outputs\metrics\hxc590_s1_nick_16mer_antiparallel_30deg_profile.csv |
+| ideal_antiparallel_30deg_hexaplex | ideal_antiparallel_30deg_hexaplex | candidate | outputs\metrics\hxc590_s1_ideal_antiparallel_30deg_hexaplex_profile.csv |
 | negative_hexads_only | wrong_geometry_control | negative_control | outputs\metrics\ladder_diffraction\profiles\reference_hexads_only_heavy_deduped_debye_profile.csv |
 | negative_scaffold_only | wrong_geometry_control | negative_control | outputs\metrics\ladder_diffraction\profiles\reference_scaffold_only_complement_heavy_deduped_debye_profile.csv |
 
 ## Nick 8-Hexad Candidate
 
-The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` candidate. It is treated as an 8-hexad candidate, not a 16-mer.
+The `nick_hexaplex_8hexads` row is Nick's included `Hexaplex_8Hexads.xyz` 8-hexad candidate.
 
 Tolerance survival for Nick's 8-hexad candidate:
 
@@ -47,11 +47,12 @@ Tolerance survival for Nick's 8-hexad candidate:
 | current | 3 | 2 | no | no | 3.987464 |
 | broad | 3 | 2 | no | no | 3.987464 |
 
-## Nick 16-Mer Simulation Input
+## Ideal Antiparallel 30-Degree Hexaplex Model
 
-The `nick_16mer_antiparallel_30deg_ideal` row is Nick's confirmed `Hexaplex_AntiParallel_30deg_Ideal.pdb` 16-mer simulation input.
+The `ideal_antiparallel_30deg_hexaplex` row is `Hexaplex_AntiParallel_30deg_Ideal.pdb`, labeled by ideal antiparallel 30-degree model geometry for this screen.
+Nick clarified that this is the file he meant when referring to the 16-mer simulation benchmark; the scoring outputs use model-provenance naming instead of that informal shorthand.
 
-Tolerance survival for Nick's 16-mer simulation input:
+Tolerance survival for the ideal antiparallel 30-degree hexaplex model:
 
 | tolerance_setting | match_count | diagnostic_match_count | screen_survives | strict_survives | discrimination_score |
 |---|---|---|---|---|---|
@@ -99,7 +100,7 @@ Survival means matching all 3 diagnostic windows and at least 5 of 5 total peak 
 | base_length_scale_0p90 | 3 | 2 | no | no | 0.067850 | 1.620709 |
 | base_length_scale_0p95 | 3 | 2 | no | no | 0.067850 | 1.620709 |
 | base_length_scale_1p00 | 3 | 2 | no | no | 0.067850 | 1.620709 |
-| nick_16mer_antiparallel_30deg_ideal | 3 | 2 | no | no | 0.067850 | 1.620709 |
+| ideal_antiparallel_30deg_hexaplex | 3 | 2 | no | no | 0.067850 | 1.620709 |
 | central6_units_30deg | 3 | 2 | no | no | 0.067850 | 1.359346 |
 | central7_units_30deg | 3 | 2 | no | no | 0.067850 | 1.359346 |
 | base_length_scale_1p05 | 3 | 2 | no | no | 0.067850 | 1.359346 |
@@ -123,7 +124,7 @@ Current-tolerance failures:
 - `base_length_scale_0p90` missed survival criteria
 - `base_length_scale_0p95` missed survival criteria
 - `base_length_scale_1p00` missed survival criteria
-- `nick_16mer_antiparallel_30deg_ideal` missed survival criteria
+- `ideal_antiparallel_30deg_hexaplex` missed survival criteria
 - `central6_units_30deg` missed survival criteria
 - `central7_units_30deg` missed survival criteria
 - `base_length_scale_1p05` missed survival criteria
@@ -228,7 +229,7 @@ The available alternative set is incomplete: missing full-length twist variants 
 - `outputs/metrics/hxc590_s1_corrected_predicted_unmatched_peaks.csv`
 - `outputs/metrics/hxc590_s1_corrected_tolerance_survival_summary.csv`
 - `outputs/metrics/hxc590_s1_twist_rise_sensitivity.csv` when the twist/rise audit has been run
-- `outputs\plots\hxc590_s1_corrected_with_nick_16mer_falsification\candidate_discrimination_scores.svg`
-- `outputs\plots\hxc590_s1_corrected_with_nick_16mer_falsification\diagnostic_window_survival.svg`
-- `outputs\plots\hxc590_s1_corrected_with_nick_16mer_falsification\tolerance_survival_counts.svg`
-- `outputs\plots\hxc590_s1_corrected_with_nick_16mer_falsification\unmatched_predicted_peaks.svg`
+- `outputs\plots\hxc590_s1_corrected_with_ideal_hexaplex_falsification\candidate_discrimination_scores.svg`
+- `outputs\plots\hxc590_s1_corrected_with_ideal_hexaplex_falsification\diagnostic_window_survival.svg`
+- `outputs\plots\hxc590_s1_corrected_with_ideal_hexaplex_falsification\tolerance_survival_counts.svg`
+- `outputs\plots\hxc590_s1_corrected_with_ideal_hexaplex_falsification\unmatched_predicted_peaks.svg`

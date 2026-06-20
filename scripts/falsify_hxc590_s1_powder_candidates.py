@@ -120,6 +120,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--plot-dir", type=Path, default=DEFAULT_PLOT_DIR)
     parser.add_argument("--include-nick-8hexad", action="store_true", help="Include Nick's provided Hexaplex_8Hexads.xyz 8-hexad candidate.")
+    parser.add_argument("--include-nick-16mer", action="store_true", help="Include Nick's confirmed Hexaplex_AntiParallel_30deg_Ideal.pdb 16-mer simulation input.")
     return parser.parse_args()
 
 
@@ -159,9 +160,9 @@ def unavailable_candidate(
     )
 
 
-def build_candidate_manifest(include_nick_8hexad: bool = False) -> list[ManifestCandidate]:
+def build_candidate_manifest(include_nick_8hexad: bool = False, include_nick_16mer: bool = False) -> list[ManifestCandidate]:
     manifest: list[ManifestCandidate] = []
-    for model in default_candidate_models(include_nick_8hexad=include_nick_8hexad):
+    for model in default_candidate_models(include_nick_8hexad=include_nick_8hexad, include_nick_16mer=include_nick_16mer):
         family = "existing_hxc590_scored"
         role = "candidate"
         if model.category == "base_length_variant":
@@ -170,6 +171,8 @@ def build_candidate_manifest(include_nick_8hexad: bool = False) -> list[Manifest
             family = "full_length_twist_variant"
         elif model.candidate_id == "nick_hexaplex_8hexads":
             family = "nick_provided_8hexad"
+        elif model.candidate_id == "nick_16mer_antiparallel_30deg_ideal":
+            family = "nick_confirmed_16mer_simulation_input"
         manifest.append(available_candidate(model, family, role))
 
     negative_controls = [
@@ -573,6 +576,7 @@ def write_report(
     best = current_rows[0]
     central8 = next(row for row in current_rows if row["candidate_id"] == CENTRAL_CANDIDATE_ID)
     nick = next((row for row in current_rows if row["candidate_id"] == "nick_hexaplex_8hexads"), None)
+    nick16 = next((row for row in current_rows if row["candidate_id"] == "nick_16mer_antiparallel_30deg_ideal"), None)
     survivors = [row for row in current_rows if row["screen_survives"] == "yes"]
     failed = [row for row in current_rows if row["screen_survives"] != "yes"]
     unmatched_focus = [
@@ -641,6 +645,29 @@ def write_report(
         lines.extend(
             row_table(
                 list(nick_survivals.values()),
+                ["tolerance_setting", "match_count", "diagnostic_match_count", "screen_survives", "strict_survives", "discrimination_score"],
+            )
+        )
+    if nick16:
+        nick16_survivals = {
+            row["tolerance_setting"]: row
+            for row in score_rows
+            if row["candidate_id"] == "nick_16mer_antiparallel_30deg_ideal"
+        }
+        lines.extend(
+            [
+                "",
+                "## Nick 16-Mer Simulation Input",
+                "",
+                "The `nick_16mer_antiparallel_30deg_ideal` row is Nick's confirmed `Hexaplex_AntiParallel_30deg_Ideal.pdb` 16-mer simulation input.",
+                "",
+                "Tolerance survival for Nick's 16-mer simulation input:",
+                "",
+            ]
+        )
+        lines.extend(
+            row_table(
+                list(nick16_survivals.values()),
                 ["tolerance_setting", "match_count", "diagnostic_match_count", "screen_survives", "strict_survives", "discrimination_score"],
             )
         )
@@ -795,7 +822,10 @@ def write_report(
 
 def run(args: argparse.Namespace) -> dict[str, object]:
     targets = read_experimental_targets(args.experimental_peaks)
-    manifest = build_candidate_manifest(include_nick_8hexad=args.include_nick_8hexad)
+    manifest = build_candidate_manifest(
+        include_nick_8hexad=args.include_nick_8hexad,
+        include_nick_16mer=args.include_nick_16mer,
+    )
     write_manifest(args.manifest_csv, manifest)
     score_rows, unmatched_rows, tolerance_rows = score_available_candidates(manifest, targets)
     write_csv(args.scores_csv, score_rows, SCORE_COLUMNS)

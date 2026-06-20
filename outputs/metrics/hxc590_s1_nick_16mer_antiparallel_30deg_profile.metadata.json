@@ -1,0 +1,10 @@
+{
+  "candidate_label": "nick_16mer_antiparallel_30deg_ideal",
+  "caution": "Nick clarified this PDB is the 16-mer simulation input. This profile is used for a compatibility screen, not a unique refined phase assignment.",
+  "copied_pdb": "inputs\\candidates\\nick_16mer_hexaplex_antiparallel_30deg_ideal.pdb",
+  "copied_pdb_sha256": "9a880544a551b3d16f9024e7897a23af0286820ed69df9e3cb805c94113b6aca",
+  "deduped_reference": "outputs\\intermediates\\ai_candidate_inputs\\full_hexaplex_anti_parallel_30deg_ideal_deduped_6chain.pdb",
+  "profile_source_note": "Reused existing full-length baseline radial profile for the same original PDB after the repo's established deduped/full-length profile workflow.",
+  "profile_source_path": "outputs\\mini_hexaplex\\radial_profiles\\full_length_baseline_radial.csv",
+  "source_pdb": "C:\\Users\\Public\\hexaplex-tools\\repos\\fiber-diffraction-original\\inputs\\Hexaplex_AntiParallel_30deg_Ideal.pdb"
+}

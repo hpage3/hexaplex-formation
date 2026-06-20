@@ -130,6 +130,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--plot-dir", type=Path, default=DEFAULT_PLOT_DIR)
     parser.add_argument("--include-nick-8hexad", action="store_true", help="Include Nick's provided Hexaplex_8Hexads.xyz 8-hexad candidate.")
+    parser.add_argument("--include-nick-16mer", action="store_true", help="Include Nick's confirmed Hexaplex_AntiParallel_30deg_Ideal.pdb 16-mer simulation input.")
     return parser.parse_args()
 
 
@@ -212,7 +213,7 @@ def write_targets_csv(path: Path, targets: list[PeakTarget]) -> None:
             )
 
 
-def default_candidate_models(include_nick_8hexad: bool = False) -> list[CandidateModel]:
+def default_candidate_models(include_nick_8hexad: bool = False, include_nick_16mer: bool = False) -> list[CandidateModel]:
     candidates = [
         CandidateModel(
             "central6_units_30deg",
@@ -268,6 +269,16 @@ def default_candidate_models(include_nick_8hexad: bool = False) -> list[Candidat
                 Path("inputs/candidates/nick_hexaplex_8hexads.xyz"),
                 Path("outputs/metrics/hxc590_s1_nick_hexaplex_8hexads_profile.csv"),
                 "nick_provided_8hexad",
+            )
+        )
+    if include_nick_16mer:
+        candidates.append(
+            CandidateModel(
+                "nick_16mer_antiparallel_30deg_ideal",
+                "Nick-confirmed Hexaplex_AntiParallel_30deg_Ideal.pdb 16-mer simulation input",
+                Path("inputs/candidates/nick_16mer_hexaplex_antiparallel_30deg_ideal.pdb"),
+                Path("outputs/metrics/hxc590_s1_nick_16mer_antiparallel_30deg_profile.csv"),
+                "nick_confirmed_16mer_simulation_input",
             )
         )
     return [candidate for candidate in candidates if candidate.profile_path.exists()]
@@ -590,6 +601,31 @@ def write_report(
         if central8_row and nick_row:
             relation = "above" if float(nick_row["rank_score"]) > float(central8_row["rank_score"]) else "below"
             lines.append(f"By the existing rank score, Nick's 8-hexad candidate is {relation} `central8_units_30deg` in this corrected screen.")
+    if any(candidate.candidate_id == "nick_16mer_antiparallel_30deg_ideal" for candidate in candidates):
+        nick16_row = next((row for row in summary_rows if row["candidate_id"] == "nick_16mer_antiparallel_30deg_ideal"), None)
+        central12_row = next((row for row in summary_rows if row["candidate_id"] == "central12_units_30deg"), None)
+        central8_row = next((row for row in summary_rows if row["candidate_id"] == "central8_units_30deg"), None)
+        nick8_row = next((row for row in summary_rows if row["candidate_id"] == "nick_hexaplex_8hexads"), None)
+        lines.extend(
+            [
+                "",
+                "## Nick 16-Mer Simulation Input",
+                "",
+                "The `nick_16mer_antiparallel_30deg_ideal` row is Nick's confirmed `Hexaplex_AntiParallel_30deg_Ideal.pdb` 16-mer simulation input.",
+            ]
+        )
+        if nick16_row:
+            lines.append(
+                f"It scores with {nick16_row['match_count']} of {len(targets)} corrected windows and {nick16_row['diagnostic_match_count']} diagnostic windows matched."
+            )
+        for label, row in [
+            ("central12_units_30deg", central12_row),
+            ("central8_units_30deg", central8_row),
+            ("nick_hexaplex_8hexads", nick8_row),
+        ]:
+            if row and nick16_row:
+                relation = "above" if float(nick16_row["rank_score"]) > float(row["rank_score"]) else "below"
+                lines.append(f"By the existing rank score, Nick's 16-mer simulation input is {relation} `{label}` in this corrected screen.")
     lines.extend(["", "Unavailable twist variants:", ""])
     lines.extend(f"- {note}" for note in unavailable_candidate_notes())
     lines.extend(
@@ -672,7 +708,10 @@ def write_report(
 
 def run(args: argparse.Namespace) -> dict[str, object]:
     targets = read_experimental_targets(args.experimental_peaks)
-    candidates = default_candidate_models(include_nick_8hexad=args.include_nick_8hexad)
+    candidates = default_candidate_models(
+        include_nick_8hexad=args.include_nick_8hexad,
+        include_nick_16mer=args.include_nick_16mer,
+    )
     if not candidates:
         raise ValueError("No candidate profiles found")
     write_targets_csv(args.targets_csv, targets)

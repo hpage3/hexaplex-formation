@@ -62,6 +62,39 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=ROOT / "inputs" / "experimental" / "nick_powder_profile.csv",
     )
+    parser.add_argument(
+        "--feature-summary-output",
+        type=Path,
+        default=ROOT / "outputs" / "metrics" / "nick_atom_contribution_feature_summary_corrected.csv",
+    )
+    parser.add_argument(
+        "--difference-summary-output",
+        type=Path,
+        default=ROOT / "outputs" / "metrics" / "nick_atom_contribution_difference_summary_corrected.csv",
+    )
+    parser.add_argument(
+        "--report-output",
+        type=Path,
+        default=ROOT / "outputs" / "reports" / "nick_atom_contribution_corrected_report.md",
+    )
+    parser.add_argument(
+        "--report-title",
+        default="Nick Atom Contribution Comparison: Asem-Corrected",
+    )
+    parser.add_argument(
+        "--report-purpose",
+        default=(
+            "Redo Nick's first powder diffraction model-comparison task using the "
+            "Asem-corrected non-accumulating/vectorized diffraction path and corrected "
+            "rotation sampling."
+        ),
+    )
+    parser.add_argument(
+        "--prior-feature-summary",
+        type=Path,
+        default=None,
+        help="Optional prior feature summary CSV to compare experimental peak positions against.",
+    )
     return parser.parse_args()
 
 
@@ -379,6 +412,59 @@ def markdown_table(rows: list[dict[str, object]], columns: list[str]) -> str:
     return "\n".join(lines)
 
 
+def display_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def read_csv_dicts(path: Path | None) -> list[dict[str, str]]:
+    if path is None or not path.exists():
+        return []
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def build_prior_comparison(
+    summary_rows: list[dict[str, object]],
+    prior_summary_path: Path | None,
+) -> list[dict[str, object]]:
+    prior_rows = read_csv_dicts(prior_summary_path)
+    if not prior_rows:
+        return []
+    prior_by_key = {
+        (row["model"], row["feature_window"]): row
+        for row in prior_rows
+    }
+    comparison_rows = []
+    for row in summary_rows:
+        key = (str(row["model"]), str(row["feature_window"]))
+        old = prior_by_key.get(key)
+        if old is None:
+            continue
+        old_exp = old.get("experimental_peak_d_A", "")
+        new_exp = str(row.get("experimental_peak_d_A", ""))
+        old_offset = old.get("peak_offset_d_A", "")
+        new_offset = str(row.get("peak_offset_d_A", ""))
+        comparison_rows.append(
+            {
+                "model": row["model"],
+                "feature_window": row["feature_window"],
+                "old_experimental_peak_d_A": old_exp,
+                "corrected_experimental_peak_d_A": new_exp,
+                "old_peak_offset_d_A": old_offset,
+                "corrected_peak_offset_d_A": new_offset,
+                "offset_abs_change_d_A": (
+                    f"{abs(float(new_offset)) - abs(float(old_offset)):.12g}"
+                    if old_offset and new_offset
+                    else ""
+                ),
+            }
+        )
+    return comparison_rows
+
+
 def write_report(
     path: Path,
     args: argparse.Namespace,
@@ -399,13 +485,34 @@ def write_report(
         if group == "primary"
     ]
     diff_primary = [row for row in difference_rows if row["feature_group"] == "primary"]
+    prior_comparison = build_prior_comparison(summary_rows, args.prior_feature_summary)
+    prior_primary = [
+        row for row in prior_comparison
+        if row["feature_window"] in {"3.4 A", "3.7 A", "4.4 A", "5.6 A", "7.25 A"}
+    ]
+    base_3p4 = next(
+        (
+            row for row in prior_comparison
+            if row["model"] == "only_bases" and row["feature_window"] == "3.4 A"
+        ),
+        None,
+    )
+    base_3p4_sentence = "No prior summary was provided for direct 3.4 A offset comparison."
+    if base_3p4:
+        change = float(str(base_3p4["offset_abs_change_d_A"]))
+        direction = "improves" if change < 0 else "does not improve"
+        base_3p4_sentence = (
+            "For the bases-only 3.4 A window, the absolute simulated-vs-experimental "
+            f"peak offset {direction} after the Emory correction "
+            f"(change {change:.12g} A)."
+        )
     d_values = [row["d_A"] for row in experimental]
     lines = [
-        "# Nick Atom Contribution Comparison: Asem-Corrected",
+        f"# {args.report_title}",
         "",
         "## Purpose",
         "",
-        "Redo Nick's first powder diffraction model-comparison task using the Asem-corrected non-accumulating/vectorized diffraction path and corrected rotation sampling.",
+        args.report_purpose,
         "",
         "## Inputs",
         "",
@@ -417,7 +524,7 @@ def write_report(
             ["model", "label", "atoms", "path"],
         ),
         "",
-        f"- Experimental profile: `{args.experimental_profile.relative_to(ROOT)}`",
+        f"- Experimental profile: `{display_path(args.experimental_profile)}`",
         f"- Experimental rows: {len(experimental)}",
         f"- Experimental d-spacing range: {min(d_values):.12g} A to {max(d_values):.12g} A",
         "",
@@ -444,6 +551,23 @@ def write_report(
         "",
         markdown_table(primary_top, ["feature_window", "top_simulated_model", "top_simulated_peak_norm", "experimental_peak_d_A"]),
         "",
+        "## Comparison Against Original-Profile Results",
+        "",
+        base_3p4_sentence,
+        "",
+        markdown_table(
+            prior_primary,
+            [
+                "model",
+                "feature_window",
+                "old_experimental_peak_d_A",
+                "corrected_experimental_peak_d_A",
+                "old_peak_offset_d_A",
+                "corrected_peak_offset_d_A",
+                "offset_abs_change_d_A",
+            ],
+        ) if prior_primary else "No prior feature summary was provided.",
+        "",
         "## Full Feature Summary",
         "",
         markdown_table(
@@ -469,7 +593,7 @@ def write_report(
         "",
         "## Preliminary Interpretation",
         "",
-        f"- 3.4 A: strongest simulated peak is in `{top_model_by_feature(summary_rows, '3.4 A')['model']}` for this corrected reproduction. Treat this as support for stacked-base contribution only if bases-only remains competitive in area and peak intensity.",
+        f"- 3.4 A: strongest simulated peak is in `{top_model_by_feature(summary_rows, '3.4 A')['model']}` for this corrected reproduction. {base_3p4_sentence}",
         f"- 7.25 A: strongest simulated peak is in `{top_model_by_feature(summary_rows, '7.25 A')['model']}`; compare the full-minus-bases and full-minus-8hexads differences before assigning it to backbone/full-model structure.",
         f"- 3.7 A, 4.4 A, and 5.6 A: these windows should be treated as mixed until atom-group controls separate backbone and Glu/COO contributions more directly.",
         "",
@@ -575,13 +699,9 @@ def main() -> int:
         "difference_peak_intensity_norm",
         "window_area_difference",
     ]
-    write_csv(ROOT / "outputs" / "metrics" / "nick_atom_contribution_feature_summary_corrected.csv", feature_summary, feature_fields)
+    write_csv(args.feature_summary_output, feature_summary, feature_fields)
     write_csv(table_dir / "nick_atom_contribution_feature_summary_corrected.csv", feature_summary, feature_fields)
-    write_csv(
-        ROOT / "outputs" / "metrics" / "nick_atom_contribution_difference_summary_corrected.csv",
-        difference_summary,
-        difference_fields,
-    )
+    write_csv(args.difference_summary_output, difference_summary, difference_fields)
     write_csv(table_dir / "nick_atom_contribution_difference_summary_corrected.csv", difference_summary, difference_fields)
     (table_dir / "run_metadata.json").write_text(json.dumps(run_metadata, indent=2) + "\n", encoding="utf-8")
 
@@ -590,7 +710,7 @@ def main() -> int:
     plot_differences(plot_dir / "nick_atom_contribution_difference_profiles_corrected.png", difference_profiles)
 
     write_report(
-        ROOT / "outputs" / "reports" / "nick_atom_contribution_corrected_report.md",
+        args.report_output,
         args,
         atom_counts,
         experimental,

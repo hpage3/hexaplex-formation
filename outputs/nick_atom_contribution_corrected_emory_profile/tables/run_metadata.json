@@ -1,0 +1,78 @@
+{
+  "engine_dir": "reference\\asem_corrected_diffraction_engine",
+  "rotation_sampling": "range(0, 181, 5)",
+  "rotations_deg": [
+    0,
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95,
+    100,
+    105,
+    110,
+    115,
+    120,
+    125,
+    130,
+    135,
+    140,
+    145,
+    150,
+    155,
+    160,
+    165,
+    170,
+    175,
+    180
+  ],
+  "tilts_deg": [
+    0
+  ],
+  "grid_size": 129,
+  "grid_limit_mm": 100.0,
+  "radial_bins": 420,
+  "detector_distance_mm": 338.4,
+  "wavelength_A": 0.7749,
+  "note": "180 degrees included; compare range(0, 180, 5) in a later endpoint sensitivity check if needed.",
+  "models": {
+    "with_coo": {
+      "label": "With COO/full model",
+      "path": "inputs\\nick_asem_models\\nick_hexaplex_with_coo.xyz",
+      "atoms": 4620,
+      "image_min": 165724.83335132312,
+      "image_max": 35795976191.9492,
+      "image_mean": 65360633.327896886
+    },
+    "only_bases": {
+      "label": "Bases only",
+      "path": "inputs\\nick_asem_models\\nick_hexaplex_only_bases.xyz",
+      "atoms": 1034,
+      "image_min": 11210.177225479667,
+      "image_max": 1761569999.9980876,
+      "image_mean": 6448525.638836169
+    },
+    "eight_hexads": {
+      "label": "8 hexads",
+      "path": "inputs\\nick_asem_models\\nick_hexaplex_8hexads.xyz",
+      "atoms": 2064,
+      "image_min": 95749.80901096149,
+      "image_max": 7140543567.98997,
+      "image_mean": 22209636.418739527
+    }
+  }
+}

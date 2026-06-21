@@ -36,3 +36,5 @@ Nick's archive frames the next corrected analysis around these questions:
 Nick's email and the source archive predate Asem's rotation correction. Treat these files as source provenance and scientific agenda, not as final corrected simulated patterns.
 
 Future analysis should use the Asem-corrected non-accumulating/vectorized diffraction path. In particular, azimuthal rotations should be applied independently to the tilted coordinate stack rather than repeatedly rotating an already rotated coordinate set.
+
+The preserved notebook/code also contains a Python `range()` ambiguity: `rotations = range(0, 5, 180)` produces only `0` in Python, rather than 0-180 degrees in 5-degree steps. The archive copy is intentionally left unchanged; future corrected analysis should document the interpreted rotation sampling explicitly.

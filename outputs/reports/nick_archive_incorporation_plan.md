@@ -66,3 +66,11 @@ Additional windows already used in the compact twist corrected workflow:
 Experimental oriented/fiber-like features should be compared by q/d-spacing and relative feature trends, not by raw 2D detector shape.
 
 Corrected analysis should use the Asem-corrected non-accumulating/vectorized diffraction path rather than treating old notebook/script outputs as final.
+
+## Rotation Range Ambiguity in Nick Notebook
+
+Nick's shared notebook/code includes `rotations = range(0, 5, 180)`. In Python, that means `range(start=0, stop=5, step=180)`, so it produces only the single rotation value `0`; it does not sample 0 degrees to 180 degrees in 5-degree steps.
+
+Nick's text appears to intend rotation sampling across the 0-180 degree interval in 5-degree increments. Commit 2 corrected reanalysis should not use `range(0, 5, 180)`. The preferred reproduction setting is `range(0, 181, 5)`, with a small endpoint sensitivity check against `range(0, 180, 5)` if endpoint duplication after spinning/symmetrization could affect the result.
+
+This is separate from Asem's non-accumulating rotation correction. The preserved archive should remain unchanged; corrected scripts should document the interpreted rotation range explicitly.

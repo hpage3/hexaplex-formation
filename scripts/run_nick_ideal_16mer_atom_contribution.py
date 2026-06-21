@@ -253,9 +253,9 @@ def plot_four_trace(
     sub_y: np.ndarray,
     sigma: float,
 ) -> None:
-    fig, ax = plt.subplots(figsize=(6.6, 5.0), dpi=180)
-    fig.patch.set_facecolor("#8a8a8a")
-    ax.set_facecolor("#8a8a8a")
+    fig, ax = plt.subplots(figsize=(6.6, 5.0), dpi=180, facecolor="white")
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
     offsets = [3.0, 2.05, 1.10, 0.15]
     labels = [
         ("Corrected Experimental", "black", exp_y, offsets[0]),
@@ -264,14 +264,14 @@ def plot_four_trace(
         ("Side Chain Contribution Derived From Subtraction", "#7b2cff", sub_y, offsets[3]),
     ]
     for _label, _center, d_min, d_max, _note in FEATURE_WINDOWS:
-        ax.axvspan(d_min, d_max, color="white", alpha=0.06, linewidth=0)
+        ax.axvspan(d_min, d_max, color="lightgray", alpha=0.15, linewidth=0, zorder=0)
     for label, color, y_values, offset in labels:
-        ax.plot(d_grid, normalize(y_values) + offset, color=color, linewidth=1.15, label=label)
+        ax.plot(d_grid, normalize(y_values) + offset, color=color, linewidth=1.15, label=label, zorder=2)
     ax.set_xlim(8.0, 3.0)
     ax.set_ylim(-0.05, 4.15)
-    ax.set_xlabel("A")
-    ax.set_ylabel("offset normalized intensity")
-    ax.set_title(f"Nick-style ideal 16-mer atom contribution (sigma {sigma:.2f} A)", fontsize=9.5)
+    ax.set_xlabel("A", color="black")
+    ax.set_ylabel("offset normalized intensity", color="black")
+    ax.set_title(f"Nick-style ideal 16-mer atom contribution (sigma {sigma:.2f} A)", fontsize=9.5, color="black")
     ax.legend(loc="upper left", fontsize=5.8, frameon=True, facecolor="white", edgecolor="none")
     ax.tick_params(axis="both", colors="black", labelsize=7, direction="out", length=3)
     for spine in ax.spines.values():
@@ -279,7 +279,7 @@ def plot_four_trace(
     ax.grid(False)
     fig.tight_layout(pad=1.0)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(path)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
 

@@ -1,0 +1,81 @@
+{
+  "conversion": {
+    "duplicate_heavy_records_removed": 0,
+    "exact_heavy_atom_deduplication_applied": true,
+    "heavy_atoms_before_deduplication": 100,
+    "hydrogens_excluded": true,
+    "pdb_atom_count": 120,
+    "pdb_record_counts": {
+      "ATOM": 120
+    },
+    "source_element_counts": {
+      "C": 60,
+      "H": 20,
+      "N": 20,
+      "O": 20
+    },
+    "source_hydrogen_count": 20,
+    "xyz_atom_count": 100,
+    "xyz_element_counts": {
+      "C": 60,
+      "N": 20,
+      "O": 20
+    }
+  },
+  "detector_distance_mm": 338.4,
+  "engine_dir": "reference\\asem_corrected_diffraction_engine",
+  "grid_limit_mm": 100.0,
+  "grid_size": 129,
+  "image_max": 16117199.9999967,
+  "image_mean": 534252.9931683004,
+  "image_min": 13445.20718583858,
+  "model_atoms": 100,
+  "parallel_pdb": "inputs\\nick_ideal_models\\parallel_control\\TwoBetaSheetBackbones180_180.pdb",
+  "parallel_xyz": "inputs\\nick_ideal_models\\parallel_control\\TwoBetaSheetBackbones180_180.xyz",
+  "radial_bins": 420,
+  "radial_profile": "outputs\\parallel_control_corrected_emory_profile\\radial_profiles\\parallel_control_radial_profile.csv",
+  "rotation_sampling": "range(0, 181, 5)",
+  "rotations_deg": [
+    0,
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95,
+    100,
+    105,
+    110,
+    115,
+    120,
+    125,
+    130,
+    135,
+    140,
+    145,
+    150,
+    155,
+    160,
+    165,
+    170,
+    175,
+    180
+  ],
+  "tilts_deg": [
+    0
+  ],
+  "wavelength_A": 0.7749
+}

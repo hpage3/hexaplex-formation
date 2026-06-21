@@ -1,0 +1,42 @@
+{
+  "atom_selection_rule": "Remove atoms named CG, CD, OE1, OE2, HG2, and HG3 from every GLU residue. This removes the terminal GLU CH2-COOH group while preserving backbone atoms and CB. Hydrogens are excluded from the diffraction XYZ.",
+  "derived_heavy_deduped_xyz_atom_count": 1806,
+  "derived_heavy_deduped_xyz_element_counts": {
+    "C": 900,
+    "N": 585,
+    "O": 321
+  },
+  "derived_pdb": "inputs\\nick_ideal_models\\derived\\Hexaplex_AntiParallel_30deg_Ideal_no_CH2_COOH.pdb",
+  "derived_pdb_atom_count": 6066,
+  "derived_pdb_element_counts": {
+    "C": 1800,
+    "H": 2454,
+    "N": 1170,
+    "O": 642
+  },
+  "derived_xyz": "inputs\\nick_ideal_models\\derived\\Hexaplex_AntiParallel_30deg_Ideal_no_CH2_COOH.xyz",
+  "exact_heavy_atom_deduplication_applied_to_xyz": true,
+  "hydrogens_excluded_from_xyz": true,
+  "removed_atom_count": 1080,
+  "removed_element_counts": {
+    "C": 360,
+    "H": 360,
+    "O": 360
+  },
+  "removed_glu_atom_names": [
+    "CD",
+    "CG",
+    "HG2",
+    "HG3",
+    "OE1",
+    "OE2"
+  ],
+  "source_atom_count": 7146,
+  "source_element_counts": {
+    "C": 2160,
+    "H": 2814,
+    "N": 1170,
+    "O": 1002
+  },
+  "source_pdb": "inputs\\nick_ideal_models\\Hexaplex_AntiParallel_30deg_Ideal.pdb"
+}

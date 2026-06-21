@@ -44,6 +44,10 @@ This commit focuses only on the full ideal 16-mer baseline. No-side-chain/no-COO
 - Profile normalization: max mean intensity at q >= 0.15 A^-1.
 - Plotting choice: both traces are independently normalized; the theoretical trace is vertically offset by +1.15 for visual comparison.
 
+## Nick-Style Visualization Update
+
+The original comparison plot used the committed absolute normalized profile values plus a vertical offset, which preserved intensity scale but made the ideal 16-mer local structure appear nearly flat. The added Nick-style plot at `outputs/nick_ideal_16mer_corrected_emory_profile/plots/nick_ideal_16mer_vs_corrected_experimental_profile_nick_style.png` independently normalizes the corrected experimental and simulated ideal 16-mer traces within 3.0-8.0 A, then vertically offsets them for visual shape comparison. Peak-position scoring and feature-window metrics are unchanged from the corrected analysis above, and no diffraction was rerun for this visualization-only update.
+
 ## Primary Feature Windows
 
 | feature_window | simulated_peak_d_A | simulated_peak_intensity_norm | experimental_peak_d_A | experimental_peak_intensity_norm | peak_offset_d_A | window_area_simulated | window_area_experimental |

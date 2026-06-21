@@ -1,0 +1,100 @@
+{
+  "detector_distance_mm": 338.4,
+  "engine_dir": "reference\\asem_corrected_diffraction_engine",
+  "experimental_profile": "inputs\\experimental\\nick_powder_profile_corrected_emory.csv",
+  "grid_limit_mm": 100.0,
+  "grid_size": 129,
+  "normalize_q_min": 0.15,
+  "radial_bins": 420,
+  "rotation_sampling": "range(0, 181, 5)",
+  "rotations_deg": [
+    0,
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95,
+    100,
+    105,
+    110,
+    115,
+    120,
+    125,
+    130,
+    135,
+    140,
+    145,
+    150,
+    155,
+    160,
+    165,
+    170,
+    175,
+    180
+  ],
+  "runs": [
+    {
+      "atom_count": 2166,
+      "image_max": 7868563892.981581,
+      "image_mean": 14659010.466223218,
+      "image_min": 8204.676011193216,
+      "radial_profile": "outputs\\rise_sensitivity_corrected_emory_profile\\radial_profiles\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p36_radial_profile.csv",
+      "rise_A": "3.36",
+      "xyz_path": "inputs\\nick_ideal_models\\rise_variants\\xyz\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p36.xyz"
+    },
+    {
+      "atom_count": 2166,
+      "image_max": 7868563892.981481,
+      "image_mean": 14654216.884251453,
+      "image_min": 154.76471709286326,
+      "radial_profile": "outputs\\rise_sensitivity_corrected_emory_profile\\radial_profiles\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p37_radial_profile.csv",
+      "rise_A": "3.37",
+      "xyz_path": "inputs\\nick_ideal_models\\rise_variants\\xyz\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p37.xyz"
+    },
+    {
+      "atom_count": 2166,
+      "image_max": 7868563892.981481,
+      "image_mean": 14650718.277979255,
+      "image_min": 9623.015342787548,
+      "radial_profile": "outputs\\rise_sensitivity_corrected_emory_profile\\radial_profiles\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p38_radial_profile.csv",
+      "rise_A": "3.38",
+      "xyz_path": "inputs\\nick_ideal_models\\rise_variants\\xyz\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p38.xyz"
+    },
+    {
+      "atom_count": 2166,
+      "image_max": 7868563892.981472,
+      "image_mean": 14648527.696748244,
+      "image_min": 10334.882407140933,
+      "radial_profile": "outputs\\rise_sensitivity_corrected_emory_profile\\radial_profiles\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p39_radial_profile.csv",
+      "rise_A": "3.39",
+      "xyz_path": "inputs\\nick_ideal_models\\rise_variants\\xyz\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p39.xyz"
+    },
+    {
+      "atom_count": 2166,
+      "image_max": 7868563892.981472,
+      "image_mean": 14647608.497273851,
+      "image_min": 3786.1733358066904,
+      "radial_profile": "outputs\\rise_sensitivity_corrected_emory_profile\\radial_profiles\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p40_radial_profile.csv",
+      "rise_A": "3.40",
+      "xyz_path": "inputs\\nick_ideal_models\\rise_variants\\xyz\\Hexaplex_AntiParallel_30deg_Ideal_rise_3p40.xyz"
+    }
+  ],
+  "tilts_deg": [
+    0
+  ],
+  "wavelength_A": 0.7749
+}

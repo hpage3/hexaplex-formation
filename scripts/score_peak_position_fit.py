@@ -15,6 +15,8 @@ SUMMARY_FIELDS = [
     "rank",
     "model_id",
     "twist_deg",
+    "rise_A",
+    "target_group",
     "target_count",
     "assigned_peak_count",
     "missing_peak_count",
@@ -29,6 +31,8 @@ SUMMARY_FIELDS = [
 PER_PEAK_FIELDS = [
     "model_id",
     "twist_deg",
+    "rise_A",
+    "target_group",
     "target_label",
     "experimental_d_A",
     "theoretical_d_A",
@@ -45,6 +49,7 @@ PER_PEAK_FIELDS = [
 ASSIGNMENT_FIELDS = [
     "model_id",
     "twist_deg",
+    "rise_A",
     "target_label",
     "theoretical_d_A",
     "assignment_method",
@@ -57,6 +62,7 @@ class TargetPeak:
     target_label: str
     experimental_d_A: float
     default_weight: float
+    target_group: str = "combined"
     structural_note: str = ""
 
 
@@ -66,6 +72,7 @@ class PeakAssignment:
     twist_deg: str
     target_label: str
     theoretical_d_A: float
+    rise_A: str = ""
     assignment_method: str = ""
     notes: str = ""
     matched_peak_d_A: str = ""
@@ -125,6 +132,7 @@ def read_targets(path: Path) -> list[TargetPeak]:
                 target_label=row["target_label"],
                 experimental_d_A=_as_float(row["experimental_d_A"], "experimental_d_A"),
                 default_weight=_as_float(row["default_weight"], "default_weight"),
+                target_group=row.get("target_group", "combined") or "combined",
                 structural_note=row.get("structural_note", ""),
             )
             for row in reader
@@ -148,6 +156,7 @@ def read_assignments(path: Path) -> list[PeakAssignment]:
                     twist_deg=row["twist_deg"],
                     target_label=row["target_label"],
                     theoretical_d_A=_as_float(row["theoretical_d_A"], "theoretical_d_A"),
+                    rise_A=row.get("rise_A", ""),
                     assignment_method=row.get("assignment_method", ""),
                     notes=row.get("notes", ""),
                 )
@@ -162,12 +171,12 @@ def match_peak_list(
 ) -> list[PeakAssignment]:
     """Match each target to the nearest listed peak for each model within tolerance."""
 
-    grouped: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str], list[dict[str, str]]] = defaultdict(list)
     for row in peak_rows:
-        grouped[(row["model_id"], row["twist_deg"])].append(row)
+        grouped[(row["model_id"], row["twist_deg"], row.get("rise_A", ""))].append(row)
 
     assignments: list[PeakAssignment] = []
-    for (model_id, twist_deg), rows in grouped.items():
+    for (model_id, twist_deg, rise_A), rows in grouped.items():
         available = list(rows)
         for target in targets:
             best_index = None
@@ -190,6 +199,7 @@ def match_peak_list(
                     twist_deg=twist_deg,
                     target_label=target.target_label,
                     theoretical_d_A=peak_d_A,
+                    rise_A=rise_A,
                     assignment_method=f"nearest_within_{tolerance_A:g}A",
                     notes=best_peak.get("notes", ""),
                     matched_peak_d_A=f"{peak_d_A:.6g}",
@@ -214,27 +224,25 @@ def score_models(
     assignments: list[PeakAssignment],
     missing_peak_penalty: float = 0.25,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
-    grouped: dict[tuple[str, str], dict[str, PeakAssignment]] = defaultdict(dict)
+    grouped: dict[tuple[str, str, str], dict[str, PeakAssignment]] = defaultdict(dict)
     for assignment in assignments:
-        grouped[(assignment.model_id, assignment.twist_deg)][assignment.target_label] = assignment
+        grouped[(assignment.model_id, assignment.twist_deg, assignment.rise_A)][assignment.target_label] = assignment
 
     summary_rows: list[dict[str, object]] = []
     per_peak_rows: list[dict[str, object]] = []
-    for (model_id, twist_deg), by_label in grouped.items():
-        errors: list[float] = []
-        weights: list[float] = []
-        missing_count = 0
-        assigned_count = 0
+    metric_values_by_model_group: dict[tuple[str, str, str], dict[str, dict[str, object]]] = {}
+    for (model_id, twist_deg, rise_A), by_label in grouped.items():
+        per_model_group_values: dict[str, dict[str, object]] = {}
         for target in targets:
             assignment = by_label.get(target.target_label)
-            weights.append(target.default_weight)
             if assignment is None:
                 error = missing_peak_penalty
-                missing_count += 1
                 per_peak_rows.append(
                     {
                         "model_id": model_id,
                         "twist_deg": twist_deg,
+                        "rise_A": rise_A,
+                        "target_group": target.target_group,
                         "target_label": target.target_label,
                         "experimental_d_A": f"{target.experimental_d_A:.8g}",
                         "theoretical_d_A": "",
@@ -250,11 +258,12 @@ def score_models(
                 )
             else:
                 error = relative_error(target.experimental_d_A, assignment.theoretical_d_A)
-                assigned_count += 1
                 per_peak_rows.append(
                     {
                         "model_id": model_id,
                         "twist_deg": twist_deg,
+                        "rise_A": rise_A,
+                        "target_group": target.target_group,
                         "target_label": target.target_label,
                         "experimental_d_A": f"{target.experimental_d_A:.8g}",
                         "theoretical_d_A": f"{assignment.theoretical_d_A:.8g}",
@@ -268,35 +277,61 @@ def score_models(
                         "notes": assignment.notes,
                     }
                 )
-            errors.append(error)
 
-        abs_errors = [abs(error) for error in errors]
-        summary_rows.append(
-            {
-                "rank": "",
-                "model_id": model_id,
-                "twist_deg": twist_deg,
-                "target_count": len(targets),
-                "assigned_peak_count": assigned_count,
-                "missing_peak_count": missing_count,
-                "root_sum_relative_error": f"{root_sum_relative_error(errors):.12g}",
-                "rms_relative_error": f"{rms_relative_error(errors):.12g}",
-                "weighted_rms_relative_error": f"{weighted_rms_relative_error(errors, weights):.12g}",
-                "max_abs_relative_error": f"{(max(abs_errors) if abs_errors else 0.0):.12g}",
-                "mean_abs_relative_error": f"{(sum(abs_errors) / len(abs_errors) if abs_errors else 0.0):.12g}",
-                "missing_peak_penalty": f"{missing_peak_penalty:.12g}",
-            }
-        )
+            metric_groups = ["combined"]
+            if target.target_group != "combined":
+                metric_groups.append(target.target_group)
+            for group in metric_groups:
+                values = per_model_group_values.setdefault(
+                    group,
+                    {"errors": [], "weights": [], "missing": 0, "assigned": 0},
+                )
+                values["errors"].append(error)
+                values["weights"].append(target.default_weight)
+                if assignment is None:
+                    values["missing"] += 1
+                else:
+                    values["assigned"] += 1
+        metric_values_by_model_group[(model_id, twist_deg, rise_A)] = per_model_group_values
+
+    for (model_id, twist_deg, rise_A), by_group in metric_values_by_model_group.items():
+        for target_group, values in by_group.items():
+            errors = values["errors"]
+            weights = values["weights"]
+            abs_errors = [abs(error) for error in errors]
+            summary_rows.append(
+                {
+                    "rank": "",
+                    "model_id": model_id,
+                    "twist_deg": twist_deg,
+                    "rise_A": rise_A,
+                    "target_group": target_group,
+                    "target_count": len(errors),
+                    "assigned_peak_count": values["assigned"],
+                    "missing_peak_count": values["missing"],
+                    "root_sum_relative_error": f"{root_sum_relative_error(errors):.12g}",
+                    "rms_relative_error": f"{rms_relative_error(errors):.12g}",
+                    "weighted_rms_relative_error": f"{weighted_rms_relative_error(errors, weights):.12g}",
+                    "max_abs_relative_error": f"{(max(abs_errors) if abs_errors else 0.0):.12g}",
+                    "mean_abs_relative_error": f"{(sum(abs_errors) / len(abs_errors) if abs_errors else 0.0):.12g}",
+                    "missing_peak_penalty": f"{missing_peak_penalty:.12g}",
+                }
+            )
 
     summary_rows.sort(
         key=lambda row: (
+            str(row["target_group"]) != "combined",
+            str(row["target_group"]),
             float(row["weighted_rms_relative_error"]),
             int(row["missing_peak_count"]),
             str(row["model_id"]),
         )
     )
-    for index, row in enumerate(summary_rows, start=1):
-        row["rank"] = index
+    ranks_by_group: dict[str, int] = defaultdict(int)
+    for row in summary_rows:
+        group = str(row["target_group"])
+        ranks_by_group[group] += 1
+        row["rank"] = ranks_by_group[group]
     return summary_rows, per_peak_rows
 
 
@@ -382,6 +417,7 @@ def main(argv: list[str] | None = None) -> int:
                     {
                         "model_id": assignment.model_id,
                         "twist_deg": assignment.twist_deg,
+                        "rise_A": assignment.rise_A,
                         "target_label": assignment.target_label,
                         "theoretical_d_A": f"{assignment.theoretical_d_A:.8g}",
                         "assignment_method": assignment.assignment_method,

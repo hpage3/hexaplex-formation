@@ -87,3 +87,41 @@ def test_nearest_peak_matching_respects_tolerance():
         ("C", 5.90),
     ]
     assert assignments[0].assignment_method == "nearest_within_0.35A"
+
+
+def test_target_group_scoring_separates_base_and_backbone():
+    targets = [
+        TargetPeak("stack", 3.35, 1.0, "base_stacking"),
+        TargetPeak("D", 7.3, 1.0, "backbone_associated"),
+        TargetPeak("C", 5.65, 1.0, "backbone_associated"),
+    ]
+    assignments = [
+        PeakAssignment("rise338", "30", "stack", 3.35, rise_A="3.38"),
+        PeakAssignment("rise338", "30", "D", 7.3, rise_A="3.38"),
+        PeakAssignment("rise338", "30", "C", 5.65, rise_A="3.38"),
+        PeakAssignment("rise340", "30", "stack", 3.40, rise_A="3.40"),
+        PeakAssignment("rise340", "30", "D", 7.3, rise_A="3.40"),
+        PeakAssignment("rise340", "30", "C", 5.95, rise_A="3.40"),
+    ]
+
+    summary_rows, _per_peak_rows = score_peak_position_fit.score_models(targets, assignments)
+    by_key = {
+        (row["model_id"], row["rise_A"], row["target_group"]): row
+        for row in summary_rows
+    }
+
+    assert by_key[("rise338", "3.38", "base_stacking")]["rank"] == 1
+    assert by_key[("rise340", "3.40", "backbone_associated")]["rank"] == 2
+    assert by_key[("rise338", "3.38", "combined")]["missing_peak_count"] == 0
+    assert float(by_key[("rise340", "3.40", "combined")]["weighted_rms_relative_error"]) > 0
+
+
+def test_auto_matching_preserves_rise_value():
+    targets = [TargetPeak("stack", 3.35, 1.0, "base_stacking")]
+    peak_rows = [
+        {"model_id": "rise338", "twist_deg": "30", "rise_A": "3.38", "peak_d_A": "3.36"},
+    ]
+
+    assignments = score_peak_position_fit.match_peak_list(targets, peak_rows, tolerance_A=0.10)
+
+    assert assignments[0].rise_A == "3.38"

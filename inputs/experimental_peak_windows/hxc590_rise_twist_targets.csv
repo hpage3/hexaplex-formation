@@ -1,0 +1,6 @@
+target_label,experimental_d_A,default_weight,target_group,structural_note
+base_stack,3.35,1.0,base_stacking,base-stacking-associated feature
+D,7.3,1.0,backbone_associated,longer-distance backbone-associated feature
+C,5.65,1.0,backbone_associated,intermediate backbone-associated feature
+B,4.4,1.0,backbone_associated,intermediate/short backbone-associated feature
+A,3.8,1.0,backbone_associated,short backbone-associated feature

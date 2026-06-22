@@ -1,0 +1,14 @@
+{
+  "ambertools_tleap_run": false,
+  "candidate_count": 3,
+  "exact_heavy_atom_deduplication": true,
+  "experimental_profile": "inputs/experimental/nick_powder_profile_corrected_emory.csv",
+  "hydrogens_excluded": true,
+  "minimization_run": false,
+  "notebooks_executed": false,
+  "pnab_run": false,
+  "rotation_sampling": "range(0, 181, 5)",
+  "tilts": [
+    0
+  ]
+}

@@ -1,0 +1,4 @@
+source_folder,relative_path,filename,file_kind,size_bytes,atom_count,residue_count,residue_names,residue_name_counts,full_model_scale_ratio,diffraction_readiness,readiness_note
+29,inputs/asem_twist_series_29_30_31/raw/29/29.pdb.txt,29.pdb.txt,pdb,239440,3573,180,CYP;GLU;MEP,CYP:1041;GLU:1356;MEP:1176,0.5,diffraction_ready,full diffraction-ready candidate
+30,inputs/asem_twist_series_29_30_31/raw/30/30.pdb.txt,30.pdb.txt,pdb,239440,3573,180,CYP;GLU;MEP,CYP:1041;GLU:1356;MEP:1176,0.5,diffraction_ready,full diffraction-ready candidate
+31,inputs/asem_twist_series_29_30_31/raw/31/31.pdb.txt,31.pdb.txt,pdb,255319,3810,192,CYP;GLU;MEP,CYP:1110;GLU:1446;MEP:1254,0.533165,diffraction_ready,full diffraction-ready candidate

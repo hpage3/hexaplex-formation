@@ -1,0 +1,5 @@
+target_label,experimental_d_A,default_weight,structural_note
+D,7.3,1.0,longer-distance backbone-associated feature
+C,5.65,1.0,intermediate backbone-associated feature
+B,4.4,1.0,intermediate/short backbone-associated feature
+A,3.8,1.0,short backbone-associated feature

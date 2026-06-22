@@ -1,0 +1,9 @@
+{
+  "diffraction_rerun": "extended synthetic stacks only",
+  "exact_heavy_atom_deduplication": true,
+  "hydrogens_excluded": true,
+  "rotations": "range(0, 181, 5)",
+  "tilts": [
+    0
+  ]
+}

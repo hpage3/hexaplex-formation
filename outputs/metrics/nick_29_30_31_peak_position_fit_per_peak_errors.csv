@@ -1,0 +1,16 @@
+model_id,twist_deg,rise_A,target_group,target_label,experimental_d_A,theoretical_d_A,relative_error,abs_relative_error,weight,is_missing,assignment_method,matched_peak_d_A,peak_intensity_optional,notes
+nick_29,29,,base_stacking,base,3.38,3.396,-0.00473372781065,0.00473372781065,1,false,nick_measured,,,Nick measured peak assignment
+nick_29,29,,backbone_associated,A,3.8,3.895,-0.025,0.025,1,false,nick_measured,,,Nick measured peak assignment
+nick_29,29,,backbone_associated,B,4.4,4.46,-0.0136363636364,0.0136363636364,1,false,nick_measured,,,Nick measured peak assignment
+nick_29,29,,backbone_associated,C,5.65,5.79,-0.0247787610619,0.0247787610619,1,false,nick_measured,,,Nick measured peak assignment
+nick_29,29,,backbone_associated,D,7.3,7.465,-0.022602739726,0.022602739726,1,false,nick_measured,,,Nick measured peak assignment
+nick_30,30,,base_stacking,base,3.38,3.407,-0.00798816568047,0.00798816568047,1,false,nick_measured,,,Nick measured peak assignment
+nick_30,30,,backbone_associated,A,3.8,3.853,-0.0139473684211,0.0139473684211,1,false,nick_measured,,,Nick measured peak assignment
+nick_30,30,,backbone_associated,B,4.4,4.465,-0.0147727272727,0.0147727272727,1,false,nick_measured,,,Nick measured peak assignment
+nick_30,30,,backbone_associated,C,5.65,5.73,-0.0141592920354,0.0141592920354,1,false,nick_measured,,,Nick measured peak assignment
+nick_30,30,,backbone_associated,D,7.3,7.63,-0.0452054794521,0.0452054794521,1,false,nick_measured,,,Nick measured peak assignment
+nick_31,31,,base_stacking,base,3.38,3.407,-0.00798816568047,0.00798816568047,1,false,nick_measured,,,Nick measured peak assignment
+nick_31,31,,backbone_associated,A,3.8,3.77,0.00789473684211,0.00789473684211,1,false,nick_measured,,,Nick measured peak assignment
+nick_31,31,,backbone_associated,B,4.4,4.39,0.00227272727273,0.00227272727273,1,false,nick_measured,,,Nick measured peak assignment
+nick_31,31,,backbone_associated,C,5.65,5.55,0.0176991150442,0.0176991150442,1,false,nick_measured,,,Nick measured peak assignment
+nick_31,31,,backbone_associated,D,7.3,7.865,-0.077397260274,0.077397260274,1,false,nick_measured,,,Nick measured peak assignment

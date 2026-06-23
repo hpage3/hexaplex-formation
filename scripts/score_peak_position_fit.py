@@ -123,17 +123,23 @@ def weighted_rms_relative_error(errors: Iterable[float], weights: Iterable[float
 def read_targets(path: Path) -> list[TargetPeak]:
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
-        required = {"target_label", "experimental_d_A", "default_weight"}
-        missing = required.difference(reader.fieldnames or [])
+        fieldnames = reader.fieldnames or []
+        required = {"target_label"}
+        missing = required.difference(fieldnames)
         if missing:
             raise ValueError(f"{path} is missing required columns: {sorted(missing)}")
+        if "experimental_d_A" not in fieldnames and "target_d_A" not in fieldnames:
+            raise ValueError(f"{path} is missing required d-spacing column: experimental_d_A or target_d_A")
         return [
             TargetPeak(
                 target_label=row["target_label"],
-                experimental_d_A=_as_float(row["experimental_d_A"], "experimental_d_A"),
-                default_weight=_as_float(row["default_weight"], "default_weight"),
+                experimental_d_A=_as_float(
+                    row.get("experimental_d_A") or row.get("target_d_A"),
+                    "experimental_d_A",
+                ),
+                default_weight=_as_float(row.get("default_weight", "1.0") or "1.0", "default_weight"),
                 target_group=row.get("target_group", "combined") or "combined",
-                structural_note=row.get("structural_note", ""),
+                structural_note=row.get("structural_note", row.get("notes", "")),
             )
             for row in reader
         ]

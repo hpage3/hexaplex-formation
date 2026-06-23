@@ -125,3 +125,27 @@ def test_auto_matching_preserves_rise_value():
     assignments = score_peak_position_fit.match_peak_list(targets, peak_rows, tolerance_A=0.10)
 
     assert assignments[0].rise_A == "3.38"
+
+
+def test_read_targets_accepts_target_d_alias_and_default_weight(tmp_path):
+    target_csv = tmp_path / "targets.csv"
+    target_csv.write_text(
+        "\n".join(
+            [
+                "target_label,target_d_A,target_group,notes",
+                "base,3.38,base_stacking,Nick experimental base-stacking target",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    targets = score_peak_position_fit.read_targets(target_csv)
+
+    assert targets[0] == TargetPeak(
+        "base",
+        3.38,
+        1.0,
+        "base_stacking",
+        "Nick experimental base-stacking target",
+    )

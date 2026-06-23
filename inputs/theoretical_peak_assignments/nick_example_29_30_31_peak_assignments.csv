@@ -1,1 +1,16 @@
-model_id,twist_deg,target_label,theoretical_d_A,assignment_method,notes
+model_id,twist_deg,rise_A,target_label,theoretical_d_A,assignment_method,notes
+nick_29,29,,base,3.396,nick_measured,Nick measured peak assignment
+nick_29,29,,A,3.895,nick_measured,Nick measured peak assignment
+nick_29,29,,B,4.46,nick_measured,Nick measured peak assignment
+nick_29,29,,C,5.79,nick_measured,Nick measured peak assignment
+nick_29,29,,D,7.465,nick_measured,Nick measured peak assignment
+nick_30,30,,base,3.407,nick_measured,Nick measured peak assignment
+nick_30,30,,A,3.853,nick_measured,Nick measured peak assignment
+nick_30,30,,B,4.465,nick_measured,Nick measured peak assignment
+nick_30,30,,C,5.73,nick_measured,Nick measured peak assignment
+nick_30,30,,D,7.63,nick_measured,Nick measured peak assignment
+nick_31,31,,base,3.407,nick_measured,Nick measured peak assignment
+nick_31,31,,A,3.77,nick_measured,Nick measured peak assignment
+nick_31,31,,B,4.39,nick_measured,Nick measured peak assignment
+nick_31,31,,C,5.55,nick_measured,Nick measured peak assignment
+nick_31,31,,D,7.865,nick_measured,Nick measured peak assignment

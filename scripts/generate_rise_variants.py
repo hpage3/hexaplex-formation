@@ -31,6 +31,14 @@ DEFAULT_RISES = [3.40, 3.38]
 BASE_RESIDUES = {"CYP", "MEP"}
 
 
+def display_path(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(resolved)
+
+
 def rise_token(value: float) -> str:
     return f"{value:.2f}".replace(".", "p")
 
@@ -157,7 +165,7 @@ def write_readme(output_dir: Path, source: Path) -> None:
         [
             "# Rise Twist Variants",
             "",
-            f"Source PDB: `{source.relative_to(ROOT)}`",
+            f"Source PDB: `{display_path(source)}`",
             "",
             "These PDBs are rigid-layer z-position variants of the ideal antiparallel 30-degree model.",
             "They preserve atom count, atom identity, residue identity, x/y coordinates, and intralayer geometry.",
@@ -179,6 +187,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    args.source_pdb = args.source_pdb.resolve()
+    args.output_dir = args.output_dir.resolve()
     rises = parse_rise_values(args.rises)
     atoms = load_pdb_atoms(args.source_pdb)
     layers = infer_base_layers(atoms)
@@ -213,8 +223,8 @@ def main(argv: list[str] | None = None) -> int:
                 "model_id": model_id,
                 "twist_deg": f"{args.twist_deg:.6g}",
                 "rise_A": f"{rise_A:.2f}",
-                "pdb_path": str(pdb_path.relative_to(ROOT)),
-                "xyz_path": str(xyz_path.relative_to(ROOT)),
+                "pdb_path": display_path(pdb_path),
+                "xyz_path": display_path(xyz_path),
                 "source_atom_count": source_atom_count,
                 "variant_atom_count": len(transformed),
                 "atom_count_preserved": len(transformed) == source_atom_count,

@@ -1,0 +1,17 @@
+Nick 3.38 A rise handoff validation
+source_pdb: inputs\nick_ideal_models\Hexaplex_AntiParallel_30deg_Ideal.pdb
+output_pdb: outputs\nick_handoff\hexaplex_16hexad_ideal_source_twist30_rise3p38.pdb
+requested_twist_deg: 30
+requested_rise_A: 3.38
+source_atom_count: 7146
+output_atom_count: 7146
+atom_count_preserved: True
+inferred_source_base_layer_count: 15
+inferred_output_base_layer_count: 15
+adjacent_inter_hexad_rise_interval_count: 14
+measured_adjacent_base_layer_rise_A: 3.3800484
+maximum_adjacent_rise_error_A: 0.00052952301
+consistent_with_16_hexad_stack: False
+hexad_interval_clarification: a 16-hexad stack would have 16 base layers and 15 adjacent inter-hexad rise intervals.
+observed_stack_clarification: this exact Nick-identified source infers 15 base layers and 14 adjacent inter-hexad rise intervals.
+source_note: no substitute deduped/intermediate PDB was used.

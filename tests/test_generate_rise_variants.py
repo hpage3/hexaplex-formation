@@ -22,3 +22,8 @@ def test_parse_rise_values():
 
 def test_rise_token_roundtrip_style():
     assert generate_rise_variants.rise_token(3.38) == "3p38"
+
+
+def test_display_path_accepts_external_absolute_path(tmp_path):
+    external = tmp_path / "model.pdb"
+    assert generate_rise_variants.display_path(external) == str(external.resolve())

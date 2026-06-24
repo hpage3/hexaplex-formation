@@ -1,0 +1,26 @@
+model_id,twist_deg,rise_A,target_group,target_label,experimental_d_A,theoretical_d_A,relative_error,abs_relative_error,weight,is_missing,assignment_method,matched_peak_d_A,peak_intensity_optional,notes
+pnab_twist28p5_rise3p38,28.5,3.38,base_stacking,base,3.38,3.3690002,0.00325437869822,0.00325437869822,1,false,interior_local_maximum_in_3.25_3.52A,,,Simplified isotropic Debye radial profile.
+pnab_twist28p5_rise3p38,28.5,3.38,backbone_associated,A,3.8,3.7288934,0.0187122631579,0.0187122631579,1,false,interior_local_maximum_in_3.6_4A,,,Simplified isotropic Debye radial profile.
+pnab_twist28p5_rise3p38,28.5,3.38,backbone_associated,B,4.4,,0.25,0.25,1,true,,,,missing target; penalty applied
+pnab_twist28p5_rise3p38,28.5,3.38,backbone_associated,C,5.65,5.6605273,-0.00186323893805,0.00186323893805,1,false,interior_local_maximum_in_5.3_6A,,,Simplified isotropic Debye radial profile.
+pnab_twist28p5_rise3p38,28.5,3.38,backbone_associated,D,7.3,7.3487547,-0.0066787260274,0.0066787260274,1,false,interior_local_maximum_in_6.8_7.8A,,,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,base_stacking,base,3.38,3.3510322,0.00857035502959,0.00857035502959,1,false,interior_local_maximum_in_3.25_3.52A,,,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,backbone_associated,A,3.8,3.7736849,0.00692502631579,0.00692502631579,1,false,interior_local_maximum_in_3.6_4A,,,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,backbone_associated,B,4.4,,0.25,0.25,1,true,,,,missing target; penalty applied
+pnab_twist29p5_rise3p38,29.5,3.38,backbone_associated,C,5.65,5.5850536,0.0114949380531,0.0114949380531,1,false,interior_local_maximum_in_5.3_6A,,,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,backbone_associated,D,7.3,7.5701028,-0.0370003835616,0.0370003835616,1,false,interior_local_maximum_in_6.8_7.8A,,,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,base_stacking,base,3.38,3.3510322,0.00857035502959,0.00857035502959,1,false,interior_local_maximum_in_3.25_3.52A,,,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,backbone_associated,A,3.8,3.7623864,0.00989831578947,0.00989831578947,1,false,interior_local_maximum_in_3.6_4A,,,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,backbone_associated,B,4.4,,0.25,0.25,1,true,,,,missing target; penalty applied
+pnab_twist30_rise3p38,30.0,3.38,backbone_associated,C,5.65,5.5358461,0.0202042300885,0.0202042300885,1,false,interior_local_maximum_in_5.3_6A,,,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,backbone_associated,D,7.3,7.5701028,-0.0370003835616,0.0370003835616,1,false,interior_local_maximum_in_6.8_7.8A,,,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,base_stacking,base,3.38,3.3510322,0.00857035502959,0.00857035502959,1,false,interior_local_maximum_in_3.25_3.52A,,,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,backbone_associated,A,3.8,3.7511554,0.0128538421053,0.0128538421053,1,false,interior_local_maximum_in_3.6_4A,,,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,backbone_associated,B,4.4,,0.25,0.25,1,true,,,,missing target; penalty applied
+pnab_twist30p5_rise3p38,30.5,3.38,backbone_associated,C,5.65,5.4636394,0.0329841769912,0.0329841769912,1,false,interior_local_maximum_in_5.3_6A,,,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,backbone_associated,D,7.3,7.4799825,-0.0246551369863,0.0246551369863,1,false,interior_local_maximum_in_6.8_7.8A,,,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,base_stacking,base,3.38,3.3510322,0.00857035502959,0.00857035502959,1,false,interior_local_maximum_in_3.25_3.52A,,,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,backbone_associated,A,3.8,3.7399913,0.0157917631579,0.0157917631579,1,false,interior_local_maximum_in_3.6_4A,,,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,backbone_associated,B,4.4,4.4879895,-0.0199976136364,0.0199976136364,1,false,interior_local_maximum_in_4.15_4.65A,,,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,backbone_associated,C,5.65,5.3932921,0.0454350265487,0.0454350265487,1,false,interior_local_maximum_in_5.3_6A,,,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,backbone_associated,D,7.3,7.4799825,-0.0246551369863,0.0246551369863,1,false,interior_local_maximum_in_6.8_7.8A,,,Simplified isotropic Debye radial profile.

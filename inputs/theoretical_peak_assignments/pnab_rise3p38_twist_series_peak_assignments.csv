@@ -1,0 +1,22 @@
+model_id,twist_deg,rise_A,target_label,theoretical_d_A,assignment_method,notes
+pnab_twist28p5_rise3p38,28.5,3.38,base,3.3690002,interior_local_maximum_in_3.25_3.52A,Simplified isotropic Debye radial profile.
+pnab_twist28p5_rise3p38,28.5,3.38,A,3.7288934,interior_local_maximum_in_3.6_4A,Simplified isotropic Debye radial profile.
+pnab_twist28p5_rise3p38,28.5,3.38,C,5.6605273,interior_local_maximum_in_5.3_6A,Simplified isotropic Debye radial profile.
+pnab_twist28p5_rise3p38,28.5,3.38,D,7.3487547,interior_local_maximum_in_6.8_7.8A,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,base,3.3510322,interior_local_maximum_in_3.25_3.52A,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,A,3.7736849,interior_local_maximum_in_3.6_4A,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,C,5.5850536,interior_local_maximum_in_5.3_6A,Simplified isotropic Debye radial profile.
+pnab_twist29p5_rise3p38,29.5,3.38,D,7.5701028,interior_local_maximum_in_6.8_7.8A,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,base,3.3510322,interior_local_maximum_in_3.25_3.52A,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,A,3.7623864,interior_local_maximum_in_3.6_4A,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,C,5.5358461,interior_local_maximum_in_5.3_6A,Simplified isotropic Debye radial profile.
+pnab_twist30_rise3p38,30.0,3.38,D,7.5701028,interior_local_maximum_in_6.8_7.8A,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,base,3.3510322,interior_local_maximum_in_3.25_3.52A,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,A,3.7511554,interior_local_maximum_in_3.6_4A,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,C,5.4636394,interior_local_maximum_in_5.3_6A,Simplified isotropic Debye radial profile.
+pnab_twist30p5_rise3p38,30.5,3.38,D,7.4799825,interior_local_maximum_in_6.8_7.8A,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,base,3.3510322,interior_local_maximum_in_3.25_3.52A,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,A,3.7399913,interior_local_maximum_in_3.6_4A,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,B,4.4879895,interior_local_maximum_in_4.15_4.65A,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,C,5.3932921,interior_local_maximum_in_5.3_6A,Simplified isotropic Debye radial profile.
+pnab_twist31_rise3p38,31.0,3.38,D,7.4799825,interior_local_maximum_in_6.8_7.8A,Simplified isotropic Debye radial profile.

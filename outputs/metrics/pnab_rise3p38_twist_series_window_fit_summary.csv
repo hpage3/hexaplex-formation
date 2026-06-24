@@ -1,0 +1,6 @@
+model_id,twist_deg,rise_A,base_stacking_score,backbone_associated_score,combined_score,missing_peak_count,metric_note
+pnab_twist31_rise3p38,31.0,3.38,0.00857035502959,0.0288162356671,0.0260574470638,0,RMS relative local-peak-position error; missing assignments use the scorer penalty.
+pnab_twist28p5_rise3p38,28.5,3.38,0.00325437869822,0.0115213690329,0.11216845975,1,RMS relative local-peak-position error; missing assignments use the scorer penalty.
+pnab_twist29p5_rise3p38,29.5,3.38,0.00857035502959,0.0227238345798,0.113245369847,1,RMS relative local-peak-position error; missing assignments use the scorer penalty.
+pnab_twist30p5_rise3p38,30.5,3.38,0.00857035502959,0.0249068462373,0.113520486216,1,RMS relative local-peak-position error; missing assignments use the scorer penalty.
+pnab_twist30_rise3p38,30.0,3.38,0.00857035502959,0.0250014396428,0.113532961679,1,RMS relative local-peak-position error; missing assignments use the scorer penalty.

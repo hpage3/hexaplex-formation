@@ -1,0 +1,10 @@
+model_id,twist_deg,rise_A,generation_status,analysis_status,analysis_mode,worker_count,structure_path,radial_profile_path,peak_list_path,elapsed_seconds,error_summary
+pnab_twist28_rise3p38,28.0,3.38,timed_out,skipped_missing_generation,parallel,16,,,,,
+pnab_twist28p5_rise3p38,28.5,3.38,success_with_warning,skipped_existing,parallel,16,outputs\pnab_twist_series_rise3p38\structures\pnab_twist28p5_rise3p38.pdb,outputs\pnab_twist_series_rise3p38\radial_profiles\pnab_twist28p5_rise3p38_radial.csv,outputs\pnab_twist_series_rise3p38\peak_lists\pnab_twist28p5_rise3p38_peaks.csv,,
+pnab_twist29_rise3p38,29.0,3.38,timed_out,skipped_missing_generation,parallel,16,,,,,
+pnab_twist29p5_rise3p38,29.5,3.38,success_with_warning,skipped_existing,parallel,16,outputs\pnab_twist_series_rise3p38\structures\pnab_twist29p5_rise3p38.pdb,outputs\pnab_twist_series_rise3p38\radial_profiles\pnab_twist29p5_rise3p38_radial.csv,outputs\pnab_twist_series_rise3p38\peak_lists\pnab_twist29p5_rise3p38_peaks.csv,,
+pnab_twist30_rise3p38,30.0,3.38,success_with_warning,skipped_existing,parallel,16,outputs\pnab_twist_series_rise3p38\structures\pnab_twist30_rise3p38.pdb,outputs\pnab_twist_series_rise3p38\radial_profiles\pnab_twist30_rise3p38_radial.csv,outputs\pnab_twist_series_rise3p38\peak_lists\pnab_twist30_rise3p38_peaks.csv,,
+pnab_twist30p5_rise3p38,30.5,3.38,success_with_warning,skipped_existing,parallel,16,outputs\pnab_twist_series_rise3p38\structures\pnab_twist30p5_rise3p38.pdb,outputs\pnab_twist_series_rise3p38\radial_profiles\pnab_twist30p5_rise3p38_radial.csv,outputs\pnab_twist_series_rise3p38\peak_lists\pnab_twist30p5_rise3p38_peaks.csv,,
+pnab_twist31_rise3p38,31.0,3.38,success_with_warning,skipped_existing,parallel,16,outputs\pnab_twist_series_rise3p38\structures\pnab_twist31_rise3p38.pdb,outputs\pnab_twist_series_rise3p38\radial_profiles\pnab_twist31_rise3p38_radial.csv,outputs\pnab_twist_series_rise3p38\peak_lists\pnab_twist31_rise3p38_peaks.csv,,
+pnab_twist31p5_rise3p38,31.5,3.38,timed_out,skipped_missing_generation,parallel,16,,,,,
+pnab_twist32_rise3p38,32.0,3.38,timed_out,skipped_missing_generation,parallel,16,,,,,

@@ -1,0 +1,6 @@
+model_id,twist_deg,rise_A,target_label,target_group,target_d_A,window_min_A,window_max_A,peak_d_A,peak_intensity_optional,assignment_status,notes
+pnab_twist29p5_rise3p38,29.5,3.38,base,base_stacking,3.38,3.25,3.52,3.3510322,1,local_maximum,Simplified isotropic Debye radial profile; assignment requires an interior local maximum.
+pnab_twist29p5_rise3p38,29.5,3.38,A,backbone_associated,3.8,3.6,4,3.7736849,0.33016129,local_maximum,Simplified isotropic Debye radial profile; assignment requires an interior local maximum.
+pnab_twist29p5_rise3p38,29.5,3.38,B,backbone_associated,4.4,4.15,4.65,4.6370371,0.23974711,ambiguous_boundary_or_monotonic,Simplified isotropic Debye radial profile; assignment requires an interior local maximum.
+pnab_twist29p5_rise3p38,29.5,3.38,C,backbone_associated,5.65,5.3,6,5.5850536,0.78757027,local_maximum,Simplified isotropic Debye radial profile; assignment requires an interior local maximum.
+pnab_twist29p5_rise3p38,29.5,3.38,D,backbone_associated,7.3,6.8,7.8,7.5701028,0.35844667,local_maximum,Simplified isotropic Debye radial profile; assignment requires an interior local maximum.

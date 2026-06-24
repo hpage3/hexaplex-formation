@@ -1,0 +1,6 @@
+model_id,twist_deg,rise_A,atom_count,residue_count,chain_count,residue_counts,inferred_base_layer_count,adjacent_rise_interval_count,measured_mean_adjacent_rise_A,measured_adjacent_rise_stdev_A,notes
+pnab_twist28p5_rise3p38,28.5,3.38,2835,180,6,CYP:45;GLU:90;MEP:45,15,14,3.380000000,2.71540689e-15,Layer count and rise are inferred from clustered CYP/MEP base-atom z centroids.
+pnab_twist29p5_rise3p38,29.5,3.38,2835,180,6,CYP:45;GLU:90;MEP:45,15,14,3.380000000,2.71540689e-15,Layer count and rise are inferred from clustered CYP/MEP base-atom z centroids.
+pnab_twist30_rise3p38,30.0,3.38,2835,180,6,CYP:45;GLU:90;MEP:45,15,14,3.380000000,2.71540689e-15,Layer count and rise are inferred from clustered CYP/MEP base-atom z centroids.
+pnab_twist30p5_rise3p38,30.5,3.38,2835,180,6,CYP:45;GLU:90;MEP:45,15,14,3.380000000,2.71540689e-15,Layer count and rise are inferred from clustered CYP/MEP base-atom z centroids.
+pnab_twist31_rise3p38,31.0,3.38,2835,180,6,CYP:45;GLU:90;MEP:45,15,14,3.380000000,2.71540689e-15,Layer count and rise are inferred from clustered CYP/MEP base-atom z centroids.

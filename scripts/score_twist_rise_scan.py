@@ -1,11 +1,14 @@
 ﻿"""Score a twist/rise scan manifest against HXC590 diffraction targets.
 
-This is the scoring layer for the twist/rise model-family scan. It is designed
-to consume a grid manifest plus later peak-extraction outputs and write base,
-helical, and combined RMSD scores.
+This scoring layer consumes:
+  1. a twist/rise grid manifest,
+  2. target peak definitions, and
+  3. optionally, an observed peak table keyed by model_id.
 
-At this stage, rows without extracted peak assignments are preserved with
-score_status=pending.
+The score is split into:
+  - base_rmsd: base-stacking / rise-sensitive target(s)
+  - helical_rmsd: backbone-associated / helical-geometry target(s)
+  - combined_rmsd: all available target errors together
 """
 
 from __future__ import annotations
@@ -29,7 +32,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def write_csv(path: Path, rows: list[dict[str, str]], fields: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -53,6 +56,62 @@ def load_targets(path: Path) -> dict[str, dict[str, str]]:
     return targets
 
 
+def load_observed_peaks(path: Path | None) -> dict[str, dict[str, str]]:
+    """Load observed peak assignments keyed by model_id.
+
+    Expected columns include model_id plus any observed_<target_label>_d_A
+    columns, for example:
+      observed_base_d_A
+      observed_A_d_A
+      observed_B_d_A
+    """
+
+    if path is None:
+        return {}
+
+    rows = read_csv(path)
+    if not rows:
+        return {}
+
+    if "model_id" not in rows[0]:
+        raise ValueError(f"Observed peak file {path} is missing model_id column")
+
+    observed: dict[str, dict[str, str]] = {}
+    for row in rows:
+        model_id = row["model_id"]
+        if not model_id:
+            raise ValueError(f"Observed peak file {path} has a row with empty model_id")
+        if model_id in observed:
+            raise ValueError(f"Duplicate model_id {model_id!r} in observed peak file {path}")
+        observed[model_id] = row
+
+    return observed
+
+
+def merge_observed_peaks(
+    manifest_rows: list[dict[str, str]],
+    observed_by_model: dict[str, dict[str, str]],
+) -> list[dict[str, str]]:
+    """Merge observed peak columns into manifest rows by model_id."""
+
+    if not observed_by_model:
+        return [dict(row) for row in manifest_rows]
+
+    merged: list[dict[str, str]] = []
+    for row in manifest_rows:
+        out = dict(row)
+        model_id = out.get("model_id", "")
+        observed = observed_by_model.get(model_id, {})
+        for key, value in observed.items():
+            if key == "model_id":
+                continue
+            if key.startswith("observed_"):
+                out[key] = value
+        merged.append(out)
+
+    return merged
+
+
 def rmsd(errors: Iterable[float]) -> str:
     values = list(errors)
     if not values:
@@ -61,16 +120,7 @@ def rmsd(errors: Iterable[float]) -> str:
 
 
 def row_errors(row: dict[str, str], targets: dict[str, dict[str, str]], group: str) -> list[float]:
-    """Return d-spacing errors for a target group.
-
-    Later peak-extraction stages should add columns named:
-      observed_<target_label>_d_A
-
-    Example:
-      observed_base_d_A
-      observed_A_d_A
-      observed_B_d_A
-    """
+    """Return d-spacing errors for a target group."""
 
     errors: list[float] = []
     for label, target in targets.items():
@@ -84,13 +134,23 @@ def row_errors(row: dict[str, str], targets: dict[str, dict[str, str]], group: s
     return errors
 
 
+def count_available_observations(row: dict[str, str], targets: dict[str, dict[str, str]]) -> int:
+    count = 0
+    for label in targets:
+        if row.get(f"observed_{label}_d_A", ""):
+            count += 1
+    return count
+
+
 def score_rows(
     manifest_rows: list[dict[str, str]],
     targets: dict[str, dict[str, str]],
+    observed_by_model: dict[str, dict[str, str]] | None = None,
 ) -> list[dict[str, str]]:
+    rows_with_observed = merge_observed_peaks(manifest_rows, observed_by_model or {})
     scored: list[dict[str, str]] = []
 
-    for row in manifest_rows:
+    for row in rows_with_observed:
         out = dict(row)
 
         base_errors = row_errors(out, targets, BASE_GROUP)
@@ -103,6 +163,7 @@ def score_rows(
         out["base_rmsd"] = base_score
         out["helical_rmsd"] = helical_score
         out["combined_rmsd"] = combined_score
+        out["observed_peak_count"] = str(count_available_observations(out, targets))
 
         if combined_score:
             out["score_status"] = "scored"
@@ -124,6 +185,12 @@ def merged_fields(rows: list[dict[str, str]]) -> list[str]:
         "diffraction_status",
         "diffraction_file",
         "score_status",
+        "observed_peak_count",
+        "observed_base_d_A",
+        "observed_A_d_A",
+        "observed_B_d_A",
+        "observed_C_d_A",
+        "observed_D_d_A",
         "base_rmsd",
         "helical_rmsd",
         "combined_rmsd",
@@ -133,7 +200,7 @@ def merged_fields(rows: list[dict[str, str]]) -> list[str]:
     seen = set()
     fields: list[str] = []
     for name in preferred:
-        if rows and name in rows[0]:
+        if any(name in row for row in rows):
             fields.append(name)
             seen.add(name)
 
@@ -159,6 +226,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("inputs/experimental_peak_windows/hxc590_twist_rise_scan_targets.csv"),
     )
     parser.add_argument(
+        "--observed-peaks",
+        type=Path,
+        help="Optional observed peak table keyed by model_id.",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("outputs/twist_rise_scan/twist_rise_scored_manifest.csv"),
@@ -170,7 +242,8 @@ def main() -> int:
     args = build_parser().parse_args()
     manifest_rows = read_csv(args.manifest)
     targets = load_targets(args.targets)
-    scored = score_rows(manifest_rows, targets)
+    observed_by_model = load_observed_peaks(args.observed_peaks)
+    scored = score_rows(manifest_rows, targets, observed_by_model)
     fields = merged_fields(scored)
     write_csv(args.output, scored, fields)
     print(f"Wrote {len(scored)} scored rows to {args.output}")

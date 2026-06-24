@@ -2,14 +2,24 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import numpy as np
 
-from scripts import (
-    Rx,
-    Ry,
-    Rz,
-    generate_fiber_diffraction,
-    generate_fiber_diffraction_series,
-    make_oriented_coords,
-)
+try:
+    from .scripts import (
+        Rx,
+        Ry,
+        Rz,
+        generate_fiber_diffraction,
+        generate_fiber_diffraction_series,
+        make_oriented_coords,
+    )
+except ImportError:
+    from scripts import (
+        Rx,
+        Ry,
+        Rz,
+        generate_fiber_diffraction,
+        generate_fiber_diffraction_series,
+        make_oriented_coords,
+    )
 
 
 def parse_angle_list(text):
@@ -310,7 +320,7 @@ def average_powder_diffraction_parallel(
     ]
     partial_results = {}
 
-    with ProcessPoolExecutor(max_workers=workers) as executor:
+    with ProcessPoolExecutor(max_workers=len(chunks)) as executor:
         futures = []
         for task in tasks:
             print(

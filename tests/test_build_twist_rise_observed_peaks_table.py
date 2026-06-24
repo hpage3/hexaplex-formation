@@ -60,3 +60,39 @@ def test_validate_long_rows_rejects_non_numeric_observed_d(tmp_path):
 
     with pytest.raises(ValueError):
         validate_long_rows(rows, source)
+
+def test_long_to_wide_skips_missing_peak_rows():
+    rows = [
+        {
+            "model_id": "twist30p0_rise3p400",
+            "target_label": "base",
+            "observed_d_A": "3.407",
+            "peak_status": "found",
+        },
+        {
+            "model_id": "twist30p0_rise3p400",
+            "target_label": "D",
+            "observed_d_A": "",
+            "peak_status": "missing",
+        },
+    ]
+
+    wide = long_to_wide(rows, ["base", "A", "B", "C", "D"])
+
+    assert len(wide) == 1
+    assert wide[0]["observed_base_d_A"] == "3.407"
+    assert wide[0]["observed_D_d_A"] == ""
+
+
+def test_validate_long_rows_allows_missing_peak_rows(tmp_path):
+    source = tmp_path / "observed_long.csv"
+    rows = [
+        {
+            "model_id": "twist30p0_rise3p400",
+            "target_label": "D",
+            "observed_d_A": "",
+            "peak_status": "missing",
+        }
+    ]
+
+    validate_long_rows(rows, source)

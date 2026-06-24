@@ -60,9 +60,15 @@ def validate_long_rows(rows: list[dict[str, str]], source: Path) -> None:
             raise ValueError(f"{source} row {index} has empty model_id")
         if not row.get("target_label", "").strip():
             raise ValueError(f"{source} row {index} has empty target_label")
-        if not row.get("observed_d_A", "").strip():
+        observed_text = row.get("observed_d_A", "").strip()
+        peak_status = row.get("peak_status", "").strip().lower()
+
+        if not observed_text:
+            if peak_status == "missing":
+                continue
             raise ValueError(f"{source} row {index} has empty observed_d_A")
-        float(row["observed_d_A"])
+
+        float(observed_text)
 
 
 def long_to_wide(
@@ -79,6 +85,10 @@ def long_to_wide(
         model_id = row["model_id"].strip()
         target_label = row["target_label"].strip()
         observed_d = row["observed_d_A"].strip()
+        peak_status = row.get("peak_status", "").strip().lower()
+
+        if not observed_d and peak_status == "missing":
+            continue
 
         pair = (model_id, target_label)
         if pair in seen_pairs:

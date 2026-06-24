@@ -1,0 +1,20 @@
+source leaprc.protein.ff14SB
+loadamberparams all_CYP.frcmod
+loadamberparams all_MEP.frcmod
+loadoff CCYP.lib
+loadoff CYP.lib
+loadoff NCYP.lib
+loadoff CMEP.lib
+loadoff MEP.lib
+loadoff NMEP.lib
+#   Define the PDB name map for the amino acids
+#
+addPdbResMap {
+  { 0 "CYP" "NCYP" } { 1 "CYP" "CCYP" }
+  { 0 "MEP" "NMEP" } { 1 "MEP" "CMEP" }
+}
+
+mol = loadpdb fixed.pdb
+savepdb mol "initial.pdb"
+saveAmberParm mol "initial.parm7" "initial.rst7"
+quit

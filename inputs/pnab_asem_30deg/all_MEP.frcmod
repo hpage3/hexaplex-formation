@@ -1,0 +1,26 @@
+Remark line goes here
+MASS
+
+BOND
+CQ-N2  481.00   1.340       same as CA-N2, penalty score=  2.5
+
+ANGLE
+CQ-N2-CT   50.000     123.200   same as CA-N2-CT, penalty score=  0.3
+N2-CQ-NC  111.300     117.230   same as nc-cc-nh, penalty score=  0.0
+CQ-N2-H    50.000     120.000   same as CA-N2-H , penalty score=  0.3
+CQ-NC-CQ   70.000     118.600   same as CA-NC-CQ, penalty score=  0.3
+
+DIHE
+NC-CQ-N2-CT   4    4.200       180.000           2.000      same as X -cd-nh-X , penalty score=  0.0
+NC-CQ-N2-H    4    4.200       180.000           2.000      same as X -cd-nh-X , penalty score=  0.0
+
+IMPROPER
+CX-O2-C -O2        10.5          180.0         2.0          Using general improper torsional angle  X-O2- C-O2, penalty score=  3.0)
+CQ-CT-N2-H          1.0          180.0         2.0          Using general improper torsional angle  X- X-N2- H, penalty score=  6.0)
+N2-NC-CQ-NC         1.1          180.0         2.0          Using the default value
+CQ-H -N2-H          1.0          180.0         2.0          Using general improper torsional angle  X- X-N2- H, penalty score=  6.0)
+
+NONBON
+
+
+

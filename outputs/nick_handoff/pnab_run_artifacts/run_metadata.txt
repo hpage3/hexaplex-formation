@@ -1,0 +1,7 @@
+﻿command: C:\Users\Public\hexaplex-tools\miniforge3\Scripts\conda.exe run -n pnab python run.py
+working_directory: inputs\pnab_asem_30deg
+process_exit_code: -1073741819
+output_completed: true
+selected_conformer: 1_558214.pdb
+handoff_sha256: 4ad8fed71eaa1b6977834d6ae3d6227492eb9094d1cab63b39c1bc5b0b70b77d
+note: Windows teardown returned an access-violation code after all expected output files were written.

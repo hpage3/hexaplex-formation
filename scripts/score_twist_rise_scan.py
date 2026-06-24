@@ -142,6 +142,16 @@ def count_available_observations(row: dict[str, str], targets: dict[str, dict[st
     return count
 
 
+def expected_observation_count(targets: dict[str, dict[str, str]]) -> int:
+    return len(targets)
+
+
+def completeness_fraction(observed_count: int, expected_count: int) -> str:
+    if expected_count <= 0:
+        return ""
+    return f"{observed_count / expected_count:.9f}"
+
+
 def score_rows(
     manifest_rows: list[dict[str, str]],
     targets: dict[str, dict[str, str]],
@@ -163,7 +173,15 @@ def score_rows(
         out["base_rmsd"] = base_score
         out["helical_rmsd"] = helical_score
         out["combined_rmsd"] = combined_score
-        out["observed_peak_count"] = str(count_available_observations(out, targets))
+
+        observed_count = count_available_observations(out, targets)
+        expected_count = expected_observation_count(targets)
+        missing_count = expected_count - observed_count
+
+        out["observed_peak_count"] = str(observed_count)
+        out["expected_peak_count"] = str(expected_count)
+        out["missing_peak_count"] = str(missing_count)
+        out["score_completeness"] = completeness_fraction(observed_count, expected_count)
 
         if combined_score:
             out["score_status"] = "scored"
@@ -186,6 +204,9 @@ def merged_fields(rows: list[dict[str, str]]) -> list[str]:
         "diffraction_file",
         "score_status",
         "observed_peak_count",
+        "expected_peak_count",
+        "missing_peak_count",
+        "score_completeness",
         "observed_base_d_A",
         "observed_A_d_A",
         "observed_B_d_A",

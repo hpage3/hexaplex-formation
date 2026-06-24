@@ -46,6 +46,9 @@ def test_score_rows_leaves_pending_without_observed_peaks():
 
     assert scored[0]["score_status"] == "pending"
     assert scored[0]["observed_peak_count"] == "0"
+    assert scored[0]["expected_peak_count"] == "1"
+    assert scored[0]["missing_peak_count"] == "1"
+    assert scored[0]["score_completeness"] == "0.000000000"
     assert scored[0]["base_rmsd"] == ""
     assert scored[0]["combined_rmsd"] == ""
 
@@ -134,7 +137,52 @@ def test_score_rows_computes_base_and_helical_rmsd_from_observed_table():
 
     assert scored[0]["score_status"] == "scored"
     assert scored[0]["observed_peak_count"] == "3"
+    assert scored[0]["expected_peak_count"] == "3"
+    assert scored[0]["missing_peak_count"] == "0"
+    assert scored[0]["score_completeness"] == "1.000000000"
     assert scored[0]["observed_base_d_A"] == "3.40"
     assert scored[0]["base_rmsd"] == "0.020000000"
     assert scored[0]["helical_rmsd"] == "0.100000000"
+    assert scored[0]["combined_rmsd"] != ""
+
+def test_score_rows_tracks_partial_peak_coverage():
+    rows = [
+        {
+            "model_id": "twist30p0_rise3p400",
+            "twist_deg": "30.000",
+            "rise_A": "3.400",
+        }
+    ]
+    observed = {
+        "twist30p0_rise3p400": {
+            "model_id": "twist30p0_rise3p400",
+            "observed_base_d_A": "3.40",
+            "observed_A_d_A": "3.90",
+        }
+    }
+    targets = {
+        "base": {
+            "target_label": "base",
+            "target_d_A": "3.38",
+            "target_group": "base_stacking",
+        },
+        "A": {
+            "target_label": "A",
+            "target_d_A": "3.8",
+            "target_group": "backbone_associated",
+        },
+        "D": {
+            "target_label": "D",
+            "target_d_A": "7.3",
+            "target_group": "backbone_associated",
+        },
+    }
+
+    scored = score_rows(rows, targets, observed)
+
+    assert scored[0]["score_status"] == "scored"
+    assert scored[0]["observed_peak_count"] == "2"
+    assert scored[0]["expected_peak_count"] == "3"
+    assert scored[0]["missing_peak_count"] == "1"
+    assert scored[0]["score_completeness"] == "0.666666667"
     assert scored[0]["combined_rmsd"] != ""

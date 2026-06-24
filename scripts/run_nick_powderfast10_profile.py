@@ -21,6 +21,10 @@ FIBER_FILENAME = "plot2.png"
 MANIFEST_FILENAME = "nick_powder_profile_manifest.json"
 
 
+def scipy_available() -> bool:
+    return importlib.util.find_spec("scipy") is not None
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -125,30 +129,12 @@ def run_profile(
         )
 
     destination.mkdir(parents=True, exist_ok=True)
-    selected_plotter = plotter or load_reference_plotter()
-    with working_directory(destination):
-        selected_plotter(
-            diffraction,
-            z_limits,
-            x_limits,
-            max_intensity_scaling,
-            diffraction.shape[0],
-        )
-
     paths = output_paths(destination)
-    missing = [
-        str(path)
-        for key, path in paths.items()
-        if key != "manifest" and key != "fiber_pattern" and not path.is_file()
-    ]
-    if missing:
-        raise RuntimeError(
-            "Nick's plotting routine did not create expected output(s): "
-            + ", ".join(missing)
-        )
-
     timestamp = generated_at_utc or datetime.now(timezone.utc).isoformat()
     metadata: dict[str, object] = {
+        "status": "pending",
+        "error": "",
+        "scipy_available": scipy_available(),
         "run_label": run_label or input_path.stem,
         "generated_at_utc": timestamp,
         "input_file": str(input_path),
@@ -176,10 +162,45 @@ def run_profile(
             "integration": "reference routine called unchanged from a controlled working directory",
         },
         "outputs": {
-            key: path.name
-            for key, path in paths.items()
-            if key != "manifest" and path.is_file()
+            "manifest": paths["manifest"].name,
         },
+    }
+
+    try:
+        selected_plotter = plotter or load_reference_plotter()
+        with working_directory(destination):
+            selected_plotter(
+                diffraction,
+                z_limits,
+                x_limits,
+                max_intensity_scaling,
+                diffraction.shape[0],
+            )
+
+        missing = [
+            str(path)
+            for key, path in paths.items()
+            if key not in {"manifest", "fiber_pattern"} and not path.is_file()
+        ]
+        if missing:
+            raise RuntimeError(
+                "Nick's plotting routine did not create expected output(s): "
+                + ", ".join(missing)
+            )
+    except Exception as exc:
+        metadata["status"] = "failed"
+        metadata["error"] = f"{type(exc).__name__}: {exc}"
+        paths["manifest"].write_text(
+            json.dumps(metadata, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        raise
+
+    metadata["status"] = "success"
+    metadata["outputs"] = {
+        key: path.name
+        for key, path in paths.items()
+        if path.is_file() or key == "manifest"
     }
     paths["manifest"].write_text(
         json.dumps(metadata, indent=2) + "\n",

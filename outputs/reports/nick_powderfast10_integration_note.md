@@ -22,11 +22,17 @@ because that is the input supported directly by Nick's plotting function. It
 does not reinterpret coordinate files or replace the repo's existing
 diffraction-generation and scoring definitions.
 
-Nick's routine imports SciPy for image rotation. The current project `.venv`
-does not include SciPy, so a real powder-profile run must use an environment
-where the reference script's NumPy, Matplotlib, Pillow, and SciPy dependencies
-are available. The adapter reports a clear missing-package error and does not
-install or replace those dependencies.
+Nick's routine imports SciPy for image rotation. This repository does not
+currently maintain a complete scientific dependency list in `pyproject.toml`,
+so enable SciPy directly in the existing project environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install scipy
+```
+
+The adapter reports a clear missing-package error if SciPy is unavailable. Its
+manifest records `status`, `error`, and `scipy_available` in addition to the
+input, output directory, grid settings, and generated files.
 
 Example:
 
@@ -39,10 +45,30 @@ python scripts\run_nick_powderfast10_profile.py `
   --run-label example
 ```
 
-Run this command from a Python environment containing the reference script's
-dependencies. Grid limits and display scaling are required rather than inferred,
-so the adapter does not introduce new scientific defaults.
+For the committed smoke example, first create a tiny deterministic diffraction
+array:
+
+```powershell
+.\.venv\Scripts\python.exe -c "import numpy as np; from pathlib import Path; p=Path(r'outputs\nick_powderfast10_smoke'); p.mkdir(parents=True, exist_ok=True); y,x=np.mgrid[-1:1:17j,-1:1:17j]; np.save(p/'smoke_diffraction.npy', np.exp(-8*(x*x+y*y)))"
+```
+
+Then run Nick's real plotting routine through the adapter:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_nick_powderfast10_profile.py `
+  --diffraction-npy outputs\nick_powderfast10_smoke\smoke_diffraction.npy `
+  --output-dir outputs\nick_powderfast10_smoke `
+  --z-min -1 --z-max 1 --x-min -1 --x-max 1 `
+  --max-intensity-scaling 0.25 `
+  --run-label nick-powderfast10-smoke
+```
+
+Expected controlled outputs are `PowderPattern.png`, `middlerow.txt`,
+`plot2.png`, and `nick_powder_profile_manifest.json`. Grid limits and display
+scaling are required rather than inferred, so the adapter does not introduce
+new scientific defaults.
 
 This wrapper is the intended entry point for reproducing Nick-style powder
 plots from existing diffraction arrays. Parallel execution is intentionally
-deferred to a later pipeline task.
+deferred. That future work belongs to the Asem-corrected diffraction
+computation, not Nick's plotting routine.

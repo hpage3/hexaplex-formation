@@ -1,0 +1,46 @@
+{
+  "status": "success",
+  "error": "",
+  "scipy_available": true,
+  "run_label": "nick-powderfast10-smoke",
+  "generated_at_utc": "2026-06-24T22:23:15.192551+00:00",
+  "input_file": "C:\\Users\\hpage3\\OneDrive - Georgia Institute of Technology\\Documents\\GitHub\\research\\hexaplex-formation\\outputs\\nick_powderfast10_smoke\\smoke_diffraction.npy",
+  "output_directory": "C:\\Users\\hpage3\\OneDrive - Georgia Institute of Technology\\Documents\\GitHub\\research\\hexaplex-formation\\outputs\\nick_powderfast10_smoke",
+  "input_array": {
+    "shape": [
+      17,
+      17
+    ],
+    "dtype": "float64"
+  },
+  "grid_settings": {
+    "z_limits": [
+      -1.0,
+      1.0
+    ],
+    "x_limits": [
+      -1.0,
+      1.0
+    ],
+    "z_grid_size": 17,
+    "x_grid_size": 17,
+    "max_intensity_scaling": 0.25
+  },
+  "powder_settings": {
+    "rotation_count": 360,
+    "rotation_angles_deg": "1 through 360 inclusive",
+    "rotation_function": "scipy.ndimage.rotate",
+    "reshape": false
+  },
+  "reference": {
+    "script": "scripts/powderfast10.py",
+    "function": "plot_powder_diffraction",
+    "integration": "reference routine called unchanged from a controlled working directory"
+  },
+  "outputs": {
+    "powder_pattern": "PowderPattern.png",
+    "middle_row_profile": "middlerow.txt",
+    "fiber_pattern": "plot2.png",
+    "manifest": "nick_powder_profile_manifest.json"
+  }
+}

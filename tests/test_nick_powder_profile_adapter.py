@@ -67,6 +67,13 @@ def test_argument_parsing_and_output_paths(tmp_path):
     assert paths["middle_row_profile"] == tmp_path / "middlerow.txt"
 
 
+def test_scipy_availability_detection(monkeypatch):
+    monkeypatch.setattr(adapter.importlib.util, "find_spec", lambda name: object())
+    assert adapter.scipy_available() is True
+    monkeypatch.setattr(adapter.importlib.util, "find_spec", lambda name: None)
+    assert adapter.scipy_available() is False
+
+
 def test_adapter_confines_outputs_and_writes_manifest(tmp_path, monkeypatch):
     caller = tmp_path / "caller"
     output_dir = tmp_path / "controlled-output"
@@ -74,6 +81,7 @@ def test_adapter_confines_outputs_and_writes_manifest(tmp_path, monkeypatch):
     monkeypatch.chdir(caller)
     input_path = tmp_path / "tiny.npy"
     np.save(input_path, np.arange(9, dtype=float).reshape(3, 3))
+    monkeypatch.setattr(adapter, "scipy_available", lambda: True)
 
     def fake_plotter(data, z_limits, x_limits, scaling, z_grid_size):
         assert data.shape == (3, 3)
@@ -104,10 +112,37 @@ def test_adapter_confines_outputs_and_writes_manifest(tmp_path, monkeypatch):
         (output_dir / "nick_powder_profile_manifest.json").read_text(encoding="utf-8")
     )
     assert manifest == metadata
+    assert manifest["status"] == "success"
+    assert manifest["error"] == ""
+    assert manifest["scipy_available"] is True
     assert manifest["run_label"] == "tiny-test"
     assert manifest["grid_settings"]["z_grid_size"] == 3
     assert manifest["powder_settings"]["rotation_count"] == 360
     assert manifest["reference"]["function"] == "plot_powder_diffraction"
+
+
+def test_failed_plotter_records_failure_manifest(tmp_path, monkeypatch):
+    input_path = tmp_path / "tiny.npy"
+    output_dir = tmp_path / "controlled-output"
+    np.save(input_path, np.ones((3, 3)))
+    monkeypatch.setattr(adapter, "scipy_available", lambda: False)
+
+    def failed_plotter(*args):
+        raise RuntimeError("synthetic plotting failure")
+
+    try:
+        adapter.run_profile(input_path, output_dir, plotter=failed_plotter)
+    except RuntimeError as exc:
+        assert "synthetic plotting failure" in str(exc)
+    else:
+        raise AssertionError("Expected plotting failure")
+
+    manifest = json.loads(
+        (output_dir / "nick_powder_profile_manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["status"] == "failed"
+    assert manifest["scipy_available"] is False
+    assert "synthetic plotting failure" in manifest["error"]
 
 
 def test_adapter_rejects_non_2d_input(tmp_path):

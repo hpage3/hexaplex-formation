@@ -1,0 +1,21 @@
+model_id,twist_deg,rise_A,model_status,coordinate_file,diffraction_status,diffraction_file,score_status,base_rmsd,helical_rmsd,combined_rmsd,notes,pilot_selection,pilot_notes
+twist28p0_rise3p350,28.000,3.350,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist29p0_rise3p350,29.000,3.350,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist30p0_rise3p350,30.000,3.350,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist31p0_rise3p350,31.000,3.350,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist32p0_rise3p350,32.000,3.350,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist28p0_rise3p400,28.000,3.400,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist29p0_rise3p400,29.000,3.400,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist30p0_rise3p400,30.000,3.400,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist31p0_rise3p400,31.000,3.400,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist32p0_rise3p400,32.000,3.400,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist28p0_rise3p450,28.000,3.450,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist29p0_rise3p450,29.000,3.450,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist30p0_rise3p450,30.000,3.450,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist31p0_rise3p450,31.000,3.450,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist32p0_rise3p450,32.000,3.450,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist28p0_rise3p500,28.000,3.500,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist29p0_rise3p500,29.000,3.500,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist30p0_rise3p500,30.000,3.500,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist31p0_rise3p500,31.000,3.500,pending,,pending,,pending,,,,,true,twist/rise pilot grid
+twist32p0_rise3p500,32.000,3.500,pending,,pending,,pending,,,,,true,twist/rise pilot grid

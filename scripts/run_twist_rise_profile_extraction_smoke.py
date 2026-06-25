@@ -60,6 +60,56 @@ def count_status(rows: list[dict[str, str]], field: str) -> dict[str, int]:
     return counts
 
 
+def load_model_id_map(path: Path | None) -> dict[str, str]:
+    """Load optional source_model_id -> target_model_id mappings."""
+
+    if path is None:
+        return {}
+
+    rows = read_csv(path)
+    if not rows:
+        return {}
+
+    required = {"source_model_id", "target_model_id"}
+    missing = required - set(rows[0])
+    if missing:
+        raise ValueError(f"{path} is missing required columns: {sorted(missing)}")
+
+    mapping: dict[str, str] = {}
+    for index, row in enumerate(rows, start=2):
+        source = row["source_model_id"].strip()
+        target = row["target_model_id"].strip()
+
+        if not source:
+            raise ValueError(f"{path} row {index} has empty source_model_id")
+        if not target:
+            raise ValueError(f"{path} row {index} has empty target_model_id")
+        if source in mapping:
+            raise ValueError(f"Duplicate source_model_id {source!r} in {path}")
+
+        mapping[source] = target
+
+    return mapping
+
+
+def apply_model_id_map(rows: list[dict[str, str]], mapping: dict[str, str]) -> list[dict[str, str]]:
+    """Return rows with model_id remapped when a mapping is provided."""
+
+    if not mapping:
+        return [dict(row) for row in rows]
+
+    mapped_rows: list[dict[str, str]] = []
+    for row in rows:
+        out = dict(row)
+        model_id = out.get("model_id", "")
+        if model_id in mapping:
+            out["source_model_id"] = model_id
+            out["model_id"] = mapping[model_id]
+        mapped_rows.append(out)
+
+    return mapped_rows
+
+
 def write_manifest(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
@@ -124,8 +174,12 @@ def run_smoke(args: argparse.Namespace) -> dict[str, object]:
 
     long_rows = read_csv(long_peaks_path)
     validate_long_rows(long_rows, long_peaks_path)
+
+    model_id_map = load_model_id_map(args.model_id_map)
+    mapped_long_rows = apply_model_id_map(long_rows, model_id_map)
+
     target_order = parse_target_order(args.target_order)
-    wide_rows = long_to_wide(long_rows, target_order)
+    wide_rows = long_to_wide(mapped_long_rows, target_order)
     write_observed_csv(wide_peaks_path, wide_rows, observed_output_fields(wide_rows, target_order))
 
     manifest_rows = read_csv(args.manifest)
@@ -147,6 +201,8 @@ def run_smoke(args: argparse.Namespace) -> dict[str, object]:
         "grid_manifest_input": str(args.manifest),
         "window_half_width_A": args.window_half_width,
         "include_missing": args.include_missing,
+        "model_id_map": str(args.model_id_map) if args.model_id_map else "",
+        "mapped_model_count": len(model_id_map),
         "outputs": {
             "observed_peaks_long": str(long_peaks_path),
             "observed_peaks_wide": str(wide_peaks_path),
@@ -213,6 +269,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--target-order",
         default="base,A,B,C,D",
         help="Comma-separated target order for wide observed peak columns.",
+    )
+    parser.add_argument(
+        "--model-id-map",
+        type=Path,
+        help="Optional CSV with source_model_id,target_model_id columns.",
     )
     return parser
 

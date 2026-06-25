@@ -48,6 +48,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--d-min", type=float, default=3.0)
     parser.add_argument("--d-max", type=float, default=8.0)
     parser.add_argument("--simulated-offset", type=float, default=1.2)
+    parser.add_argument("--simulated-intensity-column", default="intensity_norm")
+    parser.add_argument("--simulated-label", default="Ideal 16-mer AntiParallel 30deg")
+    parser.add_argument("--title", default="Nick-style ideal 16-mer comparison")
     return parser.parse_args()
 
 
@@ -83,7 +86,7 @@ def windowed_normalize(
 def main() -> int:
     args = parse_args()
     exp_d, exp_i = read_profile(args.experimental_profile, "intensity_normalized")
-    sim_d, sim_i = read_profile(args.simulated_profile, "intensity_norm")
+    sim_d, sim_i = read_profile(args.simulated_profile, args.simulated_intensity_column)
     exp_x, exp_y = windowed_normalize(exp_d, exp_i, args.d_min, args.d_max)
     sim_x, sim_y = windowed_normalize(sim_d, sim_i, args.d_min, args.d_max)
 
@@ -106,14 +109,14 @@ def main() -> int:
         sim_y + args.simulated_offset,
         color="#1f77b4",
         linewidth=1.55,
-        label="Ideal 16-mer AntiParallel 30deg",
+        label=args.simulated_label,
     )
 
     ax.set_xlim(args.d_max, args.d_min)
     ax.set_ylim(-0.08, args.simulated_offset + 1.18)
     ax.set_xlabel("d-spacing (A)")
     ax.set_ylabel("independently normalized intensity; theoretical trace offset")
-    ax.set_title("Nick-style ideal 16-mer comparison")
+    ax.set_title(args.title)
     ax.grid(True, alpha=0.25, linewidth=0.6)
     ax.legend(loc="upper right", frameon=False)
     fig.tight_layout()

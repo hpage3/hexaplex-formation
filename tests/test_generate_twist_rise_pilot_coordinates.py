@@ -7,11 +7,14 @@ from pathlib import Path
 import pytest
 
 from scripts.generate_twist_rise_pilot_coordinates import (
+    build_parser,
     build_fields,
     finish_completed_run,
     generate_coordinates,
     patch_options_yaml,
+    process_selected_rows,
     require_columns,
+    summarize_statuses,
 )
 
 
@@ -94,6 +97,7 @@ def test_generate_coordinates_dry_run_writes_coordinate_paths(tmp_path):
         timeout_seconds=10,
         max_models=0,
         dry_run=True,
+        workers=1,
     )
 
     rows = generate_coordinates(args)
@@ -182,3 +186,100 @@ def test_zero_return_without_fixed_pdb_remains_missing(tmp_path):
     assert row["model_status"] == "missing_fixed_pdb"
     assert row["notes"] == "pNAB completed but fixed.pdb was not found"
     assert not (tmp_path / "coordinates" / "model.pdb").exists()
+
+
+def test_summary_counts_coordinate_present_without_calling_salvage_clean():
+    rows = [
+        {"model_status": "generated"},
+        *[{"model_status": "generated_with_pnab_nonzero"} for _ in range(19)],
+        {"model_status": "failed"},
+        {"model_status": "dry_run"},
+    ]
+
+    assert summarize_statuses(rows) == {
+        "coordinate_present": 20,
+        "clean_generated": 1,
+        "generated_with_pnab_nonzero": 19,
+        "dry_run": 1,
+        "failed_or_other": 1,
+    }
+
+
+def test_workers_default_is_one():
+    args = build_parser().parse_args([])
+    assert args.workers == 1
+
+
+def parallel_args(tmp_path: Path, workers: int) -> argparse.Namespace:
+    return argparse.Namespace(
+        template_dir=tmp_path / "template",
+        work_dir=tmp_path / "work",
+        coordinate_dir=tmp_path / "coordinates",
+        conda_exe=Path("missing-conda.exe"),
+        conda_env="pnab",
+        timeout_seconds=10,
+        dry_run=True,
+        workers=workers,
+    )
+
+
+def test_parallel_path_preserves_manifest_row_order(tmp_path):
+    rows = [
+        {"model_id": "first", "twist_deg": "28", "rise_A": "3.35"},
+        {"model_id": "second", "twist_deg": "29", "rise_A": "3.40"},
+        {"model_id": "third", "twist_deg": "30", "rise_A": "3.45"},
+    ]
+    delays = {"first": 0.03, "second": 0.02, "third": 0.01}
+
+    def out_of_order_process(*, row, **unused):
+        time.sleep(delays[row["model_id"]])
+        return {
+            **row,
+            "model_status": "dry_run",
+            "elapsed_seconds": f"{delays[row['model_id']]:.3f}",
+        }
+
+    output = process_selected_rows(
+        rows,
+        parallel_args(tmp_path, workers=3),
+        process_fn=out_of_order_process,
+    )
+
+    assert [row["model_id"] for row in output] == ["first", "second", "third"]
+
+
+def test_parallel_dry_run_produces_expected_rows(tmp_path):
+    rows = [
+        {"model_id": "m1", "twist_deg": "28", "rise_A": "3.35"},
+        {"model_id": "m2", "twist_deg": "30", "rise_A": "3.40"},
+    ]
+
+    output = process_selected_rows(rows, parallel_args(tmp_path, workers=2))
+
+    assert [row["model_id"] for row in output] == ["m1", "m2"]
+    assert all(row["model_status"] == "dry_run" for row in output)
+    assert output[0]["coordinate_file"].endswith("m1.pdb")
+    assert output[1]["coordinate_file"].endswith("m2.pdb")
+
+
+def test_parallel_worker_exception_does_not_abort_other_rows(tmp_path):
+    rows = [
+        {"model_id": "bad", "twist_deg": "28", "rise_A": "3.35"},
+        {"model_id": "good", "twist_deg": "30", "rise_A": "3.40"},
+    ]
+
+    def sometimes_fails(*, row, **unused):
+        if row["model_id"] == "bad":
+            raise RuntimeError("synthetic worker error")
+        return {**row, "model_status": "dry_run", "elapsed_seconds": "0.001"}
+
+    output = process_selected_rows(
+        rows,
+        parallel_args(tmp_path, workers=2),
+        process_fn=sometimes_fails,
+    )
+
+    assert [row["model_id"] for row in output] == ["bad", "good"]
+    assert output[0]["model_status"] == "failed"
+    assert "synthetic worker error" in output[0]["notes"]
+    assert output[1]["model_status"] == "dry_run"

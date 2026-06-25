@@ -19,8 +19,10 @@ import csv
 import shutil
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Callable
 
 
 DEFAULT_CONDA_EXE = Path(r"C:\Users\Public\hexaplex-tools\miniforge3\Scripts\conda.exe")
@@ -292,6 +294,107 @@ def process_row(
     )
 
 
+def print_start(index: int, total: int, row: dict[str, str]) -> None:
+    print(
+        f"[{index}/{total}] Starting {row['model_id']} "
+        f"twist={float(row['twist_deg']):.3f} rise={float(row['rise_A']):.3f}",
+        flush=True,
+    )
+
+
+def print_finish(index: int, total: int, row: dict[str, str]) -> None:
+    print(
+        f"[{index}/{total}] Finished {row['model_id']} "
+        f"status={row.get('model_status', '')} "
+        f"elapsed_seconds={row.get('elapsed_seconds', '')}",
+        flush=True,
+    )
+
+
+def unexpected_worker_failure(
+    row: dict[str, str],
+    work_root: Path,
+    coordinate_dir: Path,
+    exc: Exception,
+    started_at: str,
+    start_time: float,
+) -> dict[str, str]:
+    out = dict(row)
+    model_id = out["model_id"]
+    out["pnab_work_dir"] = str(work_root / model_id)
+    out["coordinate_file"] = str(coordinate_dir / f"{model_id}.pdb")
+    out["started_at"] = started_at
+    out["model_status"] = "failed"
+    out["notes"] = f"Unexpected coordinate worker exception: {type(exc).__name__}: {exc}"
+    finish_timing(out, start_time)
+    return out
+
+
+def process_selected_rows(
+    selected_rows: list[dict[str, str]],
+    args: argparse.Namespace,
+    process_fn: Callable[..., dict[str, str]] = process_row,
+) -> list[dict[str, str]]:
+    workers = getattr(args, "workers", 1)
+    total = len(selected_rows)
+
+    if workers == 1:
+        output_rows = []
+        for index, row in enumerate(selected_rows, start=1):
+            print_start(index, total, row)
+            output_row = process_fn(
+                row=row,
+                template_dir=args.template_dir,
+                work_root=args.work_dir,
+                coordinate_dir=args.coordinate_dir,
+                conda_exe=args.conda_exe,
+                conda_env=args.conda_env,
+                timeout_seconds=args.timeout_seconds,
+                dry_run=args.dry_run,
+            )
+            output_rows.append(output_row)
+            print_finish(index, total, output_row)
+        return output_rows
+
+    output_rows: list[dict[str, str] | None] = [None] * total
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        future_details = {}
+        for index, row in enumerate(selected_rows, start=1):
+            print_start(index, total, row)
+            started_at = utc_now_iso()
+            start_time = time.monotonic()
+            future = executor.submit(
+                process_fn,
+                row=row,
+                template_dir=args.template_dir,
+                work_root=args.work_dir,
+                coordinate_dir=args.coordinate_dir,
+                conda_exe=args.conda_exe,
+                conda_env=args.conda_env,
+                timeout_seconds=args.timeout_seconds,
+                dry_run=args.dry_run,
+            )
+            future_details[future] = (index, row, started_at, start_time)
+
+        for future in as_completed(future_details):
+            index, row, started_at, start_time = future_details[future]
+            try:
+                output_row = future.result()
+            except Exception as exc:
+                output_row = unexpected_worker_failure(
+                    row=row,
+                    work_root=args.work_dir,
+                    coordinate_dir=args.coordinate_dir,
+                    exc=exc,
+                    started_at=started_at,
+                    start_time=start_time,
+                )
+            output_rows[index - 1] = output_row
+            print_finish(index, total, output_row)
+
+    return [row for row in output_rows if row is not None]
+
+
 def generate_coordinates(args: argparse.Namespace) -> list[dict[str, str]]:
     rows = read_csv(args.manifest)
     require_columns(rows, args.manifest)
@@ -310,33 +413,7 @@ def generate_coordinates(args: argparse.Namespace) -> list[dict[str, str]]:
     if args.max_models:
         selected_rows = rows[: args.max_models]
 
-    output_rows = []
-    total = len(selected_rows)
-    for index, row in enumerate(selected_rows, start=1):
-        print(
-            f"[{index}/{total}] Starting {row['model_id']} "
-            f"twist={float(row['twist_deg']):.3f} rise={float(row['rise_A']):.3f}",
-            flush=True,
-        )
-        output_row = process_row(
-            row=row,
-            template_dir=args.template_dir,
-            work_root=args.work_dir,
-            coordinate_dir=args.coordinate_dir,
-            conda_exe=args.conda_exe,
-            conda_env=args.conda_env,
-            timeout_seconds=args.timeout_seconds,
-            dry_run=args.dry_run,
-        )
-        output_rows.append(output_row)
-        print(
-            f"[{index}/{total}] Finished {row['model_id']} "
-            f"status={output_row.get('model_status', '')} "
-            f"elapsed_seconds={output_row.get('elapsed_seconds', '')}",
-            flush=True,
-        )
-
-    return output_rows
+    return process_selected_rows(selected_rows, args)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -390,7 +467,37 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run",
         action="store_true",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Number of manifest rows to process concurrently. Default: 1.",
+    )
     return parser
+
+
+def summarize_statuses(rows: list[dict[str, str]]) -> dict[str, int]:
+    coordinate_present_statuses = {"generated", "generated_with_pnab_nonzero"}
+    coordinate_present = sum(
+        1 for row in rows if row.get("model_status") in coordinate_present_statuses
+    )
+    clean_generated = sum(
+        1 for row in rows if row.get("model_status") == "generated"
+    )
+    generated_with_pnab_nonzero = sum(
+        1
+        for row in rows
+        if row.get("model_status") == "generated_with_pnab_nonzero"
+    )
+    dry_run = sum(1 for row in rows if row.get("model_status") == "dry_run")
+    failed_or_other = len(rows) - coordinate_present - dry_run
+    return {
+        "coordinate_present": coordinate_present,
+        "clean_generated": clean_generated,
+        "generated_with_pnab_nonzero": generated_with_pnab_nonzero,
+        "dry_run": dry_run,
+        "failed_or_other": failed_or_other,
+    }
 
 
 def main() -> int:
@@ -400,17 +507,24 @@ def main() -> int:
         raise ValueError("--timeout-seconds must be positive")
     if args.max_models < 0:
         raise ValueError("--max-models cannot be negative")
+    if args.workers <= 0:
+        raise ValueError("--workers must be positive")
 
     rows = generate_coordinates(args)
     fields = build_fields(rows)
     write_csv(args.output_manifest, rows, fields)
 
-    generated = sum(1 for row in rows if row.get("model_status") == "generated")
-    dry_run = sum(1 for row in rows if row.get("model_status") == "dry_run")
-    failed = len(rows) - generated - dry_run
+    summary = summarize_statuses(rows)
 
     print(f"Wrote {len(rows)} rows to {args.output_manifest}")
-    print(f"generated={generated} dry_run={dry_run} failed_or_other={failed}")
+    print(
+        f"coordinate_present={summary['coordinate_present']} "
+        f"clean_generated={summary['clean_generated']} "
+        "generated_with_pnab_nonzero="
+        f"{summary['generated_with_pnab_nonzero']} "
+        f"dry_run={summary['dry_run']} "
+        f"failed_or_other={summary['failed_or_other']}"
+    )
     return 0
 
 

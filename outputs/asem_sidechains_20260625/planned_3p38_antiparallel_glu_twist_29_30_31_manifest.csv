@@ -1,0 +1,4 @@
+model_id,twist_deg,rise_A,strand_arrangement,sidechain_model,target_units_per_strand,target_residue_count,structure_generation_status,sidechain_generation_status,diffraction_status,structure_file,notes
+antiparallel_glu_twist29_rise3p38,29.0,3.38,anti-parallel,complete_Glu,16,192,pending_structure_generation,pending_asem_sidechain_generation,pending_diffraction,,"Request final tleap-completed structure; no local structure path claimed"
+antiparallel_glu_twist30_rise3p38,30.0,3.38,anti-parallel,complete_Glu,16,192,pending_structure_generation,pending_asem_sidechain_generation,pending_diffraction,,"Request final tleap-completed structure; no local structure path claimed"
+antiparallel_glu_twist31_rise3p38,31.0,3.38,anti-parallel,complete_Glu,16,192,pending_structure_generation,pending_asem_sidechain_generation,pending_diffraction,,"Request final tleap-completed structure; no local structure path claimed"

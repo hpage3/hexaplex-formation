@@ -1,21 +1,73 @@
-model_id,twist_deg,rise_A,model_status,coordinate_file,diffraction_status,diffraction_file,score_status,notes,pilot_selection,pilot_notes,pnab_work_dir,base_rmsd,helical_rmsd,combined_rmsd
-twist28p0_rise3p350,28.000,3.350,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist28p0_rise3p350.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist28p0_rise3p350,,,
-twist29p0_rise3p350,29.000,3.350,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist29p0_rise3p350.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist29p0_rise3p350,,,
-twist30p0_rise3p350,30.000,3.350,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist30p0_rise3p350.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist30p0_rise3p350,,,
-twist31p0_rise3p350,31.000,3.350,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist31p0_rise3p350.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist31p0_rise3p350,,,
-twist32p0_rise3p350,32.000,3.350,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist32p0_rise3p350.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist32p0_rise3p350,,,
-twist28p0_rise3p400,28.000,3.400,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist28p0_rise3p400.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist28p0_rise3p400,,,
-twist29p0_rise3p400,29.000,3.400,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist29p0_rise3p400.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist29p0_rise3p400,,,
-twist30p0_rise3p400,30.000,3.400,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist30p0_rise3p400.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist30p0_rise3p400,,,
-twist31p0_rise3p400,31.000,3.400,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist31p0_rise3p400.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist31p0_rise3p400,,,
-twist32p0_rise3p400,32.000,3.400,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist32p0_rise3p400.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist32p0_rise3p400,,,
-twist28p0_rise3p450,28.000,3.450,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist28p0_rise3p450.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist28p0_rise3p450,,,
-twist29p0_rise3p450,29.000,3.450,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist29p0_rise3p450.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist29p0_rise3p450,,,
-twist30p0_rise3p450,30.000,3.450,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist30p0_rise3p450.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist30p0_rise3p450,,,
-twist31p0_rise3p450,31.000,3.450,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist31p0_rise3p450.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist31p0_rise3p450,,,
-twist32p0_rise3p450,32.000,3.450,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist32p0_rise3p450.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist32p0_rise3p450,,,
-twist28p0_rise3p500,28.000,3.500,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist28p0_rise3p500.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist28p0_rise3p500,,,
-twist29p0_rise3p500,29.000,3.500,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist29p0_rise3p500.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist29p0_rise3p500,,,
-twist30p0_rise3p500,30.000,3.500,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist30p0_rise3p500.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist30p0_rise3p500,,,
-twist31p0_rise3p500,31.000,3.500,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist31p0_rise3p500.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist31p0_rise3p500,,,
-twist32p0_rise3p500,32.000,3.500,dry_run,outputs\twist_rise_scan\pilot_coordinates\twist32p0_rise3p500.pdb,pending,,pending,pNAB coordinate generation dry run,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work\twist32p0_rise3p500,,,
+model_id,twist_deg,rise_A,model_status,coordinate_file,started_at,finished_at,elapsed_seconds,diffraction_status,diffraction_file,score_status,notes,pilot_selection,pilot_notes,pnab_work_dir,pnab_returncode,pnab_stdout_tail,pnab_stderr_tail,base_rmsd,helical_rmsd,combined_rmsd
+twist28p0_rise3p350,28.000,3.350,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist28p0_rise3p350.pdb,2026-06-25T09:07:08Z,2026-06-25T09:11:13Z,244.688,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist28p0_rise3p350,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist29p0_rise3p350,29.000,3.350,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist29p0_rise3p350.pdb,2026-06-25T09:11:13Z,2026-06-25T09:19:46Z,512.468,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist29p0_rise3p350,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist30p0_rise3p350,30.000,3.350,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist30p0_rise3p350.pdb,2026-06-25T09:19:46Z,2026-06-25T09:22:37Z,170.985,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist30p0_rise3p350,3221225477,1: 0%	Accepted: 0,"              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\Users\Public\hexaplex-tools\miniforge3\envs\pnab\Lib\multiprocessing\spawn.py"", line 131, in _main
+    prepare(preparation_data)
+  File ""C:\Users\Public\hexaplex-tools\miniforge3\envs\pnab\Lib\multiprocessing\spawn.py"", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File ""C:\Users\Public\hexaplex-tools\miniforge3\envs\pnab\Lib\multiprocessing\spawn.py"", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""<frozen runpy>"", line 290, in run_path
+  File ""<frozen runpy>"", line 254, in _get_code_from_file
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\hpage3\\OneDrive - Georgia Institute of Technology\\Documents\\GitHub\\research\\hexaplex-formation\\outputs\\twist_rise_scan\\pilot_pnab_work_run3\\twist30p0_rise3p350\\run.py'
+ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error)",,,
+twist31p0_rise3p350,31.000,3.350,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist31p0_rise3p350.pdb,2026-06-25T09:22:37Z,2026-06-25T09:32:41Z,604.533,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist31p0_rise3p350,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist32p0_rise3p350,32.000,3.350,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist32p0_rise3p350.pdb,2026-06-25T09:32:41Z,2026-06-25T09:44:07Z,685.555,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist32p0_rise3p350,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0
+1: 30%	Accepted: 0
+1: 40%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist28p0_rise3p400,28.000,3.400,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist28p0_rise3p400.pdb,2026-06-25T09:44:07Z,2026-06-25T09:55:23Z,676.794,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist28p0_rise3p400,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist29p0_rise3p400,29.000,3.400,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist29p0_rise3p400.pdb,2026-06-25T09:55:23Z,2026-06-25T09:56:35Z,71.209,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist29p0_rise3p400,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist30p0_rise3p400,30.000,3.400,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist30p0_rise3p400.pdb,2026-06-25T09:56:35Z,2026-06-25T09:59:34Z,179.036,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist30p0_rise3p400,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist31p0_rise3p400,31.000,3.400,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist31p0_rise3p400.pdb,2026-06-25T09:59:34Z,2026-06-25T10:09:29Z,595.340,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist31p0_rise3p400,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist32p0_rise3p400,32.000,3.400,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist32p0_rise3p400.pdb,2026-06-25T10:09:29Z,2026-06-25T10:20:15Z,646.194,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist32p0_rise3p400,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0
+1: 30%	Accepted: 0
+1: 40%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist28p0_rise3p450,28.000,3.450,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist28p0_rise3p450.pdb,2026-06-25T10:20:15Z,2026-06-25T10:25:45Z,330.108,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist28p0_rise3p450,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist29p0_rise3p450,29.000,3.450,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist29p0_rise3p450.pdb,2026-06-25T10:25:45Z,2026-06-25T10:26:53Z,67.271,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist29p0_rise3p450,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist30p0_rise3p450,30.000,3.450,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist30p0_rise3p450.pdb,2026-06-25T10:26:53Z,2026-06-25T10:29:38Z,165.690,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist30p0_rise3p450,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist31p0_rise3p450,31.000,3.450,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist31p0_rise3p450.pdb,2026-06-25T10:29:38Z,2026-06-25T10:38:51Z,553.136,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist31p0_rise3p450,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist32p0_rise3p450,32.000,3.450,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist32p0_rise3p450.pdb,2026-06-25T10:38:51Z,2026-06-25T10:49:17Z,625.798,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist32p0_rise3p450,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0
+1: 30%	Accepted: 0
+1: 40%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist28p0_rise3p500,28.000,3.500,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist28p0_rise3p500.pdb,2026-06-25T10:49:17Z,2026-06-25T10:54:45Z,328.264,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist28p0_rise3p500,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist29p0_rise3p500,29.000,3.500,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist29p0_rise3p500.pdb,2026-06-25T10:54:45Z,2026-06-25T10:55:52Z,66.684,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist29p0_rise3p500,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist30p0_rise3p500,30.000,3.500,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist30p0_rise3p500.pdb,2026-06-25T10:55:52Z,2026-06-25T10:58:31Z,158.803,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist30p0_rise3p500,3221225477,1: 0%	Accepted: 0,ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist31p0_rise3p500,31.000,3.500,generated_with_pnab_nonzero,outputs\twist_rise_scan\pilot_coordinates_run3\twist31p0_rise3p500.pdb,2026-06-25T10:58:31Z,2026-06-25T11:07:26Z,534.866,pending,,pending,fixed.pdb produced despite nonzero pNAB exit code; coordinate copied for cautious downstream review,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist31p0_rise3p500,3221225477,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0",ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error),,,
+twist32p0_rise3p500,32.000,3.500,failed,outputs\twist_rise_scan\pilot_coordinates_run3\twist32p0_rise3p500.pdb,2026-06-25T11:07:26Z,2026-06-25T11:30:46Z,1400.655,pending,,pending,pNAB returned non-zero exit code and fixed.pdb was not found,true,twist/rise pilot grid,outputs\twist_rise_scan\pilot_pnab_work_run3\twist32p0_rise3p500,1,"1: 0%	Accepted: 0
+1: 10%	Accepted: 0
+1: 20%	Accepted: 0
+1: 30%	Accepted: 0
+1: 40%	Accepted: 0
+1: 50%	Accepted: 0
+1: 60%	Accepted: 0
+1: 70%	Accepted: 0
+1: 80%	Accepted: 0
+1: 90%	Accepted: 0
+Run is complete. 0 out of 1 conformers are found
+Maximum number of steps is exceeded.","Traceback (most recent call last):
+  File ""C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\research\hexaplex-formation\outputs\twist_rise_scan\pilot_pnab_work_run3\twist32p0_rise3p500\run.py"", line 61, in <module>
+    main()
+  File ""C:\Users\hpage3\OneDrive - Georgia Institute of Technology\Documents\GitHub\research\hexaplex-formation\outputs\twist_rise_scan\pilot_pnab_work_run3\twist32p0_rise3p500\run.py"", line 10, in main
+    file_name = ""%i_%i.pdb"" % (run.results[0, 0], run.results[0, 1])
+                               ~~~~~~~~~~~^^^^^^
+IndexError: index 0 is out of bounds for axis 1 with size 0
+ERROR conda.cli.main_run:execute(148): `conda run python run.py` failed. (See above for error)",,,

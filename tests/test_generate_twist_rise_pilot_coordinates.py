@@ -1,11 +1,14 @@
 ﻿import argparse
 import csv
+import subprocess
+import time
 from pathlib import Path
 
 import pytest
 
 from scripts.generate_twist_rise_pilot_coordinates import (
     build_fields,
+    finish_completed_run,
     generate_coordinates,
     patch_options_yaml,
     require_columns,
@@ -114,3 +117,68 @@ def test_build_fields_includes_pnab_metadata():
     assert "model_id" in fields
     assert "pnab_work_dir" in fields
     assert "pnab_returncode" in fields
+
+
+def completed(returncode: int) -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess(
+        args=["conda", "run", "python", "run.py"],
+        returncode=returncode,
+        stdout="stdout detail",
+        stderr="stderr detail",
+    )
+
+
+def finish_run(tmp_path: Path, returncode: int, fixed_exists: bool) -> dict[str, str]:
+    fixed_pdb = tmp_path / "work" / "fixed.pdb"
+    coordinate_path = tmp_path / "coordinates" / "model.pdb"
+    fixed_pdb.parent.mkdir(parents=True)
+    coordinate_path.parent.mkdir(parents=True)
+    if fixed_exists:
+        fixed_pdb.write_text("MODEL\nEND\n", encoding="utf-8")
+
+    out = {"started_at": "2026-06-25T00:00:00Z"}
+    return finish_completed_run(
+        out=out,
+        result=completed(returncode),
+        fixed_pdb=fixed_pdb,
+        coordinate_path=coordinate_path,
+        start_time=time.monotonic(),
+    )
+
+
+def test_nonzero_return_with_fixed_pdb_is_salvaged_cautiously(tmp_path):
+    row = finish_run(tmp_path, returncode=3221225477, fixed_exists=True)
+
+    assert row["model_status"] == "generated_with_pnab_nonzero"
+    assert row["pnab_returncode"] == "3221225477"
+    assert row["pnab_stdout_tail"] == "stdout detail"
+    assert row["pnab_stderr_tail"] == "stderr detail"
+    assert row["started_at"] == "2026-06-25T00:00:00Z"
+    assert row["finished_at"].endswith("Z")
+    assert float(row["elapsed_seconds"]) >= 0
+    assert "fixed.pdb produced despite nonzero pNAB exit code" in row["notes"]
+    assert (tmp_path / "coordinates" / "model.pdb").read_text(encoding="utf-8") == "MODEL\nEND\n"
+
+
+def test_zero_return_with_fixed_pdb_remains_generated(tmp_path):
+    row = finish_run(tmp_path, returncode=0, fixed_exists=True)
+
+    assert row["model_status"] == "generated"
+    assert row["notes"] == "pNAB coordinate generated"
+    assert (tmp_path / "coordinates" / "model.pdb").is_file()
+
+
+def test_nonzero_return_without_fixed_pdb_remains_failed(tmp_path):
+    row = finish_run(tmp_path, returncode=1, fixed_exists=False)
+
+    assert row["model_status"] == "failed"
+    assert row["notes"] == "pNAB returned non-zero exit code and fixed.pdb was not found"
+    assert not (tmp_path / "coordinates" / "model.pdb").exists()
+
+
+def test_zero_return_without_fixed_pdb_remains_missing(tmp_path):
+    row = finish_run(tmp_path, returncode=0, fixed_exists=False)
+
+    assert row["model_status"] == "missing_fixed_pdb"
+    assert row["notes"] == "pNAB completed but fixed.pdb was not found"
+    assert not (tmp_path / "coordinates" / "model.pdb").exists()

@@ -192,6 +192,45 @@ def tail(text: str, max_chars: int = 1000) -> str:
     return cleaned[-max_chars:]
 
 
+def finish_completed_run(
+    out: dict[str, str],
+    result: subprocess.CompletedProcess[str],
+    fixed_pdb: Path,
+    coordinate_path: Path,
+    start_time: float,
+) -> dict[str, str]:
+    """Classify a completed pNAB process and preserve any produced fixed.pdb."""
+
+    out["pnab_returncode"] = str(result.returncode)
+    out["pnab_stdout_tail"] = tail(result.stdout)
+    out["pnab_stderr_tail"] = tail(result.stderr)
+
+    if fixed_pdb.exists():
+        shutil.copy2(fixed_pdb, coordinate_path)
+        if result.returncode == 0:
+            out["model_status"] = "generated"
+            out["notes"] = "pNAB coordinate generated"
+        else:
+            out["model_status"] = "generated_with_pnab_nonzero"
+            out["notes"] = (
+                "fixed.pdb produced despite nonzero pNAB exit code; "
+                "coordinate copied for cautious downstream review"
+            )
+        finish_timing(out, start_time)
+        return out
+
+    if result.returncode != 0:
+        out["model_status"] = "failed"
+        out["notes"] = "pNAB returned non-zero exit code and fixed.pdb was not found"
+        finish_timing(out, start_time)
+        return out
+
+    out["model_status"] = "missing_fixed_pdb"
+    out["notes"] = "pNAB completed but fixed.pdb was not found"
+    finish_timing(out, start_time)
+    return out
+
+
 def process_row(
     row: dict[str, str],
     template_dir: Path,
@@ -243,28 +282,14 @@ def process_row(
         finish_timing(out, start_time)
         return out
 
-    out["pnab_returncode"] = str(result.returncode)
-    out["pnab_stdout_tail"] = tail(result.stdout)
-    out["pnab_stderr_tail"] = tail(result.stderr)
-
     fixed_pdb = work_dir / "fixed.pdb"
-    if result.returncode != 0:
-        out["model_status"] = "failed"
-        out["notes"] = "pNAB returned non-zero exit code"
-        finish_timing(out, start_time)
-        return out
-
-    if not fixed_pdb.exists():
-        out["model_status"] = "missing_fixed_pdb"
-        out["notes"] = "pNAB completed but fixed.pdb was not found"
-        finish_timing(out, start_time)
-        return out
-
-    shutil.copy2(fixed_pdb, coordinate_path)
-    out["model_status"] = "generated"
-    out["notes"] = "pNAB coordinate generated"
-    finish_timing(out, start_time)
-    return out
+    return finish_completed_run(
+        out=out,
+        result=result,
+        fixed_pdb=fixed_pdb,
+        coordinate_path=coordinate_path,
+        start_time=start_time,
+    )
 
 
 def generate_coordinates(args: argparse.Namespace) -> list[dict[str, str]]:

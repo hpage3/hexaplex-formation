@@ -23,23 +23,29 @@ def test_patch_options_yaml_updates_twist_and_rise(tmp_path):
     options = tmp_path / "options.yaml"
     options.write_text(
         "HelicalParameters:\n"
-        "  h_twist: 30.000000\n"
-        "  h_rise: 3.400000\n",
+        "  h_twist:\n"
+        "  - 30\n"
+        "  - 30\n"
+        "  - 1\n"
+        "  h_rise:\n"
+        "  - 3.40\n"
+        "  - 3.40\n"
+        "  - 1\n",
         encoding="utf-8",
     )
 
     patch_options_yaml(options, twist_deg=29.0, rise_A=3.35)
 
     text = options.read_text(encoding="utf-8")
-    assert "h_twist: 29.000000" in text
-    assert "h_rise: 3.350000" in text
+    assert "  h_twist:\n  - 29.000000\n  - 29.000000\n  - 1" in text
+    assert "  h_rise:\n  - 3.350000\n  - 3.350000\n  - 1" in text
 
 
 def test_patch_options_yaml_requires_keys(tmp_path):
     options = tmp_path / "options.yaml"
     options.write_text("Other: true\n", encoding="utf-8")
 
-    with pytest.raises(ValueError, match="h_twist"):
+    with pytest.raises(ValueError, match="h_rise|h_twist"):
         patch_options_yaml(options, twist_deg=29.0, rise_A=3.35)
 
 

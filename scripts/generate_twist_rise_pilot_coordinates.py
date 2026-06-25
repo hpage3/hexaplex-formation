@@ -18,6 +18,8 @@ import argparse
 import csv
 import shutil
 import subprocess
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -48,35 +50,57 @@ def require_columns(rows: list[dict[str, str]], path: Path) -> None:
 
 
 def patch_options_yaml(options_path: Path, twist_deg: float, rise_A: float) -> None:
-    """Patch h_twist and h_rise in an Asem-style options.yaml file."""
+    """Patch h_twist and h_rise in an Asem-style options.yaml file.
 
-    text = options_path.read_text(encoding="utf-8")
+    Asem's pNAB options use list-valued helical parameters, for example:
 
-    lines = []
-    found_twist = False
-    found_rise = False
+      h_rise:
+      - 3.38
+      - 3.38
+      - 1
 
-    for line in text.splitlines():
-        stripped = line.strip()
+    The first two list values are patched to keep the scan fixed at the
+    requested value while preserving the third value and the YAML structure.
+    """
 
-        if stripped.startswith("h_twist:"):
-            indent = line[: len(line) - len(line.lstrip())]
-            lines.append(f"{indent}h_twist: {twist_deg:.6f}")
-            found_twist = True
-        elif stripped.startswith("h_rise:"):
-            indent = line[: len(line) - len(line.lstrip())]
-            lines.append(f"{indent}h_rise: {rise_A:.6f}")
-            found_rise = True
-        else:
-            lines.append(line)
+    lines = options_path.read_text(encoding="utf-8").splitlines()
+    patched = list(lines)
 
-    if not found_twist:
-        raise ValueError(f"Could not find h_twist in {options_path}")
-    if not found_rise:
-        raise ValueError(f"Could not find h_rise in {options_path}")
+    def patch_fixed_parameter(parameter_name: str, value: float) -> None:
+        for index, line in enumerate(patched):
+            if line.strip() == f"{parameter_name}:":
+                list_indices = []
+                cursor = index + 1
 
-    options_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                while cursor < len(patched):
+                    stripped = patched[cursor].strip()
 
+                    if stripped.startswith("-"):
+                        list_indices.append(cursor)
+                        cursor += 1
+                        continue
+
+                    if stripped and not stripped.startswith("#"):
+                        break
+
+                    cursor += 1
+
+                if len(list_indices) < 2:
+                    raise ValueError(
+                        f"Expected at least two list values below {parameter_name} in {options_path}"
+                    )
+
+                for list_index in list_indices[:2]:
+                    indent = patched[list_index][: len(patched[list_index]) - len(patched[list_index].lstrip())]
+                    patched[list_index] = f"{indent}- {value:.6f}"
+                return
+
+        raise ValueError(f"Could not find {parameter_name} in {options_path}")
+
+    patch_fixed_parameter("h_rise", rise_A)
+    patch_fixed_parameter("h_twist", twist_deg)
+
+    options_path.write_text("\n".join(patched) + "\n", encoding="utf-8")
 
 def copy_template(template_dir: Path, work_dir: Path) -> None:
     if work_dir.exists():
@@ -116,6 +140,9 @@ def build_fields(rows: list[dict[str, str]]) -> list[str]:
         "rise_A",
         "model_status",
         "coordinate_file",
+        "started_at",
+        "finished_at",
+        "elapsed_seconds",
         "diffraction_status",
         "diffraction_file",
         "score_status",
@@ -143,6 +170,19 @@ def build_fields(rows: list[dict[str, str]]) -> list[str]:
                 seen.add(field)
 
     return fields
+
+
+def utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def format_elapsed_seconds(start_time: float) -> str:
+    return f"{time.monotonic() - start_time:.3f}"
+
+
+def finish_timing(out: dict[str, str], start_time: float) -> None:
+    out["finished_at"] = utc_now_iso()
+    out["elapsed_seconds"] = format_elapsed_seconds(start_time)
 
 
 def tail(text: str, max_chars: int = 1000) -> str:
@@ -173,10 +213,13 @@ def process_row(
 
     out["pnab_work_dir"] = str(work_dir)
     out["coordinate_file"] = str(coordinate_path)
+    out["started_at"] = utc_now_iso()
+    start_time = time.monotonic()
 
     if dry_run:
         out["model_status"] = "dry_run"
         out["notes"] = "pNAB coordinate generation dry run"
+        finish_timing(out, start_time)
         return out
 
     copy_template(template_dir, work_dir)
@@ -197,6 +240,7 @@ def process_row(
         out["pnab_stdout_tail"] = tail(exc.stdout or "")
         out["pnab_stderr_tail"] = tail(exc.stderr or "")
         out["notes"] = f"pNAB timed out after {timeout_seconds} seconds"
+        finish_timing(out, start_time)
         return out
 
     out["pnab_returncode"] = str(result.returncode)
@@ -207,16 +251,19 @@ def process_row(
     if result.returncode != 0:
         out["model_status"] = "failed"
         out["notes"] = "pNAB returned non-zero exit code"
+        finish_timing(out, start_time)
         return out
 
     if not fixed_pdb.exists():
         out["model_status"] = "missing_fixed_pdb"
         out["notes"] = "pNAB completed but fixed.pdb was not found"
+        finish_timing(out, start_time)
         return out
 
     shutil.copy2(fixed_pdb, coordinate_path)
     out["model_status"] = "generated"
     out["notes"] = "pNAB coordinate generated"
+    finish_timing(out, start_time)
     return out
 
 

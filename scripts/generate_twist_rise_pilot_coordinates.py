@@ -311,18 +311,29 @@ def generate_coordinates(args: argparse.Namespace) -> list[dict[str, str]]:
         selected_rows = rows[: args.max_models]
 
     output_rows = []
-    for row in selected_rows:
-        output_rows.append(
-            process_row(
-                row=row,
-                template_dir=args.template_dir,
-                work_root=args.work_dir,
-                coordinate_dir=args.coordinate_dir,
-                conda_exe=args.conda_exe,
-                conda_env=args.conda_env,
-                timeout_seconds=args.timeout_seconds,
-                dry_run=args.dry_run,
-            )
+    total = len(selected_rows)
+    for index, row in enumerate(selected_rows, start=1):
+        print(
+            f"[{index}/{total}] Starting {row['model_id']} "
+            f"twist={float(row['twist_deg']):.3f} rise={float(row['rise_A']):.3f}",
+            flush=True,
+        )
+        output_row = process_row(
+            row=row,
+            template_dir=args.template_dir,
+            work_root=args.work_dir,
+            coordinate_dir=args.coordinate_dir,
+            conda_exe=args.conda_exe,
+            conda_env=args.conda_env,
+            timeout_seconds=args.timeout_seconds,
+            dry_run=args.dry_run,
+        )
+        output_rows.append(output_row)
+        print(
+            f"[{index}/{total}] Finished {row['model_id']} "
+            f"status={output_row.get('model_status', '')} "
+            f"elapsed_seconds={output_row.get('elapsed_seconds', '')}",
+            flush=True,
         )
 
     return output_rows

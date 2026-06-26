@@ -13,6 +13,14 @@ The raw import preserves the expanded angle/candidate folders, `options.yaml`,
 (`30/cand0/initial.pdb`) was byte-identical to the corresponding expanded file.
 The overlay image is retained as Asem's visual provenance/reference.
 
+After Nick asked whether candidate structures could be correlated by name with
+their powder profiles, Asem supplied `pNAB_per_candidate_overlays.pdf`. The PDF
+provides per-candidate visual overlays, with each panel labeled by candidate
+path such as `29/cand0/initial.pdb`. The panels include Asem's reported `r`,
+`Rwp`, and energy values. The PDF does not by itself provide raw numeric profile
+data; raw profile tables should be treated as absent unless they are supplied
+separately later.
+
 ## Asem's Note
 
 Asem reported that he generated pNAB samples with added side chains for twist

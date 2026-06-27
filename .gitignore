@@ -179,3 +179,8 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+# Local normalized Asem structure cache.
+# Regenerated from:
+# - research\tleap_structures_rise3.38
+# - research\sidechains
+inputs/asem_matched_twist_scan/**/*.pdb

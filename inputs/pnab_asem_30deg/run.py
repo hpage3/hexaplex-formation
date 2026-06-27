@@ -1,4 +1,5 @@
 from multiprocessing import freeze_support
+import sys
 
 from openbabel import openbabel as ob
 import pnab
@@ -7,6 +8,11 @@ import pnab
 def main():
     run = pnab.pNAB("options.yaml")
     run.run()
+
+    if run.results.size == 0:
+        print("No conformers found; fixed.pdb was not generated.")
+        return 1
+
     file_name = "%i_%i.pdb" % (run.results[0, 0], run.results[0, 1])
 
     conv = ob.OBConversion()
@@ -58,4 +64,4 @@ def main():
 
 if __name__ == "__main__":
     freeze_support()
-    main()
+    sys.exit(main())

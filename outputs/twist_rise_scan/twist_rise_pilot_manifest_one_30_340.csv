@@ -1,0 +1,2 @@
+"model_id","twist_deg","rise_A","model_status","coordinate_file","diffraction_status","diffraction_file","score_status","base_rmsd","helical_rmsd","combined_rmsd","notes","pilot_selection","pilot_notes"
+"twist30p0_rise3p400","30.000","3.400","pending","","pending","","pending","","","","","true","twist/rise pilot grid"
